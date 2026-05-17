@@ -1,3 +1,4 @@
+import { TimelineLensSwitcher } from '../components/TimelineLensSwitcher'
 import { timelineProjection } from '../domain/timelineProjection'
 
 export function TimelineScreen() {
@@ -9,6 +10,8 @@ export function TimelineScreen() {
           <h1>Capacidade</h1>
         </div>
       </header>
+
+      <TimelineLensSwitcher />
 
       <section className="timeline-screen__surface">
         {timelineProjection.map((item) => (
