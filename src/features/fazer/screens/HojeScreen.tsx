@@ -1,3 +1,4 @@
+import { FocusIndicator } from '../components/FocusIndicator'
 import { OperationalRow } from '../components/OperationalRow'
 import { mockTodayItems } from '../domain/mockTodayItems'
 import { buildTodayProjection } from '../domain/todayProjection'
@@ -15,6 +16,11 @@ export function HojeScreen() {
 
         <button>Abrir o Dia</button>
       </header>
+
+      <section className="hoje-screen__focus">
+        <FocusIndicator label="Direção preservada" />
+        <FocusIndicator label="Capacidade estável" />
+      </section>
 
       <section className="hoje-screen__group">
         <header>
