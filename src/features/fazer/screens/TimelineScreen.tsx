@@ -1,3 +1,5 @@
+import { timelineProjection } from '../domain/timelineProjection'
+
 export function TimelineScreen() {
   return (
     <section className="timeline-screen">
@@ -9,15 +11,15 @@ export function TimelineScreen() {
       </header>
 
       <section className="timeline-screen__surface">
-        <article className="timeline-card">
-          <strong>Hoje</strong>
-          <span>Capacidade operacional estável</span>
-        </article>
-
-        <article className="timeline-card timeline-card--warning">
-          <strong>Dependências</strong>
-          <span>2 itens exigem revisão contextual</span>
-        </article>
+        {timelineProjection.map((item) => (
+          <article
+            key={item.label}
+            className={`timeline-card timeline-card--${item.lens}`}
+          >
+            <strong>{item.label}</strong>
+            <span>{item.description}</span>
+          </article>
+        ))}
       </section>
     </section>
   )
