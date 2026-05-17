@@ -1,4 +1,8 @@
 import { OperationalRow } from '../components/OperationalRow'
+import { mockTodayItems } from '../domain/mockTodayItems'
+import { buildTodayProjection } from '../domain/todayProjection'
+
+const projection = buildTodayProjection(mockTodayItems)
 
 export function HojeScreen() {
   return (
@@ -17,15 +21,13 @@ export function HojeScreen() {
           <h2>Para fazer agora</h2>
         </header>
 
-        <OperationalRow
-          title="Revisar planejamento operacional"
-          meta="Projeto • Marketing Ops"
-        />
-
-        <OperationalRow
-          title="Validar estrutura do release"
-          meta="Essencial"
-        />
+        {projection.now.map((item) => (
+          <OperationalRow
+            key={item.id}
+            title={item.title}
+            meta={item.contextLabel}
+          />
+        ))}
       </section>
 
       <section className="hoje-screen__group hoje-screen__group--secondary">
@@ -33,10 +35,13 @@ export function HojeScreen() {
           <h2>Cabe hoje</h2>
         </header>
 
-        <OperationalRow
-          title="Consolidar projections"
-          meta="Planejamento"
-        />
+        {projection.later.map((item) => (
+          <OperationalRow
+            key={item.id}
+            title={item.title}
+            meta={item.contextLabel}
+          />
+        ))}
       </section>
 
       <section className="hoje-screen__group hoje-screen__group--attention">
@@ -44,11 +49,14 @@ export function HojeScreen() {
           <h2>Atenção</h2>
         </header>
 
-        <OperationalRow
-          title="Dependência sem revisão recente"
-          meta="Há 5 dias"
-          state="attention"
-        />
+        {projection.attention.map((item) => (
+          <OperationalRow
+            key={item.id}
+            title={item.title}
+            meta={item.dueLabel}
+            state="attention"
+          />
+        ))}
       </section>
     </section>
   )
