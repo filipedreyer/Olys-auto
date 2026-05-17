@@ -44,8 +44,13 @@ body {
   min-height: 100vh;
 }
 
-button {
+button,
+textarea {
   font: inherit;
+}
+
+textarea {
+  resize: none;
 }
 
 .app-shell {
@@ -98,26 +103,34 @@ main {
 }
 
 .hoje-screen,
-.timeline-screen {
+.timeline-screen,
+.capturar-screen,
+.inbox-screen {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
 }
 
 .hoje-screen__header,
-.timeline-screen__header {
+.timeline-screen__header,
+.capturar-screen__header,
+.inbox-screen__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .hoje-screen__header small,
-.timeline-screen__header small {
+.timeline-screen__header small,
+.capturar-screen__header small,
+.inbox-screen__header small {
   color: var(--text-secondary);
 }
 
 .hoje-screen__header h1,
-.timeline-screen__header h1 {
+.timeline-screen__header h1,
+.capturar-screen__header h1,
+.inbox-screen__header h1 {
   margin: 4px 0 0;
   font-size: 2rem;
 }
@@ -177,13 +190,15 @@ main {
   background: var(--warning);
 }
 
-.timeline-screen__surface {
+.timeline-screen__surface,
+.inbox-screen__list {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
-.timeline-card {
+.timeline-card,
+.inbox-item {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -192,15 +207,40 @@ main {
   background: var(--surface);
 }
 
-.timeline-card strong {
+.timeline-card strong,
+.inbox-item strong {
   font-size: 1rem;
 }
 
-.timeline-card span {
+.timeline-card span,
+.inbox-item span {
   color: var(--text-secondary);
   line-height: 1.4;
 }
 
 .timeline-card--dependency {
   border: 1px solid rgba(180, 138, 66, 0.25);
+}
+
+.capturar-screen__surface {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.capture-chip {
+  border: none;
+  padding: 14px 18px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.capturar-screen__input {
+  min-height: 140px;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  background: var(--surface);
+  color: var(--text-primary);
 }
