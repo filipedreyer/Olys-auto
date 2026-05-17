@@ -161,16 +161,22 @@ main {
   font-size: 0.82rem;
 }
 
-.hoje-screen__group {
+.surface-section {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
-.hoje-screen__group header h2 {
+.surface-section__header h2 {
   margin: 0;
   font-size: 0.95rem;
   color: var(--text-secondary);
+}
+
+.surface-section__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 .operational-row {
@@ -206,6 +212,20 @@ main {
 
 .operational-row--attention .operational-row__indicator {
   background: var(--warning);
+}
+
+.timeline-lens-switcher {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+
+.timeline-lens-switcher__button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: var(--surface);
+  color: var(--text-secondary);
 }
 
 .timeline-screen__surface,
