@@ -1,28 +1,46 @@
+import { useState } from 'react'
+import { useOperationalStore } from '../../../shared/store/operationalStore'
+import { OperationalRow } from '../components/OperationalRow'
 import { TimelineLensSwitcher } from '../components/TimelineLensSwitcher'
-import { timelineProjection } from '../domain/timelineProjection'
+import { TimelineLens } from '../domain/timelineLens'
+import { buildTimelineProjection } from '../domain/timelineProjection'
 
 export function TimelineScreen() {
+  const items = useOperationalStore((state) => state.items)
+  const [activeLens, setActiveLens] = useState<TimelineLens>('capacity')
+  const projection = buildTimelineProjection(items, activeLens)
+
   return (
     <section className="timeline-screen">
-      <header className="timeline-screen__header">
+      <header className="screen-header">
         <div>
           <small>Timeline</small>
-          <h1>Capacidade</h1>
+          <h1>{projection.title}</h1>
         </div>
       </header>
 
-      <TimelineLensSwitcher />
+      <TimelineLensSwitcher
+        activeLens={activeLens}
+        onChange={(lens) => setActiveLens(lens)}
+      />
 
-      <section className="timeline-screen__surface">
-        {timelineProjection.map((item) => (
-          <article
-            key={item.label}
-            className={`timeline-card timeline-card--${item.lens}`}
-          >
-            <strong>{item.label}</strong>
-            <span>{item.description}</span>
-          </article>
-        ))}
+      <section className="reading-band" aria-label="Leitura da timeline">
+        <span>{projection.readings.capacity.unknownDurationCount} unknown</span>
+        <span>{projection.readings.dependencies.summary}</span>
+      </section>
+
+      <section className="surface-section">
+        <div className="surface-section__content">
+          {projection.entries.map((entry) => (
+            <OperationalRow
+              key={entry.id}
+              title={entry.title}
+              meta={entry.label}
+              detail={entry.detail}
+              state={entry.tone}
+            />
+          ))}
+        </div>
       </section>
     </section>
   )

@@ -1,18 +1,43 @@
 import { PropsWithChildren } from 'react'
+import { NavLink } from 'react-router-dom'
+
+const primaryNav = [
+  { to: '/hoje', label: 'Fazer' },
+  { to: '/planejar', label: 'Planejar' },
+  { to: '/memoria', label: 'Memoria' },
+]
+
+const actionNav = [
+  { to: '/capturar', label: 'Capturar' },
+  { to: '/inbox', label: 'Inbox' },
+  { to: '/timeline', label: 'Timeline' },
+]
 
 export function AppShell({ children }: PropsWithChildren) {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <span>Olys</span>
+        <NavLink to="/hoje" className="brand" aria-label="Olys Hoje">
+          Olys
+        </NavLink>
+
+        <nav className="topbar__actions" aria-label="Acoes globais">
+          {actionNav.map((item) => (
+            <NavLink key={item.to} to={item.to}>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
       </header>
 
       <main>{children}</main>
 
-      <nav className="bottom-nav">
-        <button>Fazer</button>
-        <button>Planejar</button>
-        <button>Memória</button>
+      <nav className="bottom-nav" aria-label="Territorios principais">
+        {primaryNav.map((item) => (
+          <NavLink key={item.to} to={item.to}>
+            {item.label}
+          </NavLink>
+        ))}
       </nav>
     </div>
   )

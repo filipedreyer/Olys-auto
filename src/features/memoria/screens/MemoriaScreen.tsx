@@ -1,26 +1,28 @@
+import { useOperationalStore } from '../../../shared/store/operationalStore'
+import { buildMemoryProjection } from '../domain/memoryProjection'
+
 export function MemoriaScreen() {
+  const items = useOperationalStore((state) => state.items)
+  const projection = buildMemoryProjection(items)
+
   return (
     <section className="memoria-screen">
-      <header className="memoria-screen__header">
-        <small>Memória</small>
-        <h1>Recuperação viva</h1>
+      <header className="screen-header">
+        <div>
+          <small>Memoria</small>
+          <h1>Continuidade contextual</h1>
+        </div>
       </header>
 
       <section className="memory-surface">
-        <article className="memory-item">
-          <strong>Itens</strong>
-          <span>Entidades ativas, concluídas e recuperáveis.</span>
-        </article>
-
-        <article className="memory-item">
-          <strong>Caixola</strong>
-          <span>Materiais soltos aguardando sentido operacional.</span>
-        </article>
-
-        <article className="memory-item">
-          <strong>Arquivados</strong>
-          <span>Histórico preservado sem competir com a execução.</span>
-        </article>
+        {projection.groups.map((group) => (
+          <article key={group.id} className="memory-item">
+            <strong>
+              {group.label} <span>{group.count}</span>
+            </strong>
+            <p>{group.description}</p>
+          </article>
+        ))}
       </section>
     </section>
   )

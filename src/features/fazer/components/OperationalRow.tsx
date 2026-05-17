@@ -1,12 +1,16 @@
+import { OperationalRowState } from '../../../domain/entities/types'
+
 type OperationalRowProps = {
   title: string
   meta?: string
-  state?: 'default' | 'attention' | 'completed'
+  detail?: string
+  state?: OperationalRowState
 }
 
 export function OperationalRow({
   title,
   meta,
+  detail,
   state = 'default',
 }: OperationalRowProps) {
   return (
@@ -15,8 +19,8 @@ export function OperationalRow({
 
       <div className="operational-row__content">
         <strong>{title}</strong>
-
         {meta ? <span>{meta}</span> : null}
+        {detail ? <small>{detail}</small> : null}
       </div>
     </article>
   )
