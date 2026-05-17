@@ -1,8 +1,12 @@
+import { AppShell } from './shell/AppShell'
+
 export function App() {
   return (
-    <main>
-      <h1>Olys</h1>
-      <p>Operational system foundation initialized.</p>
-    </main>
+    <AppShell>
+      <section>
+        <h1>Hoje</h1>
+        <p>Operational execution surface initialized.</p>
+      </section>
+    </AppShell>
   )
 }
