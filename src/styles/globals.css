@@ -105,7 +105,8 @@ main {
 .hoje-screen,
 .timeline-screen,
 .capturar-screen,
-.inbox-screen {
+.inbox-screen,
+.memoria-screen {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -114,7 +115,8 @@ main {
 .hoje-screen__header,
 .timeline-screen__header,
 .capturar-screen__header,
-.inbox-screen__header {
+.inbox-screen__header,
+.memoria-screen__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -123,14 +125,16 @@ main {
 .hoje-screen__header small,
 .timeline-screen__header small,
 .capturar-screen__header small,
-.inbox-screen__header small {
+.inbox-screen__header small,
+.memoria-screen__header small {
   color: var(--text-secondary);
 }
 
 .hoje-screen__header h1,
 .timeline-screen__header h1,
 .capturar-screen__header h1,
-.inbox-screen__header h1 {
+.inbox-screen__header h1,
+.memoria-screen__header h1 {
   margin: 4px 0 0;
   font-size: 2rem;
 }
@@ -141,6 +145,20 @@ main {
   padding: 12px 18px;
   background: var(--accent);
   color: white;
+}
+
+.hoje-screen__focus {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.focus-indicator {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(47, 143, 99, 0.12);
+  color: #8ed0ac;
+  font-size: 0.82rem;
 }
 
 .hoje-screen__group {
@@ -191,14 +209,18 @@ main {
 }
 
 .timeline-screen__surface,
-.inbox-screen__list {
+.inbox-screen__list,
+.memory-surface,
+.planning-surface {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
 .timeline-card,
-.inbox-item {
+.inbox-item,
+.memory-item,
+.planning-item {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -208,12 +230,16 @@ main {
 }
 
 .timeline-card strong,
-.inbox-item strong {
+.inbox-item strong,
+.memory-item strong,
+.planning-item strong {
   font-size: 1rem;
 }
 
 .timeline-card span,
-.inbox-item span {
+.inbox-item span,
+.memory-item span,
+.planning-item span {
   color: var(--text-secondary);
   line-height: 1.4;
 }
