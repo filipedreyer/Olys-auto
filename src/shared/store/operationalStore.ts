@@ -1,23 +1,25 @@
 import { create } from 'zustand'
 import {
-  closeDay,
-  openDay,
-} from '../../domain/commands/dailySessionCommands'
-import {
-  applyEssentialProtected,
   archiveItem,
+  applyEssentialProtected,
+  captureInput,
+  closeDay,
   completeItem,
-  createItem,
+  convertInboxItem,
+  createDependency,
+  createLink,
+  loadOperationalSnapshot,
+  openDay,
+  postponeInboxItem,
+  removeDependency,
   removeEssentialProtected,
+  removeLink,
   restoreItem,
   softDeleteItem,
+  triageInboxItem as triageInboxCommand,
   updateItem,
-} from '../../domain/commands/itemCommands'
-import { createLink, removeLink } from '../../domain/commands/linkCommands'
-import {
-  createDependency,
-  removeDependency,
-} from '../../domain/commands/dependencyCommands'
+} from '../commands/operationalCommandHandlers'
+import { seedUserId } from '../../domain/entities/seedData'
 import {
   DailySession,
   DependencyEdge,
@@ -27,26 +29,18 @@ import {
   InboxItem,
   OlysItem,
 } from '../../domain/entities/types'
-import {
-  seedConditions,
-  seedDependencyEdges,
-  seedEntityLinks,
-  seedInboxItems,
-  seedItems,
-  seedUserId,
-} from '../../domain/entities/seedData'
-import {
-  applyInboxTriage,
-  createInboxItem,
-  InboxTriageAction,
-} from '../../features/inbox/domain/inboxTriage'
+import { InboxTriageAction } from '../../features/inbox/domain/inboxTriage'
 
 type CaptureInput = {
   title: string
   type?: EntityType
 }
 
+type StoreStatus = 'idle' | 'loading' | 'ready' | 'error'
+
 type OperationalStore = {
+  status: StoreStatus
+  error?: string
   userId: string
   items: OlysItem[]
   inboxItems: InboxItem[]
@@ -54,141 +48,171 @@ type OperationalStore = {
   links: EntityLink[]
   dependencies: DependencyEdge[]
   dailySessions: DailySession[]
-  capture: (input: CaptureInput) => void
+  hydrate: (userId: string) => Promise<void>
+  clearForUnauthenticated: () => void
+  capture: (input: CaptureInput) => Promise<void>
   triageInboxItem: (
     id: string,
     action: InboxTriageAction,
     targetType?: EntityType,
-  ) => void
-  completeItem: (id: string) => void
-  archiveItem: (id: string) => void
-  restoreItem: (id: string) => void
-  softDeleteItem: (id: string) => void
-  applyEssentialProtected: (id: string) => void
-  removeEssentialProtected: (id: string) => void
+  ) => Promise<void>
+  completeItem: (id: string) => Promise<void>
+  archiveItem: (id: string) => Promise<void>
+  restoreItem: (id: string) => Promise<void>
+  softDeleteItem: (id: string) => Promise<void>
+  applyEssentialProtected: (id: string) => Promise<void>
+  removeEssentialProtected: (id: string) => Promise<void>
   createDependency: (input: {
     predecessorId: string
     successorId: string
     justification: string
     impact: string
-  }) => void
-  removeDependency: (id: string) => void
-  createLink: (input: { sourceEntityId: string; targetEntityId: string }) => void
-  removeLink: (id: string) => void
-  openDay: (date: string) => void
-  closeDay: (date: string, closingNote: string) => void
+  }) => Promise<void>
+  removeDependency: (id: string) => Promise<void>
+  createLink: (input: { sourceEntityId: string; targetEntityId: string }) => Promise<void>
+  removeLink: (id: string) => Promise<void>
+  openDay: (date: string) => Promise<void>
+  closeDay: (date: string, closingNote: string) => Promise<void>
 }
 
+type StoreSet = (
+  partial:
+    | OperationalStore
+    | Partial<OperationalStore>
+    | ((state: OperationalStore) => OperationalStore | Partial<OperationalStore>),
+  replace?: false,
+) => void
+
 export const useOperationalStore = create<OperationalStore>((set, get) => ({
+  status: 'idle',
   userId: seedUserId,
-  items: seedItems,
-  inboxItems: seedInboxItems,
-  conditions: seedConditions,
-  links: seedEntityLinks,
-  dependencies: seedDependencyEdges,
+  items: [],
+  inboxItems: [],
+  conditions: [],
+  links: [],
+  dependencies: [],
   dailySessions: [],
-  capture: ({ title, type }) => {
-    const userId = get().userId
+  hydrate: async (userId) => {
+    set({ status: 'loading', error: undefined, userId })
 
-    if (type) {
-      set((state) => ({
-        items: createItem(state.items, {
-          userId,
-          entityType: type,
-          title,
-          sourceContext: 'capture',
-          durationMinutes: null,
-        }),
-      }))
-      return
+    try {
+      const snapshot = await loadOperationalSnapshot(userId)
+
+      set({
+        ...snapshot,
+        status: 'ready',
+        error: undefined,
+      })
+    } catch (error) {
+      set({
+        status: 'error',
+        error: error instanceof Error ? error.message : 'Persistence error',
+      })
     }
-
-    set((state) => ({
-      inboxItems: createInboxItem(state.inboxItems, {
-        userId,
-        text: title,
-        sourceContext: 'capture',
-      }),
-    }))
   },
-  triageInboxItem: (id, action, targetType) => {
-    set((state) =>
-      applyInboxTriage(state.inboxItems, state.items, id, {
-        action,
-        targetType,
+  clearForUnauthenticated: () => {
+    set({
+      status: 'ready',
+      items: [],
+      inboxItems: [],
+      conditions: [],
+      links: [],
+      dependencies: [],
+      dailySessions: [],
+      error: undefined,
+    })
+  },
+  capture: async (input) => {
+    await runAndApply(set, () =>
+      captureInput({
+        userId: get().userId,
+        ...input,
       }),
     )
   },
-  completeItem: (id) => {
-    set((state) => ({ items: completeItem(state.items, id) }))
-  },
-  archiveItem: (id) => {
-    set((state) => ({ items: archiveItem(state.items, id) }))
-  },
-  restoreItem: (id) => {
-    set((state) => ({ items: restoreItem(state.items, id) }))
-  },
-  softDeleteItem: (id) => {
-    set((state) => ({ items: softDeleteItem(state.items, id) }))
-  },
-  applyEssentialProtected: (id) => {
-    set((state) => {
-      const item = state.items.find((candidate) => candidate.id === id)
+  triageInboxItem: async (id, action, targetType) => {
+    await runAndApply(set, () => {
+      const userId = get().userId
 
-      return item
-        ? { conditions: applyEssentialProtected(state.conditions, item) }
-        : state
+      if (action === 'convert') {
+        return convertInboxItem(userId, id, targetType)
+      }
+
+      if (action === 'postpone') {
+        return postponeInboxItem(userId, id)
+      }
+
+      return triageInboxCommand(userId, id, action)
     })
   },
-  removeEssentialProtected: (id) => {
-    set((state) => ({
-      conditions: removeEssentialProtected(state.conditions, id),
-    }))
+  completeItem: async (id) => {
+    await runAndApply(set, () => completeItem(get().userId, id))
   },
-  createDependency: (input) => {
-    set((state) => {
-      const result = createDependency(state.items, state.dependencies, {
+  archiveItem: async (id) => {
+    await runAndApply(set, () => archiveItem(get().userId, id))
+  },
+  restoreItem: async (id) => {
+    await runAndApply(set, () => restoreItem(get().userId, id))
+  },
+  softDeleteItem: async (id) => {
+    await runAndApply(set, () => softDeleteItem(get().userId, id))
+  },
+  applyEssentialProtected: async (id) => {
+    await runAndApply(set, () => applyEssentialProtected(get().userId, id))
+  },
+  removeEssentialProtected: async (id) => {
+    await runAndApply(set, () => removeEssentialProtected(get().userId, id))
+  },
+  createDependency: async (input) => {
+    await runAndApply(set, () =>
+      createDependency({
+        userId: get().userId,
         ...input,
-        userId: state.userId,
-        type: 'blocks',
-        source: 'manual',
-      })
-
-      return result.error ? state : { dependencies: result.edges }
-    })
+      }),
+    )
   },
-  removeDependency: (id) => {
-    set((state) => ({ dependencies: removeDependency(state.dependencies, id) }))
+  removeDependency: async (id) => {
+    await runAndApply(set, () => removeDependency(get().userId, id))
   },
-  createLink: (input) => {
-    set((state) => ({
-      links: createLink(state.links, {
+  createLink: async (input) => {
+    await runAndApply(set, () =>
+      createLink({
+        userId: get().userId,
         ...input,
-        userId: state.userId,
-        linkType: 'relates_to',
       }),
-    }))
+    )
   },
-  removeLink: (id) => {
-    set((state) => ({ links: removeLink(state.links, id) }))
+  removeLink: async (id) => {
+    await runAndApply(set, () => removeLink(get().userId, id))
   },
-  openDay: (date) => {
-    set((state) => ({
-      dailySessions: openDay(state.dailySessions, {
-        userId: state.userId,
-        date,
-      }),
-    }))
+  openDay: async (date) => {
+    await runAndApply(set, () => openDay(get().userId, date))
   },
-  closeDay: (date, closingNote) => {
-    set((state) => ({
-      dailySessions: closeDay(state.dailySessions, {
-        userId: state.userId,
-        date,
-        closingNote,
-      }),
-    }))
+  closeDay: async (date, closingNote) => {
+    await runAndApply(set, () => closeDay(get().userId, date, closingNote))
   },
 }))
+
+async function runAndApply(
+  set: StoreSet,
+  action: () => Promise<Awaited<ReturnType<typeof loadOperationalSnapshot>>>,
+) {
+  set({ status: 'loading', error: undefined })
+
+  try {
+    const snapshot = await action()
+
+    set({
+      ...snapshot,
+      status: 'ready',
+      error: undefined,
+    })
+  } catch (error) {
+    set({
+      status: 'error',
+      error: error instanceof Error ? error.message : 'Persistence error',
+    })
+  }
+}
 
 export { updateItem }
