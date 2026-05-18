@@ -38,6 +38,10 @@ import {
   applyInboxTriage,
   createInboxItem,
 } from '../../features/inbox/domain/inboxTriage'
+import {
+  CaptureDestinationId,
+  resolveCaptureTarget,
+} from '../../features/capturar/domain/captureDestination'
 import { conditionsRepository } from '../repositories/conditionsRepository'
 import { dailySessionsRepository } from '../repositories/dailySessionsRepository'
 import { dependenciesRepository } from '../repositories/dependenciesRepository'
@@ -244,14 +248,20 @@ export async function removeEssentialProtected(userId: string, itemId: string) {
 export async function captureInput(input: {
   userId: string
   title: string
-  type?: EntityType
+  destination?: CaptureDestinationId
+  dateStart?: string
+  startAt?: string
 }) {
-  if (input.type) {
+  const target = resolveCaptureTarget(input)
+
+  if (target.kind === 'item') {
     return createItem({
       userId: input.userId,
-      entityType: input.type,
+      entityType: target.entityType,
       title: input.title,
       sourceContext: 'capture',
+      dateStart: input.dateStart,
+      startAt: input.startAt,
       durationMinutes: null,
     })
   }
@@ -261,11 +271,26 @@ export async function captureInput(input: {
     userId: input.userId,
     text: input.title,
     sourceContext: 'capture',
+    suggestedType: target.suggestedType,
+    metadata: {
+      capture_destination: input.destination ?? 'inbox',
+      capture_resolution: target.reason ?? 'inbox_default',
+    },
   })
   const created = findCreated(inboxItems, nextInboxItems)
 
   if (created) {
     await inboxRepository.create(created)
+    await emitChange({
+      userId: input.userId,
+      changeType: 'inbox_captured',
+      sourceContext: 'command:inbox',
+      metadata: {
+        inboxId: created.id,
+        suggestedType: created.suggestedType,
+        captureDestination: input.destination ?? 'inbox',
+      },
+    })
   }
 
   return loadOperationalSnapshot(input.userId)
@@ -301,6 +326,7 @@ export async function convertInboxItem(
       metadata: {
         inboxId,
         targetType,
+        inbox_source_id: inboxId,
       },
     })
   }
@@ -326,6 +352,10 @@ export async function postponeInboxItem(userId: string, inboxId: string) {
       sourceContext: 'command:inbox',
       metadata: {
         inboxId,
+        inbox_postponed: true,
+        inbox_postponed_at: updatedInbox.postponedAt,
+        inbox_needs_revisit: updatedInbox.needsRevisit,
+        inbox_source_id: inboxId,
       },
     })
   }
@@ -347,6 +377,15 @@ export async function triageInboxItem(
 
   if (updatedInbox) {
     await inboxRepository.update(updatedInbox)
+    await emitChange({
+      userId,
+      changeType: resolveInboxTriageChangeType(action),
+      sourceContext: 'command:inbox',
+      metadata: {
+        inboxId,
+        inbox_source_id: inboxId,
+      },
+    })
   }
 
   return loadOperationalSnapshot(userId)
@@ -503,6 +542,18 @@ export async function closeDay(
   }
 
   return loadOperationalSnapshot(userId)
+}
+
+function resolveInboxTriageChangeType(action: 'keep' | 'complete' | 'discard') {
+  if (action === 'keep') {
+    return 'inbox_kept'
+  }
+
+  if (action === 'complete') {
+    return 'inbox_completed'
+  }
+
+  return 'inbox_discarded'
 }
 
 function findCreated<T extends PersistedEntity>(

@@ -1,6 +1,6 @@
 import { useOperationalStore } from '../../../shared/store/operationalStore'
 import { OperationalRow } from '../../fazer/components/OperationalRow'
-import { buildInboxProjection } from '../domain/inboxTriage'
+import { buildInboxProjection } from '../domain/inboxProjection'
 
 export function InboxScreen() {
   const inboxItems = useOperationalStore((state) => state.inboxItems)
@@ -25,8 +25,8 @@ export function InboxScreen() {
             <article key={item.id} className="triage-row">
               <OperationalRow
                 title={item.text}
-                meta={item.createdAt ?? item.sourceContext}
-                detail="Decidir destino antes de virar trabalho"
+                meta={`${item.origin} · ${item.capturedAt}`}
+                detail={item.detail}
               />
 
               <div className="triage-row__actions">
@@ -35,7 +35,9 @@ export function InboxScreen() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => triageInboxItem(item.id, 'convert', 'task')}
+                  onClick={() =>
+                    triageInboxItem(item.id, 'convert', item.suggestedType ?? 'task')
+                  }
                 >
                   Converter
                 </button>

@@ -30,10 +30,13 @@ import {
   OlysItem,
 } from '../../domain/entities/types'
 import { InboxTriageAction } from '../../features/inbox/domain/inboxTriage'
+import { CaptureDestinationId } from '../../features/capturar/domain/captureDestination'
 
 type CaptureInput = {
   title: string
-  type?: EntityType
+  destination?: CaptureDestinationId
+  dateStart?: string
+  startAt?: string
 }
 
 type StoreStatus = 'idle' | 'loading' | 'ready' | 'error'

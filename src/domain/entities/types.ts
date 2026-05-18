@@ -151,6 +151,7 @@ export type InboxItem = {
   suggestedType?: EntityType
   status: InboxStatus
   sourceContext: string
+  metadata?: Record<string, unknown>
   createdAt: string
   updatedAt: string
   convertedItemId?: string

@@ -1,4 +1,5 @@
 import { EntityType, InboxItem, OlysItem } from '../../../domain/entities/types'
+import { buildInboxProjection as buildProjection } from './inboxProjection'
 
 export type InboxTriageAction =
   | 'keep'
@@ -17,7 +18,13 @@ const id = () => crypto.randomUUID()
 
 export function createInboxItem(
   inboxItems: InboxItem[],
-  input: { userId: string; text: string; sourceContext?: string },
+  input: {
+    userId: string
+    text: string
+    sourceContext?: string
+    suggestedType?: EntityType
+    metadata?: Record<string, unknown>
+  },
 ): InboxItem[] {
   const text = input.text.trim()
 
@@ -34,6 +41,8 @@ export function createInboxItem(
       text,
       status: 'new',
       sourceContext: input.sourceContext ?? 'capture',
+      suggestedType: input.suggestedType,
+      metadata: input.metadata,
       createdAt,
       updatedAt: createdAt,
     },
@@ -64,6 +73,10 @@ export function applyInboxTriage(
       priority: 0,
       durationMinutes: null,
       sourceContext: `inbox:${inboxItem.id}`,
+      metadata: {
+        inbox_source_id: inboxItem.id,
+        inbox_source_context: inboxItem.sourceContext,
+      },
       createdAt,
       updatedAt: createdAt,
     }
@@ -78,13 +91,22 @@ export function applyInboxTriage(
   }
 
   if (input.action === 'postpone') {
+    const postponedAt = nowIso()
+
     return {
       items,
       inboxItems: markInbox(inboxItems, idToTriage, {
         status: 'postponed',
-        postponedAt: nowIso(),
+        postponedAt,
         needsRevisit: true,
-      }),
+        metadata: {
+          ...inboxItem.metadata,
+          inbox_postponed: true,
+          inbox_postponed_at: postponedAt,
+          inbox_needs_revisit: true,
+          inbox_source_id: inboxItem.id,
+        },
+    }),
     }
   }
 
@@ -109,20 +131,7 @@ export function applyInboxTriage(
 }
 
 export function buildInboxProjection(inboxItems: InboxItem[]) {
-  const triageItems = inboxItems.filter((item) =>
-    ['new', 'kept', 'postponed', 'error'].includes(item.status),
-  )
-
-  return {
-    triageItems,
-    readings: {
-      pending: triageItems.length,
-      statement:
-        triageItems.length > 0
-          ? 'Entrada aguardando decisao; nao e backlog'
-          : 'Inbox limpa; nenhuma entrada competindo por atencao',
-    },
-  }
+  return buildProjection(inboxItems)
 }
 
 function markInbox(

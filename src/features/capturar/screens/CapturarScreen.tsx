@@ -1,32 +1,35 @@
 import { FormEvent, useState } from 'react'
-import { EntityType } from '../../../domain/entities/types'
 import { useOperationalStore } from '../../../shared/store/operationalStore'
-
-const captureTypes: Array<{ label: string; value?: EntityType }> = [
-  { label: 'Meta', value: 'goal' },
-  { label: 'Projeto', value: 'project' },
-  { label: 'Tarefa', value: 'task' },
-  { label: 'Habito', value: 'habit' },
-  { label: 'Rotina', value: 'routine' },
-  { label: 'Agenda', value: 'agenda' },
-  { label: 'Evento', value: 'event' },
-  { label: 'Lembrete', value: 'reminder' },
-  { label: 'Nota', value: 'note' },
-  { label: 'Lista', value: 'list' },
-  { label: 'Template', value: 'template' },
-  { label: 'Inbox' },
-]
+import { CaptureGrid } from '../components/CaptureGrid'
+import { CaptureDestinationId } from '../domain/captureDestination'
 
 export function CapturarScreen() {
   const capture = useOperationalStore((state) => state.capture)
+  const status = useOperationalStore((state) => state.status)
+  const error = useOperationalStore((state) => state.error)
   const [title, setTitle] = useState('')
-  const [type, setType] = useState<EntityType | undefined>()
+  const [destination, setDestination] = useState<CaptureDestinationId>('inbox')
+  const [dateStart, setDateStart] = useState('')
+  const [message, setMessage] = useState<string | undefined>()
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    capture({ title, type })
+    setMessage(undefined)
+
+    if (!title.trim()) {
+      setMessage('Nada capturado')
+      return
+    }
+
+    await capture({
+      title,
+      destination,
+      dateStart: dateStart || undefined,
+    })
     setTitle('')
-    setType(undefined)
+    setDateStart('')
+    setDestination('inbox')
+    setMessage('Capturado')
   }
 
   return (
@@ -38,19 +41,7 @@ export function CapturarScreen() {
         </div>
       </header>
 
-      <section className="capture-type-list" aria-label="Destino contextual">
-        {captureTypes.map((captureType) => (
-          <button
-            key={captureType.label}
-            type="button"
-            className="capture-chip"
-            aria-pressed={type === captureType.value}
-            onClick={() => setType(captureType.value)}
-          >
-            {captureType.label}
-          </button>
-        ))}
-      </section>
+      <CaptureGrid selected={destination} onSelect={setDestination} />
 
       <textarea
         className="capturar-screen__input"
@@ -59,7 +50,21 @@ export function CapturarScreen() {
         placeholder="Capturar pensamento, ideia ou acao"
       />
 
-      <button className="primary-action" type="submit">
+      {destination === 'reminder' ? (
+        <label className="capture-date-field">
+          Data do lembrete
+          <input
+            type="date"
+            value={dateStart}
+            onChange={(event) => setDateStart(event.target.value)}
+          />
+        </label>
+      ) : null}
+
+      {message ? <p className="surface-note">{message}</p> : null}
+      {error ? <p className="auth-form__error">{error}</p> : null}
+
+      <button className="primary-action" type="submit" disabled={status === 'loading'}>
         Capturar
       </button>
     </form>
