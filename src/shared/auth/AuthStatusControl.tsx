@@ -5,7 +5,7 @@ export function AuthStatusControl() {
   const { logout, mode, status, user } = useAuth()
 
   if (status === 'loading') {
-    return <span className="auth-status">Auth loading</span>
+    return <span className="auth-status">Carregando</span>
   }
 
   if (status === 'degraded') {
@@ -14,7 +14,12 @@ export function AuthStatusControl() {
 
   if (status === 'authenticated' && user) {
     return (
-      <button className="auth-status" onClick={() => void logout()}>
+      <button
+        aria-label="Sair da sessao"
+        className="auth-status"
+        type="button"
+        onClick={() => void logout()}
+      >
         Sair
       </button>
     )

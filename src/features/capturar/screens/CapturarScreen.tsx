@@ -26,6 +26,12 @@ export function CapturarScreen() {
       destination,
       dateStart: dateStart || undefined,
     })
+
+    if (useOperationalStore.getState().error) {
+      setMessage(undefined)
+      return
+    }
+
     setTitle('')
     setDateStart('')
     setDestination('inbox')
@@ -44,6 +50,7 @@ export function CapturarScreen() {
       <CaptureGrid selected={destination} onSelect={setDestination} />
 
       <textarea
+        aria-label="Texto para capturar"
         className="capturar-screen__input"
         value={title}
         onChange={(event) => setTitle(event.target.value)}
@@ -65,7 +72,7 @@ export function CapturarScreen() {
       {error ? <p className="auth-form__error">{error}</p> : null}
 
       <button className="primary-action" type="submit" disabled={status === 'loading'}>
-        Capturar
+        {status === 'loading' ? 'Capturando...' : 'Capturar'}
       </button>
     </form>
   )

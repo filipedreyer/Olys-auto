@@ -56,8 +56,14 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
 button:focus-visible,
 a:focus-visible,
+input:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: 3px;
@@ -144,6 +150,20 @@ main {
   flex: 1;
   margin: 0 auto;
   padding: var(--space-6) var(--space-5) 96px;
+}
+
+.app-status {
+  margin: 0 0 var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.app-status--error {
+  border-color: rgba(199, 121, 105, 0.4);
+  color: var(--danger);
 }
 
 .bottom-nav {
@@ -566,6 +586,20 @@ main {
   .memory-surface,
   .suggestion-card {
     grid-template-columns: 1fr;
+  }
+
+  .day-cycle {
+    grid-template-columns: 1fr;
+  }
+
+  .day-cycle__actions {
+    justify-content: stretch;
+  }
+
+  .day-cycle__actions button,
+  .day-cycle__actions input,
+  .triage-row__actions button {
+    width: 100%;
   }
 
   .suggestion-card button,

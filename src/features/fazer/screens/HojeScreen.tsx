@@ -13,6 +13,7 @@ export function HojeScreen() {
   const conditions = useOperationalStore((state) => state.conditions)
   const dependencies = useOperationalStore((state) => state.dependencies)
   const dailySessions = useOperationalStore((state) => state.dailySessions)
+  const status = useOperationalStore((state) => state.status)
   const openDay = useOperationalStore((state) => state.openDay)
   const closeDay = useOperationalStore((state) => state.closeDay)
   const projection = buildTodayProjection(items, conditions, dependencies)
@@ -20,6 +21,7 @@ export function HojeScreen() {
   const [closingNote, setClosingNote] = useState('')
   const today = new Date().toISOString().slice(0, 10)
   const currentSession = dailySessions.find((session) => session.date === today)
+  const busy = status === 'loading'
 
   return (
     <section className="hoje-screen">
@@ -45,7 +47,7 @@ export function HojeScreen() {
         </div>
 
         <div className="day-cycle__actions">
-          <button type="button" onClick={() => void openDay(today)}>
+          <button type="button" disabled={busy} onClick={() => void openDay(today)}>
             Abrir o Dia
           </button>
           <input
@@ -56,6 +58,7 @@ export function HojeScreen() {
           />
           <button
             type="button"
+            disabled={busy}
             onClick={() => {
               void closeDay(today, closingNote)
               setClosingNote('')

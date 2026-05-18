@@ -18,10 +18,15 @@ export function ConfirmationSheet({
   }
 
   return (
-    <div className="confirmation-sheet" role="dialog" aria-modal="true">
+    <div
+      className="confirmation-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirmation-sheet-title"
+    >
       <div className="confirmation-sheet__panel">
         <span className="eyebrow">confirmacao necessaria</span>
-        <h2>{suggestion.proposedAction}</h2>
+        <h2 id="confirmation-sheet-title">{suggestion.proposedAction}</h2>
         <p>
           A IA pode propor estrutura e leitura, mas a acao relevante so acontece
           apos confirmacao explicita.

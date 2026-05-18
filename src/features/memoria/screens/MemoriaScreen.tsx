@@ -8,9 +8,11 @@ export function MemoriaScreen() {
   const inboxItems = useOperationalStore((state) => state.inboxItems)
   const links = useOperationalStore((state) => state.links)
   const dependencies = useOperationalStore((state) => state.dependencies)
+  const status = useOperationalStore((state) => state.status)
   const restoreItem = useOperationalStore((state) => state.restoreItem)
   const reuseTemplate = useOperationalStore((state) => state.reuseTemplate)
   const projection = buildMemoryProjection(items, inboxItems, links, dependencies)
+  const busy = status === 'loading'
 
   return (
     <section className="memoria-screen">
@@ -52,7 +54,11 @@ export function MemoriaScreen() {
                 detail={item.detail}
               />
               <div className="triage-row__actions">
-                <button type="button" onClick={() => void restoreItem(item.id)}>
+                <button
+                  disabled={busy}
+                  type="button"
+                  onClick={() => void restoreItem(item.id)}
+                >
                   Restaurar contexto
                 </button>
               </div>
@@ -100,7 +106,11 @@ export function MemoriaScreen() {
                 detail={item.detail}
               />
               <div className="triage-row__actions">
-                <button type="button" onClick={() => void reuseTemplate(item.id)}>
+                <button
+                  disabled={busy}
+                  type="button"
+                  onClick={() => void reuseTemplate(item.id)}
+                >
                   Reutilizar
                 </button>
               </div>

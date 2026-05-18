@@ -6,7 +6,9 @@ import { buildInboxProjection } from '../domain/inboxProjection'
 export function InboxScreen() {
   const inboxItems = useOperationalStore((state) => state.inboxItems)
   const triageInboxItem = useOperationalStore((state) => state.triageInboxItem)
+  const status = useOperationalStore((state) => state.status)
   const projection = buildInboxProjection(inboxItems)
+  const busy = status === 'loading'
 
   return (
     <section className="inbox-screen">
@@ -39,10 +41,15 @@ export function InboxScreen() {
               />
 
               <div className="triage-row__actions">
-                <button type="button" onClick={() => triageInboxItem(item.id, 'keep')}>
+                <button
+                  disabled={busy}
+                  type="button"
+                  onClick={() => triageInboxItem(item.id, 'keep')}
+                >
                   Manter
                 </button>
                 <button
+                  disabled={busy}
                   type="button"
                   onClick={() =>
                     triageInboxItem(item.id, 'convert', item.suggestedType ?? 'task')
@@ -51,18 +58,21 @@ export function InboxScreen() {
                   Converter
                 </button>
                 <button
+                  disabled={busy}
                   type="button"
                   onClick={() => triageInboxItem(item.id, 'complete')}
                 >
                   Concluir
                 </button>
                 <button
+                  disabled={busy}
                   type="button"
                   onClick={() => triageInboxItem(item.id, 'postpone')}
                 >
                   Adiar
                 </button>
                 <button
+                  disabled={busy}
                   type="button"
                   onClick={() => triageInboxItem(item.id, 'discard')}
                 >
@@ -95,6 +105,7 @@ export function InboxScreen() {
 
               <div className="triage-row__actions">
                 <button
+                  disabled={busy}
                   type="button"
                   onClick={() =>
                     triageInboxItem(item.id, 'convert', item.suggestedType ?? 'task')
@@ -103,12 +114,14 @@ export function InboxScreen() {
                   Converter
                 </button>
                 <button
+                  disabled={busy}
                   type="button"
                   onClick={() => triageInboxItem(item.id, 'complete')}
                 >
                   Concluir
                 </button>
                 <button
+                  disabled={busy}
                   type="button"
                   onClick={() => triageInboxItem(item.id, 'discard')}
                 >
