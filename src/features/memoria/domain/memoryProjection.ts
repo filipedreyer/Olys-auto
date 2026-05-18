@@ -1,13 +1,22 @@
-import { OlysItem } from '../../../domain/entities/types'
+import { InboxItem, OlysItem } from '../../../domain/entities/types'
 
-export function buildMemoryProjection(items: OlysItem[]) {
-  const active = items.filter((item) => item.state === 'active')
-  const completed = items.filter((item) => item.state === 'completed')
-  const archived = items.filter((item) => item.state === 'archived')
-  const notes = items.filter((item) => item.type === 'nota')
+export function buildMemoryProjection(items: OlysItem[], inboxItems: InboxItem[]) {
+  const active = items.filter((item) => item.status === 'active')
+  const completed = items.filter((item) => item.status === 'completed')
+  const archived = items.filter((item) => item.status === 'archived')
+  const notes = items.filter((item) => item.entityType === 'note')
+  const inbox = inboxItems.filter((item) =>
+    ['new', 'kept', 'postponed', 'error'].includes(item.status),
+  )
 
   return {
     groups: [
+      {
+        id: 'inbox',
+        label: 'Inbox',
+        count: inbox.length,
+        description: 'Entradas ainda em triagem; nao e backlog.',
+      },
       {
         id: 'active',
         label: 'Ativos',
@@ -24,7 +33,7 @@ export function buildMemoryProjection(items: OlysItem[]) {
         id: 'archived',
         label: 'Arquivados',
         count: archived.length,
-        description: 'Material fora do fluxo, ainda disponivel para contexto.',
+        description: 'Material fora do fluxo ativo, ainda recuperavel.',
       },
       {
         id: 'notes',

@@ -4,7 +4,9 @@ import { buildPlanningProjection } from '../domain/planningProjection'
 
 export function PlanejarScreen() {
   const items = useOperationalStore((state) => state.items)
-  const projection = buildPlanningProjection(items)
+  const conditions = useOperationalStore((state) => state.conditions)
+  const dependencies = useOperationalStore((state) => state.dependencies)
+  const projection = buildPlanningProjection(items, conditions, dependencies)
 
   return (
     <section className="planejar-screen">
@@ -26,11 +28,11 @@ export function PlanejarScreen() {
         </header>
 
         <div className="surface-section__content">
-          {projection.activeProjects.map((item) => (
+          {projection.activeDirectionalItems.map((item) => (
             <OperationalRow
               key={item.id}
               title={item.title}
-              meta={item.contextLabel}
+              meta={item.entityType}
               detail={projection.readings.statement}
             />
           ))}

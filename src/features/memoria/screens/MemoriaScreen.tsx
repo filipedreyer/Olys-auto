@@ -3,7 +3,8 @@ import { buildMemoryProjection } from '../domain/memoryProjection'
 
 export function MemoriaScreen() {
   const items = useOperationalStore((state) => state.items)
-  const projection = buildMemoryProjection(items)
+  const inboxItems = useOperationalStore((state) => state.inboxItems)
+  const projection = buildMemoryProjection(items, inboxItems)
 
   return (
     <section className="memoria-screen">

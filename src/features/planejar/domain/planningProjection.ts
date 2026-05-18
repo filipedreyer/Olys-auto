@@ -1,23 +1,34 @@
-import { OlysItem } from '../../../domain/entities/types'
+import {
+  DependencyEdge,
+  EntityCondition,
+  OlysItem,
+} from '../../../domain/entities/types'
 import { calculateDependencies } from '../../fazer/domain/dependencies'
 import { buildDirectionReading } from '../../fazer/domain/directionReading'
 
-export function buildPlanningProjection(items: OlysItem[]) {
-  const activeProjects = items.filter(
-    (item) => item.type === 'projeto' && item.state !== 'archived',
+export function buildPlanningProjection(
+  items: OlysItem[],
+  conditions: EntityCondition[] = [],
+  dependencies: DependencyEdge[] = [],
+) {
+  const activeDirectionalItems = items.filter(
+    (item) =>
+      ['goal', 'project', 'habit', 'routine'].includes(item.entityType) &&
+      item.status !== 'archived' &&
+      item.status !== 'deleted',
   )
-  const dependencies = calculateDependencies(items)
-  const direction = buildDirectionReading(items)
+  const dependencyReading = calculateDependencies(items, dependencies)
+  const direction = buildDirectionReading(items, conditions, dependencies)
 
   return {
-    activeProjects,
+    activeDirectionalItems,
     readings: {
       direction,
-      dependencies,
+      dependencies: dependencyReading,
       statement:
-        activeProjects.length > 0
+        activeDirectionalItems.length > 0
           ? 'Planejamento orientado por direcao e risco operacional'
-          : 'Sem projetos ativos exigindo planejamento agora',
+          : 'Sem metas, projetos, habitos ou rotinas ativos',
     },
   }
 }

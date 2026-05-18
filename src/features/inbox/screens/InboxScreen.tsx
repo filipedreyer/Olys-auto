@@ -3,9 +3,9 @@ import { OperationalRow } from '../../fazer/components/OperationalRow'
 import { buildInboxProjection } from '../domain/inboxTriage'
 
 export function InboxScreen() {
-  const items = useOperationalStore((state) => state.items)
+  const inboxItems = useOperationalStore((state) => state.inboxItems)
   const triageInboxItem = useOperationalStore((state) => state.triageInboxItem)
-  const projection = buildInboxProjection(items)
+  const projection = buildInboxProjection(inboxItems)
 
   return (
     <section className="inbox-screen">
@@ -24,8 +24,8 @@ export function InboxScreen() {
           {projection.triageItems.map((item) => (
             <article key={item.id} className="triage-row">
               <OperationalRow
-                title={item.title}
-                meta={item.createdAtLabel ?? item.contextLabel}
+                title={item.text}
+                meta={item.createdAt ?? item.sourceContext}
                 detail="Decidir destino antes de virar trabalho"
               />
 
@@ -35,7 +35,7 @@ export function InboxScreen() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => triageInboxItem(item.id, 'convert', 'tarefa')}
+                  onClick={() => triageInboxItem(item.id, 'convert', 'task')}
                 >
                   Converter
                 </button>

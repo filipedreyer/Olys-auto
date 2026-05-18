@@ -9,7 +9,9 @@ import { buildTodayProjection } from '../domain/todayProjection'
 
 export function HojeScreen() {
   const items = useOperationalStore((state) => state.items)
-  const projection = buildTodayProjection(items)
+  const conditions = useOperationalStore((state) => state.conditions)
+  const dependencies = useOperationalStore((state) => state.dependencies)
+  const projection = buildTodayProjection(items, conditions, dependencies)
   const [confirmationOpen, setConfirmationOpen] = useState(false)
 
   return (
@@ -26,7 +28,7 @@ export function HojeScreen() {
       <section className="focus-strip" aria-label="Leituras">
         <FocusIndicator label={projection.readings.direction.statement} />
         <FocusIndicator
-          label={`Capacidade ${projection.readings.capacity.posture}`}
+          label={`Capacidade ${projection.readings.capacity.state}`}
         />
         <FocusIndicator label={projection.readings.dependencyRisk.summary} />
       </section>
@@ -41,11 +43,16 @@ export function HojeScreen() {
             <OperationalRow
               key={item.id}
               title={item.title}
-              meta={item.contextLabel}
+              meta={item.sourceContext}
               detail={
-                item.essentialProtected
+                conditions.some(
+                  (condition) =>
+                    condition.entityId === item.id &&
+                    condition.conditionType === 'essential_protected' &&
+                    !condition.removedAt,
+                )
                   ? 'Essencial Protegido como condicao'
-                  : item.scheduledLabel
+                  : item.dateStart
               }
             />
           ))}
@@ -58,17 +65,17 @@ export function HojeScreen() {
         </header>
 
         <div className="surface-section__content">
-          {projection.later.map((item) => (
+          {projection.fitsToday.map((item) => (
             <OperationalRow
               key={item.id}
               title={item.title}
-              meta={item.contextLabel}
+              meta={item.sourceContext}
               detail={
                 typeof item.durationMinutes === 'number'
                   ? `${item.durationMinutes} min declarados`
-                  : 'Duracao desconhecida'
+                  : 'Duracao unknown'
               }
-              state={item.state === 'paused' ? 'paused' : 'default'}
+              state={item.status === 'paused' ? 'paused' : 'default'}
             />
           ))}
         </div>
@@ -84,9 +91,9 @@ export function HojeScreen() {
             <OperationalRow
               key={item.id}
               title={item.title}
-              meta={item.dueLabel ?? item.contextLabel}
-              detail={item.dependency?.impact}
-              state={item.state === 'blocked' ? 'blocked' : 'attention'}
+              meta={item.dateStart ?? item.sourceContext}
+              detail="Risco operacional, dependencia ou informacao incompleta"
+              state="attention"
             />
           ))}
         </div>

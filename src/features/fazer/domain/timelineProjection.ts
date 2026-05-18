@@ -1,4 +1,9 @@
-import { OlysItem } from '../../../domain/entities/types'
+import {
+  DependencyEdge,
+  EntityCondition,
+  OlysItem,
+  OperationalRowState,
+} from '../../../domain/entities/types'
 import { buildCapacityReading, CapacityReading } from './capacity'
 import { calculateDependencies, DependencyReading } from './dependencies'
 import { TimelineLens } from './timelineLens'
@@ -8,7 +13,7 @@ export type TimelineEntry = {
   title: string
   label: string
   detail: string
-  tone: 'default' | 'attention' | 'blocked' | 'paused'
+  tone: OperationalRowState
 }
 
 export type TimelineProjection = {
@@ -23,18 +28,20 @@ export type TimelineProjection = {
 
 export function buildTimelineProjection(
   items: OlysItem[],
+  conditions: EntityCondition[],
+  dependencies: DependencyEdge[],
   activeLens: TimelineLens,
 ): TimelineProjection {
-  const capacity = buildCapacityReading(items)
-  const dependencies = calculateDependencies(items)
+  const capacity = buildCapacityReading(items, conditions)
+  const dependencyReading = calculateDependencies(items, dependencies)
 
   return {
     activeLens,
     title: buildTimelineTitle(activeLens),
-    entries: buildEntries(items, activeLens),
+    entries: buildEntries(items, dependencies, activeLens),
     readings: {
       capacity,
-      dependencies,
+      dependencies: dependencyReading,
     },
   }
 }
@@ -51,49 +58,51 @@ function buildTimelineTitle(activeLens: TimelineLens) {
   return 'Continuidade contextual'
 }
 
-function buildEntries(items: OlysItem[], activeLens: TimelineLens): TimelineEntry[] {
+function buildEntries(
+  items: OlysItem[],
+  dependencies: DependencyEdge[],
+  activeLens: TimelineLens,
+): TimelineEntry[] {
   if (activeLens === 'capacity') {
     return items
-      .filter((item) => item.state !== 'archived')
+      .filter((item) => item.status !== 'deleted')
       .map((item) => ({
         id: item.id,
         title: item.title,
         label:
           typeof item.durationMinutes === 'number'
             ? `${item.durationMinutes} min declarados`
-            : 'Duracao desconhecida',
-        detail: capacityDetail(item),
-        tone: item.state === 'blocked' ? 'blocked' : 'default',
+            : 'Duracao unknown',
+        detail:
+          typeof item.durationMinutes === 'number'
+            ? 'Ocupa capacidade comprometida'
+            : 'Nao ocupa capacidade sem duracao ou regra explicita',
+        tone: item.status === 'paused' ? 'paused' : 'default',
       }))
   }
 
   if (activeLens === 'dependency') {
-    return items
-      .filter((item) => item.dependency || item.state === 'blocked')
-      .map((item) => ({
-        id: item.id,
-        title: item.title,
-        label: item.dependency?.reason ?? 'Bloqueio operacional',
-        detail: item.dependency?.impact ?? 'Impacto exige triagem contextual',
-        tone: item.state === 'blocked' ? 'blocked' : 'attention',
-      }))
+    return dependencies.map((edge) => {
+      const predecessor = items.find((item) => item.id === edge.predecessorId)
+      const successor = items.find((item) => item.id === edge.successorId)
+
+      return {
+        id: edge.id,
+        title: predecessor?.title ?? 'Predecessor indisponivel',
+        label: successor ? `Antes de ${successor.title}` : edge.type,
+        detail: edge.impact,
+        tone: edge.status === 'active' ? 'blocked' : 'attention',
+      }
+    })
   }
 
   return items
-    .filter((item) => item.state !== 'archived')
+    .filter((item) => item.status !== 'deleted')
     .map((item) => ({
       id: item.id,
       title: item.title,
-      label: item.scheduledLabel ?? 'Sem janela fixa',
-      detail: item.contextLabel ?? 'Contexto operacional',
-      tone: item.state === 'paused' ? 'paused' : 'default',
+      label: item.startAt ?? item.dateStart ?? 'Sem janela fixa',
+      detail: item.sourceContext ?? 'Contexto operacional',
+      tone: item.status === 'paused' ? 'paused' : 'default',
     }))
-}
-
-function capacityDetail(item: OlysItem) {
-  if (typeof item.durationMinutes !== 'number') {
-    return 'Leitura qualitativa; o sistema nao estima duracao artificialmente'
-  }
-
-  return `Carga conhecida, demanda ${item.capacityDemand ?? 'unknown'}`
 }

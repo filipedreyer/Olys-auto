@@ -3,11 +3,18 @@ import { EntityType } from '../../../domain/entities/types'
 import { useOperationalStore } from '../../../shared/store/operationalStore'
 
 const captureTypes: Array<{ label: string; value?: EntityType }> = [
+  { label: 'Meta', value: 'goal' },
+  { label: 'Projeto', value: 'project' },
+  { label: 'Tarefa', value: 'task' },
+  { label: 'Habito', value: 'habit' },
+  { label: 'Rotina', value: 'routine' },
+  { label: 'Agenda', value: 'agenda' },
+  { label: 'Evento', value: 'event' },
+  { label: 'Lembrete', value: 'reminder' },
+  { label: 'Nota', value: 'note' },
+  { label: 'Lista', value: 'list' },
+  { label: 'Template', value: 'template' },
   { label: 'Inbox' },
-  { label: 'Tarefa', value: 'tarefa' },
-  { label: 'Nota', value: 'nota' },
-  { label: 'Projeto', value: 'projeto' },
-  { label: 'Lembrete', value: 'lembrete' },
 ]
 
 export function CapturarScreen() {

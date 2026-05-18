@@ -1,4 +1,4 @@
-import { EntityType, OlysItem } from '../../../domain/entities/types'
+import { EntityType, InboxItem, OlysItem } from '../../../domain/entities/types'
 
 export type InboxTriageAction =
   | 'keep'
@@ -12,64 +12,105 @@ type InboxTriageInput = {
   targetType?: EntityType
 }
 
+const nowIso = () => new Date().toISOString()
+const id = (prefix: string) => `${prefix}-${crypto.randomUUID()}`
+
+export function createInboxItem(
+  inboxItems: InboxItem[],
+  input: { userId: string; text: string; sourceContext?: string },
+): InboxItem[] {
+  const text = input.text.trim()
+
+  if (!text) {
+    return inboxItems
+  }
+
+  const createdAt = nowIso()
+
+  return [
+    {
+      id: id('inbox'),
+      userId: input.userId,
+      text,
+      status: 'new',
+      sourceContext: input.sourceContext ?? 'capture',
+      createdAt,
+      updatedAt: createdAt,
+    },
+    ...inboxItems,
+  ]
+}
+
 export function applyInboxTriage(
+  inboxItems: InboxItem[],
   items: OlysItem[],
-  id: string,
+  idToTriage: string,
   input: InboxTriageInput,
-): OlysItem[] {
-  return items.map((item) => {
-    if (item.id !== id) {
-      return item
-    }
+): { inboxItems: InboxItem[]; items: OlysItem[] } {
+  const inboxItem = inboxItems.find((item) => item.id === idToTriage)
 
-    if (input.action === 'discard') {
-      return {
-        ...item,
-        state: 'archived',
-        inboxStatus: 'converted',
-      }
-    }
+  if (!inboxItem) {
+    return { inboxItems, items }
+  }
 
-    if (input.action === 'complete') {
-      return {
-        ...item,
-        state: 'completed',
-        inboxStatus: 'converted',
-      }
-    }
-
-    if (input.action === 'postpone') {
-      return {
-        ...item,
-        state: 'paused',
-        inboxStatus: 'postponed',
-        scheduledLabel: 'Adiado',
-      }
-    }
-
-    if (input.action === 'convert') {
-      return {
-        ...item,
-        type: input.targetType ?? 'tarefa',
-        inboxStatus: 'converted',
-        contextLabel: 'Convertido',
-      }
+  if (input.action === 'convert') {
+    const createdAt = nowIso()
+    const convertedItem: OlysItem = {
+      id: id('item'),
+      userId: inboxItem.userId,
+      entityType: input.targetType ?? 'task',
+      title: inboxItem.text,
+      status: 'active',
+      priority: 0,
+      durationMinutes: null,
+      sourceContext: `inbox:${inboxItem.id}`,
+      createdAt,
+      updatedAt: createdAt,
     }
 
     return {
-      ...item,
-      inboxStatus: 'kept',
-      contextLabel: 'Mantido para triagem',
+      items: [convertedItem, ...items],
+      inboxItems: markInbox(inboxItems, idToTriage, {
+        status: 'converted',
+        convertedItemId: convertedItem.id,
+      }),
     }
-  })
+  }
+
+  if (input.action === 'postpone') {
+    return {
+      items,
+      inboxItems: markInbox(inboxItems, idToTriage, {
+        status: 'postponed',
+        postponedAt: nowIso(),
+        needsRevisit: true,
+      }),
+    }
+  }
+
+  if (input.action === 'complete') {
+    return {
+      items,
+      inboxItems: markInbox(inboxItems, idToTriage, { status: 'completed' }),
+    }
+  }
+
+  if (input.action === 'discard') {
+    return {
+      items,
+      inboxItems: markInbox(inboxItems, idToTriage, { status: 'discarded' }),
+    }
+  }
+
+  return {
+    items,
+    inboxItems: markInbox(inboxItems, idToTriage, { status: 'kept' }),
+  }
 }
 
-export function buildInboxProjection(items: OlysItem[]) {
-  const triageItems = items.filter(
-    (item) =>
-      item.state !== 'archived' &&
-      item.state !== 'completed' &&
-      (item.type === 'inbox' || item.inboxStatus === 'untriaged'),
+export function buildInboxProjection(inboxItems: InboxItem[]) {
+  const triageItems = inboxItems.filter((item) =>
+    ['new', 'kept', 'postponed', 'error'].includes(item.status),
   )
 
   return {
@@ -82,4 +123,20 @@ export function buildInboxProjection(items: OlysItem[]) {
           : 'Inbox limpa; nenhuma entrada competindo por atencao',
     },
   }
+}
+
+function markInbox(
+  inboxItems: InboxItem[],
+  idToMark: string,
+  patch: Partial<InboxItem>,
+): InboxItem[] {
+  return inboxItems.map((item) =>
+    item.id === idToMark
+      ? {
+          ...item,
+          ...patch,
+          updatedAt: nowIso(),
+        }
+      : item,
+  )
 }

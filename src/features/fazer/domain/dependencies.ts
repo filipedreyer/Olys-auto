@@ -1,28 +1,35 @@
-import { OlysItem } from '../../../domain/entities/types'
+import { DependencyEdge, OlysItem } from '../../../domain/entities/types'
 
 export type DependencyReading = {
-  blocked: OlysItem[]
-  risks: OlysItem[]
-  sequence: OlysItem[]
+  blocked: DependencyEdge[]
+  candidates: DependencyEdge[]
+  needsReview: DependencyEdge[]
   summary: string
 }
 
-export function calculateDependencies(items: OlysItem[]): DependencyReading {
-  const blocked = items.filter(
-    (item) => item.state === 'blocked' || item.dependency?.kind === 'blocker',
-  )
-  const risks = items.filter((item) =>
-    ['risk', 'impact'].includes(item.dependency?.kind ?? ''),
-  )
-  const sequence = items.filter((item) => item.dependency?.kind === 'sequence')
+export function calculateDependencies(
+  items: OlysItem[],
+  dependencies: DependencyEdge[] = [],
+): DependencyReading {
+  const blocked = dependencies.filter((edge) => {
+    if (edge.status !== 'active') {
+      return false
+    }
+
+    const predecessor = items.find((item) => item.id === edge.predecessorId)
+
+    return predecessor ? predecessor.status !== 'completed' : true
+  })
+  const candidates = dependencies.filter((edge) => edge.status === 'candidate')
+  const needsReview = dependencies.filter((edge) => edge.status === 'needs_review')
 
   return {
     blocked,
-    risks,
-    sequence,
+    candidates,
+    needsReview,
     summary:
       blocked.length > 0
-        ? `${blocked.length} bloqueio(s) exigem decisao`
-        : 'Sem bloqueios operacionais ativos',
+        ? `${blocked.length} dependencia(s) bloqueiam sequencia`
+        : 'Sem dependencias bloqueantes ativas',
   }
 }

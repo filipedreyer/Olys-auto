@@ -2,22 +2,22 @@ import { PropsWithChildren } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const primaryNav = [
-  { to: '/hoje', label: 'Fazer' },
+  { to: '/fazer/hoje', label: 'Fazer' },
   { to: '/planejar', label: 'Planejar' },
   { to: '/memoria', label: 'Memoria' },
 ]
 
 const actionNav = [
   { to: '/capturar', label: 'Capturar' },
-  { to: '/inbox', label: 'Inbox' },
-  { to: '/timeline', label: 'Timeline' },
+  { to: '/memoria/inbox', label: 'Inbox' },
+  { to: '/fazer/timeline', label: 'Timeline' },
 ]
 
 export function AppShell({ children }: PropsWithChildren) {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <NavLink to="/hoje" className="brand" aria-label="Olys Hoje">
+        <NavLink to="/fazer/hoje" className="brand" aria-label="Olys Hoje">
           Olys
         </NavLink>
 

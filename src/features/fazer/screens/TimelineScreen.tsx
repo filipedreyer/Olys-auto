@@ -7,8 +7,15 @@ import { buildTimelineProjection } from '../domain/timelineProjection'
 
 export function TimelineScreen() {
   const items = useOperationalStore((state) => state.items)
+  const conditions = useOperationalStore((state) => state.conditions)
+  const dependencies = useOperationalStore((state) => state.dependencies)
   const [activeLens, setActiveLens] = useState<TimelineLens>('capacity')
-  const projection = buildTimelineProjection(items, activeLens)
+  const projection = buildTimelineProjection(
+    items,
+    conditions,
+    dependencies,
+    activeLens,
+  )
 
   return (
     <section className="timeline-screen">
@@ -25,7 +32,7 @@ export function TimelineScreen() {
       />
 
       <section className="reading-band" aria-label="Leitura da timeline">
-        <span>{projection.readings.capacity.unknownDurationCount} unknown</span>
+        <span>{projection.readings.capacity.unknownLoadCount} unknown</span>
         <span>{projection.readings.dependencies.summary}</span>
       </section>
 
