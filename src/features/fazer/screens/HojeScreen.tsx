@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import { ConfirmationSheet } from '../../ia/components/ConfirmationSheet'
 import { SuggestionCard } from '../../ia/components/SuggestionCard'
 import { contextualIdeaSuggestion } from '../../ia/domain/aiState'
 import { EmptyState } from '../../../shared/components/EmptyState'
 import { useOperationalStore } from '../../../shared/store/operationalStore'
 import { FocusIndicator } from '../components/FocusIndicator'
+import { OperationalCarousel } from '../components/OperationalCarousel'
 import { OperationalRow } from '../components/OperationalRow'
 import { buildTodayProjection } from '../domain/todayProjection'
 
@@ -24,87 +26,84 @@ export function HojeScreen() {
   const busy = status === 'loading'
 
   return (
-    <section className="hoje-screen">
-      <header className="screen-header">
-        <div>
-          <small>Hoje</small>
-          <h1>Direcao operacional</h1>
-        </div>
-
-        <span className="quiet-status">Release 1</span>
-      </header>
-
-      <section className="day-cycle" aria-label="Ciclo do dia">
-        <div>
-          <strong>
+    <section className="hoje-screen fazer-territory">
+      <header className="fazer-header">
+        <div className="fazer-header__topline">
+          <nav className="fazer-tabs" aria-label="Fazer">
+            <NavLink to="/fazer/hoje">Hoje</NavLink>
+            <NavLink to="/fazer/timeline">Timeline</NavLink>
+          </nav>
+          <span className="day-state">
             {currentSession?.sessionStatus === 'closed'
               ? 'Dia fechado'
               : currentSession?.openedAt
                 ? 'Dia aberto'
-                : 'Dia ainda nao aberto'}
-          </strong>
-          <span>{currentSession?.attentionSummary ?? 'Sem leitura registrada'}</span>
+                : 'Dia por abrir'}
+          </span>
         </div>
 
-        <div className="day-cycle__actions">
-          <button type="button" disabled={busy} onClick={() => void openDay(today)}>
-            Abrir o Dia
-          </button>
-          <input
-            aria-label="Nota de fechamento"
-            placeholder="Nota curta de fechamento"
-            value={closingNote}
-            onChange={(event) => setClosingNote(event.target.value)}
-          />
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => {
-              void closeDay(today, closingNote)
-              setClosingNote('')
-            }}
-          >
-            Fechar o Dia
-          </button>
-        </div>
-      </section>
+        <div className="fazer-header__body">
+          <div>
+            <small>Fazer</small>
+            <h1>Pressao, direcao e proximo movimento</h1>
+            <p>{currentSession?.attentionSummary ?? 'Sem leitura registrada'}</p>
+          </div>
 
-      <section className="focus-strip" aria-label="Leituras">
-        <FocusIndicator label={projection.readings.direction.statement} />
-        <FocusIndicator label={projection.readings.direction.trajectory} />
-        <FocusIndicator
-          label={`Capacidade ${projection.readings.capacity.state}`}
-        />
-        <FocusIndicator label={projection.readings.dependencyRisk.summary} />
-      </section>
-
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Para fazer agora</h2>
-        </header>
-
-        <div className="surface-section__content">
-          {projection.now.length === 0 ? (
-            <EmptyState message="Nada puxado para agora; capture ou abra o dia quando houver contexto." />
-          ) : null}
-
-          {projection.now.map((item) => (
-            <OperationalRow
-              key={item.id}
-              title={item.title}
-              meta={item.sourceContext}
-              detail={projection.itemDetails[item.id]}
+          <div className="day-cycle-compact" aria-label="Ciclo do dia">
+            <button type="button" disabled={busy} onClick={() => void openDay(today)}>
+              Abrir o Dia
+            </button>
+            <input
+              aria-label="Nota de fechamento"
+              placeholder="Nota de fechamento"
+              value={closingNote}
+              onChange={(event) => setClosingNote(event.target.value)}
             />
-          ))}
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => {
+                void closeDay(today, closingNote)
+                setClosingNote('')
+              }}
+            >
+              Fechar
+            </button>
+          </div>
         </div>
+
+        <section className="operational-indicators" aria-label="Indicadores">
+          <FocusIndicator label={projection.readings.direction.statement} />
+          <FocusIndicator label={projection.readings.direction.trajectory} />
+          <FocusIndicator
+            label={`Capacidade ${projection.readings.capacity.state}`}
+          />
+          <FocusIndicator label={projection.readings.dependencyRisk.summary} />
+        </section>
+      </header>
+
+      <section className="now-stage" aria-label="Para fazer agora">
+        <div className="now-stage__header">
+          <span>Para fazer agora</span>
+          <strong>{projection.now.length}</strong>
+        </div>
+
+        {projection.now.length === 0 ? (
+          <EmptyState message="Nada puxado para agora; capture ou abra o dia quando houver contexto." />
+        ) : (
+          <OperationalCarousel
+            items={projection.now}
+            details={projection.itemDetails}
+          />
+        )}
       </section>
 
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Cabe hoje</h2>
-        </header>
-
-        <div className="surface-section__content">
+      <details className="today-secondary" open>
+        <summary>
+          <span>Cabe hoje</span>
+          <strong>{projection.later.length}</strong>
+        </summary>
+        <div className="today-secondary__grid">
           {projection.later.length === 0 ? (
             <EmptyState message="Nenhum item qualificado para depois hoje." />
           ) : null}
@@ -116,17 +115,19 @@ export function HojeScreen() {
               meta={item.sourceContext}
               detail={projection.itemDetails[item.id]}
               state={item.status === 'paused' ? 'paused' : 'default'}
+              size="compact"
             />
           ))}
         </div>
-      </section>
+      </details>
 
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Atencao</h2>
-        </header>
+      <section className="attention-layer" aria-label="Atenção">
+        <div className="attention-layer__header">
+          <span>Atencao</span>
+          <strong>{projection.attention.length}</strong>
+        </div>
 
-        <div className="surface-section__content">
+        <div className="attention-layer__content">
           {projection.attention.length === 0 ? (
             <EmptyState message="Sem riscos ou informacoes incompletas pedindo atencao." />
           ) : null}
@@ -138,20 +139,9 @@ export function HojeScreen() {
               meta={item.dateStart ?? item.sourceContext}
               detail="Risco operacional, dependencia ou informacao incompleta"
               state="attention"
+              size="compact"
             />
           ))}
-        </div>
-      </section>
-
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Bloqueados e pausados</h2>
-        </header>
-
-        <div className="surface-section__content">
-          {projection.blocked.length === 0 && projection.paused.length === 0 ? (
-            <EmptyState message="Nenhum bloqueio ou pausa ativa no fluxo de hoje." />
-          ) : null}
 
           {projection.blocked.map((item) => (
             <OperationalRow
@@ -160,38 +150,7 @@ export function HojeScreen() {
               meta={item.sourceContext}
               detail={projection.itemDetails[item.id]}
               state="blocked"
-            />
-          ))}
-
-          {projection.paused.map((item) => (
-            <OperationalRow
-              key={item.id}
-              title={item.title}
-              meta={item.sourceContext}
-              detail={projection.itemDetails[item.id]}
-              state="paused"
-            />
-          ))}
-        </div>
-      </section>
-
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Concluidos recentes</h2>
-        </header>
-
-        <div className="surface-section__content">
-          {projection.completed.length === 0 ? (
-            <EmptyState message="Nenhum item concluido recente para recuperacao contextual." />
-          ) : null}
-
-          {projection.completed.map((item) => (
-            <OperationalRow
-              key={item.id}
-              title={item.title}
-              meta={item.completedAt}
-              detail={projection.itemDetails[item.id]}
-              state="completed"
+              size="compact"
             />
           ))}
         </div>

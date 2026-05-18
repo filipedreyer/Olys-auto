@@ -1,5 +1,6 @@
-import { PropsWithChildren } from 'react'
-import { NavLink } from 'react-router-dom'
+import { PropsWithChildren, useEffect, useState } from 'react'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { CaptureSheet } from '../../features/capturar/components/CaptureSheet'
 import { AuthStatusControl } from '../../shared/auth/AuthStatusControl'
 import { useOperationalStore } from '../../shared/store/operationalStore'
 
@@ -10,14 +11,22 @@ const primaryNav = [
 ]
 
 const actionNav = [
-  { to: '/capturar', label: 'Capturar' },
   { to: '/memoria/inbox', label: 'Inbox' },
-  { to: '/fazer/timeline', label: 'Timeline' },
 ]
 
 export function AppShell({ children }: PropsWithChildren) {
+  const [captureOpen, setCaptureOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
   const storeStatus = useOperationalStore((state) => state.status)
   const error = useOperationalStore((state) => state.error)
+
+  useEffect(() => {
+    if (location.pathname === '/capturar') {
+      setCaptureOpen(true)
+      navigate('/fazer/hoje', { replace: true })
+    }
+  }, [location.pathname, navigate])
 
   return (
     <div className="app-shell">
@@ -27,6 +36,13 @@ export function AppShell({ children }: PropsWithChildren) {
         </NavLink>
 
         <nav className="topbar__actions" aria-label="Acoes globais">
+          <button
+            className="topbar__capture"
+            type="button"
+            onClick={() => setCaptureOpen(true)}
+          >
+            Capturar
+          </button>
           {actionNav.map((item) => (
             <NavLink key={item.to} to={item.to}>
               {item.label}
@@ -59,6 +75,17 @@ export function AppShell({ children }: PropsWithChildren) {
           </NavLink>
         ))}
       </nav>
+
+      <button
+        className="capture-fab"
+        type="button"
+        aria-label="Abrir captura"
+        onClick={() => setCaptureOpen(true)}
+      >
+        Capturar
+      </button>
+
+      <CaptureSheet open={captureOpen} onClose={() => setCaptureOpen(false)} />
     </div>
   )
 }

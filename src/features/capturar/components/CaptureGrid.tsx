@@ -15,10 +15,11 @@ export function CaptureGrid({ selected, onSelect }: CaptureGridProps) {
         <button
           key={destination.id}
           type="button"
-          className="capture-chip"
+          className={`capture-grid__cell capture-grid__cell--${destination.id}`}
           aria-pressed={selected === destination.id}
           onClick={() => onSelect(destination.id)}
         >
+          <span>{destination.id === 'inbox' ? 'Entrada' : 'Destino'}</span>
           {destination.label}
         </button>
       ))}

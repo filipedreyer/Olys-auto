@@ -5,6 +5,7 @@ type OperationalRowProps = {
   meta?: string
   detail?: string
   state?: OperationalRowState
+  size?: 'regular' | 'featured' | 'secondary' | 'tertiary' | 'compact'
 }
 
 export function OperationalRow({
@@ -12,9 +13,12 @@ export function OperationalRow({
   meta,
   detail,
   state = 'default',
+  size = 'regular',
 }: OperationalRowProps) {
   return (
-    <article className={`operational-row operational-row--${state}`}>
+    <article
+      className={`operational-row operational-row--${state} operational-row--${size}`}
+    >
       <div className="operational-row__indicator" />
 
       <div className="operational-row__content">

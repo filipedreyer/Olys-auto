@@ -29,15 +29,16 @@ export type ResolvedCaptureTarget =
 export const captureDestinations: CaptureDestination[] = [
   { id: 'inbox', label: 'Inbox' },
   { id: 'goal', label: 'Meta', entityType: 'goal' },
-  { id: 'task', label: 'Tarefa', entityType: 'task' },
-  { id: 'note', label: 'Nota', entityType: 'note' },
   { id: 'project', label: 'Projeto', entityType: 'project' },
-  { id: 'reminder', label: 'Lembrete', entityType: 'reminder' },
+  { id: 'task', label: 'Tarefa', entityType: 'task' },
+  { id: 'agenda', label: 'Agenda', entityType: 'agenda' },
+  { id: 'note', label: 'Nota', entityType: 'note' },
   { id: 'list', label: 'Lista', entityType: 'list' },
   { id: 'habit', label: 'Habito', entityType: 'habit' },
   { id: 'routine', label: 'Rotina', entityType: 'routine' },
+  { id: 'template', label: 'Template', entityType: 'template' },
   { id: 'event', label: 'Evento', entityType: 'event' },
-  { id: 'agenda', label: 'Agenda', entityType: 'agenda' },
+  { id: 'reminder', label: 'Lembrete', entityType: 'reminder' },
 ]
 
 export function resolveCaptureTarget(
