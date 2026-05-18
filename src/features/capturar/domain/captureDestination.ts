@@ -28,6 +28,7 @@ export type ResolvedCaptureTarget =
 
 export const captureDestinations: CaptureDestination[] = [
   { id: 'inbox', label: 'Inbox' },
+  { id: 'goal', label: 'Meta', entityType: 'goal' },
   { id: 'task', label: 'Tarefa', entityType: 'task' },
   { id: 'note', label: 'Nota', entityType: 'note' },
   { id: 'project', label: 'Projeto', entityType: 'project' },

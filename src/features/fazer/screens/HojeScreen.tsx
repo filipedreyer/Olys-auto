@@ -67,6 +67,7 @@ export function HojeScreen() {
 
       <section className="focus-strip" aria-label="Leituras">
         <FocusIndicator label={projection.readings.direction.statement} />
+        <FocusIndicator label={projection.readings.direction.trajectory} />
         <FocusIndicator
           label={`Capacidade ${projection.readings.capacity.state}`}
         />

@@ -11,6 +11,11 @@ export type EntityType =
   | 'list'
   | 'template'
 
+export type GoalItem = OlysItem & { entityType: 'goal' }
+export type ProjectItem = OlysItem & { entityType: 'project' }
+export type HabitItem = OlysItem & { entityType: 'habit' }
+export type RoutineItem = OlysItem & { entityType: 'routine' }
+
 export const ENTITY_TYPES = [
   'goal',
   'project',
@@ -23,6 +28,13 @@ export const ENTITY_TYPES = [
   'note',
   'list',
   'template',
+] as const satisfies readonly EntityType[]
+
+export const DIRECTIONAL_ENTITY_TYPES = [
+  'goal',
+  'project',
+  'habit',
+  'routine',
 ] as const satisfies readonly EntityType[]
 
 export type ItemStatus =
