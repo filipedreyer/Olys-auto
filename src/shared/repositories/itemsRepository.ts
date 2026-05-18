@@ -66,24 +66,4 @@ export const itemsRepository = {
     }
   },
 
-  async replaceAll(userId: string, items: OlysItem[]) {
-    const userItems = items.filter((item) => item.userId === userId)
-    const supabase = getSupabaseClient()
-
-    if (!supabase) {
-      replaceLocalState({
-        items: [
-          ...userItems,
-          ...getLocalState().items.filter((item) => item.userId !== userId),
-        ],
-      })
-      return
-    }
-
-    const { error } = await supabase.from('items').upsert(userItems.map(mapItemToRow))
-
-    if (error) {
-      throw error
-    }
-  },
 }

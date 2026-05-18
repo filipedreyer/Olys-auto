@@ -8,6 +8,7 @@ import {
 import {
   DailySession,
   DependencyEdge,
+  EntityChangeEvent,
   EntityCondition,
   EntityLink,
   InboxItem,
@@ -21,6 +22,7 @@ type LocalPersistenceState = {
   links: EntityLink[]
   dependencies: DependencyEdge[]
   dailySessions: DailySession[]
+  entityChangeEvents: EntityChangeEvent[]
 }
 
 const localState: LocalPersistenceState = {
@@ -30,6 +32,7 @@ const localState: LocalPersistenceState = {
   links: [...seedEntityLinks],
   dependencies: [...seedDependencyEdges],
   dailySessions: [],
+  entityChangeEvents: [],
 }
 
 export function getLocalState() {

@@ -71,30 +71,4 @@ export const conditionsRepository = {
     }
   },
 
-  async replaceAll(userId: string, conditions: EntityCondition[]) {
-    const userConditions = conditions.filter(
-      (condition) => condition.userId === userId,
-    )
-    const supabase = getSupabaseClient()
-
-    if (!supabase) {
-      replaceLocalState({
-        conditions: [
-          ...userConditions,
-          ...getLocalState().conditions.filter(
-            (condition) => condition.userId !== userId,
-          ),
-        ],
-      })
-      return
-    }
-
-    const { error } = await supabase
-      .from('entity_conditions')
-      .upsert(userConditions.map(mapConditionToRow))
-
-    if (error) {
-      throw error
-    }
-  },
 }

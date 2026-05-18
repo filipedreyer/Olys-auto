@@ -68,26 +68,4 @@ export const dependenciesRepository = {
     }
   },
 
-  async replaceAll(userId: string, dependencies: DependencyEdge[]) {
-    const userDependencies = dependencies.filter((edge) => edge.userId === userId)
-    const supabase = getSupabaseClient()
-
-    if (!supabase) {
-      replaceLocalState({
-        dependencies: [
-          ...userDependencies,
-          ...getLocalState().dependencies.filter((edge) => edge.userId !== userId),
-        ],
-      })
-      return
-    }
-
-    const { error } = await supabase
-      .from('dependency_edges')
-      .upsert(userDependencies.map(mapDependencyToRow))
-
-    if (error) {
-      throw error
-    }
-  },
 }

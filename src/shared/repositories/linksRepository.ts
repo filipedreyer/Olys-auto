@@ -68,26 +68,4 @@ export const linksRepository = {
     }
   },
 
-  async replaceAll(userId: string, links: EntityLink[]) {
-    const userLinks = links.filter((link) => link.userId === userId)
-    const supabase = getSupabaseClient()
-
-    if (!supabase) {
-      replaceLocalState({
-        links: [
-          ...userLinks,
-          ...getLocalState().links.filter((link) => link.userId !== userId),
-        ],
-      })
-      return
-    }
-
-    const { error } = await supabase
-      .from('entity_links')
-      .upsert(userLinks.map(mapLinkToRow))
-
-    if (error) {
-      throw error
-    }
-  },
 }

@@ -4,6 +4,7 @@ import {
   DependencySource,
   DependencyStatus,
   DependencyType,
+  EntityChangeEvent,
   EntityCondition,
   EntityLink,
   EntityType,
@@ -220,6 +221,32 @@ export function mapDailySessionToRow(session: DailySession) {
     closing_note: session.closingNote,
     created_at: session.createdAt,
     updated_at: session.updatedAt,
+  }
+}
+
+export function mapEntityChangeEventFromRow(row: Row): EntityChangeEvent {
+  return {
+    id: String(row.id),
+    userId: String(row.user_id),
+    entityId: optionalString(row.entity_id),
+    changeType: String(row.change_type),
+    sourceContext: String(row.source_context),
+    actor: row.actor as EntityChangeEvent['actor'],
+    createdAt: String(row.created_at),
+    metadata: asMetadata(row.metadata),
+  }
+}
+
+export function mapEntityChangeEventToRow(event: EntityChangeEvent) {
+  return {
+    id: event.id,
+    user_id: event.userId,
+    entity_id: event.entityId,
+    change_type: event.changeType,
+    source_context: event.sourceContext,
+    actor: event.actor,
+    metadata: event.metadata ?? {},
+    created_at: event.createdAt,
   }
 }
 
