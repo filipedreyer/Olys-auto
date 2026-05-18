@@ -7,7 +7,7 @@ import {
 } from '../entities/types'
 
 const nowIso = () => new Date().toISOString()
-const id = (prefix: string) => `${prefix}-${crypto.randomUUID()}`
+const id = () => crypto.randomUUID()
 
 export type CreateItemInput = {
   userId: string
@@ -34,7 +34,7 @@ export function createItem(items: OlysItem[], input: CreateItemInput): OlysItem[
 
   return [
     {
-      id: id('item'),
+      id: id(),
       userId: input.userId,
       entityType: input.entityType,
       title,
@@ -129,7 +129,7 @@ export function applyEssentialProtected(
 
   return [
     {
-      id: id('condition'),
+      id: id(),
       userId: item.userId,
       entityId: item.id,
       conditionType: 'essential_protected',
@@ -162,7 +162,7 @@ export function createEntityChangeEvent(
   entityId?: string,
 ): EntityChangeEvent {
   return {
-    id: id('change'),
+    id: id(),
     userId,
     entityId,
     changeType,

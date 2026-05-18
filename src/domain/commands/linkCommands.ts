@@ -1,7 +1,7 @@
 import { EntityLink, LinkType } from '../entities/types'
 
 const nowIso = () => new Date().toISOString()
-const id = (prefix: string) => `${prefix}-${crypto.randomUUID()}`
+const id = () => crypto.randomUUID()
 
 export function createLink(
   links: EntityLink[],
@@ -18,7 +18,7 @@ export function createLink(
 
   return [
     {
-      id: id('link'),
+      id: id(),
       userId: input.userId,
       sourceEntityId: input.sourceEntityId,
       targetEntityId: input.targetEntityId,

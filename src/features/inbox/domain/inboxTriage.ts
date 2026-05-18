@@ -13,7 +13,7 @@ type InboxTriageInput = {
 }
 
 const nowIso = () => new Date().toISOString()
-const id = (prefix: string) => `${prefix}-${crypto.randomUUID()}`
+const id = () => crypto.randomUUID()
 
 export function createInboxItem(
   inboxItems: InboxItem[],
@@ -29,7 +29,7 @@ export function createInboxItem(
 
   return [
     {
-      id: id('inbox'),
+      id: id(),
       userId: input.userId,
       text,
       status: 'new',
@@ -56,7 +56,7 @@ export function applyInboxTriage(
   if (input.action === 'convert') {
     const createdAt = nowIso()
     const convertedItem: OlysItem = {
-      id: id('item'),
+      id: id(),
       userId: inboxItem.userId,
       entityType: input.targetType ?? 'task',
       title: inboxItem.text,

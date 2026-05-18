@@ -6,7 +6,7 @@ import {
 } from '../entities/types'
 
 const nowIso = () => new Date().toISOString()
-const id = (prefix: string) => `${prefix}-${crypto.randomUUID()}`
+const id = () => crypto.randomUUID()
 
 type CreateDependencyInput = {
   userId: string
@@ -63,7 +63,7 @@ export function createDependency(
   return {
     edges: [
       {
-        id: id('dependency'),
+        id: id(),
         userId: input.userId,
         predecessorId: input.predecessorId,
         successorId: input.successorId,

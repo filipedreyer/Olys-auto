@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { NavLink } from 'react-router-dom'
+import { AuthStatusControl } from '../../shared/auth/AuthStatusControl'
 
 const primaryNav = [
   { to: '/fazer/hoje', label: 'Fazer' },
@@ -27,6 +28,7 @@ export function AppShell({ children }: PropsWithChildren) {
               {item.label}
             </NavLink>
           ))}
+          <AuthStatusControl />
         </nav>
       </header>
 

@@ -5,6 +5,7 @@ import { TimelineScreen } from '../../features/fazer/screens/TimelineScreen'
 import { InboxScreen } from '../../features/inbox/screens/InboxScreen'
 import { MemoriaScreen } from '../../features/memoria/screens/MemoriaScreen'
 import { PlanejarScreen } from '../../features/planejar/screens/PlanejarScreen'
+import { LoginScreen } from '../../shared/auth/LoginScreen'
 
 export function AppRouter() {
   return (
@@ -17,6 +18,7 @@ export function AppRouter() {
       <Route path="/memoria/inbox" element={<InboxScreen />} />
       <Route path="/planejar" element={<PlanejarScreen />} />
       <Route path="/memoria" element={<MemoriaScreen />} />
+      <Route path="/login" element={<LoginScreen />} />
 
       <Route path="/hoje" element={<Navigate to="/fazer/hoje" replace />} />
       <Route path="/timeline" element={<Navigate to="/fazer/timeline" replace />} />

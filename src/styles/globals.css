@@ -47,6 +47,7 @@ body {
 }
 
 button,
+input,
 textarea {
   font: inherit;
 }
@@ -104,6 +105,7 @@ textarea {
 }
 
 .topbar__actions a,
+.auth-status,
 .bottom-nav a {
   min-height: 40px;
   display: inline-flex;
@@ -121,7 +123,16 @@ textarea {
   font-size: 0.9rem;
 }
 
+.auth-status {
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
 .topbar__actions a.active,
+.auth-status.active,
 .bottom-nav a.active {
   color: var(--text-primary);
   background: var(--surface-raised);
@@ -161,7 +172,8 @@ main {
 .capturar-screen,
 .inbox-screen,
 .planejar-screen,
-.memoria-screen {
+.memoria-screen,
+.auth-screen {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -342,6 +354,34 @@ main {
   padding: var(--space-4);
   background: var(--surface);
   color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.auth-form {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 420px;
+}
+
+.auth-form label {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.auth-form input {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-primary);
+  padding: 0 var(--space-3);
+}
+
+.auth-form__error {
+  margin: 0;
+  color: var(--danger);
   line-height: 1.5;
 }
 

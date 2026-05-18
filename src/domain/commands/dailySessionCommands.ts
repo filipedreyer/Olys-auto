@@ -1,7 +1,7 @@
 import { DailySession } from '../entities/types'
 
 const nowIso = () => new Date().toISOString()
-const id = (prefix: string) => `${prefix}-${crypto.randomUUID()}`
+const id = () => crypto.randomUUID()
 
 export function openDay(
   sessions: DailySession[],
@@ -27,7 +27,7 @@ export function openDay(
 
   return [
     {
-      id: id('day'),
+      id: id(),
       userId: input.userId,
       date: input.date,
       openedAt: createdAt,

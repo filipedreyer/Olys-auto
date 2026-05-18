@@ -51,7 +51,7 @@ export type OperationalSnapshot = Awaited<ReturnType<typeof loadOperationalSnaps
 type PersistedEntity = { id: string; userId: string }
 
 const nowIso = () => new Date().toISOString()
-const id = (prefix: string) => `${prefix}-${crypto.randomUUID()}`
+const id = () => crypto.randomUUID()
 
 export async function loadOperationalSnapshot(userId: string) {
   const [items, inboxItems, conditions, links, dependencies, dailySessions] =
@@ -557,7 +557,7 @@ function buildChangeEvent(input: {
   metadata?: Record<string, unknown>
 }): EntityChangeEvent {
   return {
-    id: id('change'),
+    id: id(),
     userId: input.userId,
     entityId: input.entityId,
     changeType: input.changeType,
