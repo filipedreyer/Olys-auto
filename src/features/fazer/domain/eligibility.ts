@@ -8,6 +8,14 @@ export function isOperationallyActive(item: OlysItem) {
   return item.status === 'active'
 }
 
+export function isPaused(item: OlysItem) {
+  return item.status === 'paused'
+}
+
+export function isCompleted(item: OlysItem) {
+  return item.status === 'completed'
+}
+
 export function hasActiveCondition(
   conditions: EntityCondition[],
   entityId: string,
@@ -32,7 +40,11 @@ export function isBlocked(
   }
 
   return dependencies.some((edge) => {
-    if (edge.status !== 'active' || edge.successorId !== item.id) {
+    if (
+      edge.status !== 'active' ||
+      edge.successorId !== item.id ||
+      edge.removedAt
+    ) {
       return false
     }
 
@@ -52,6 +64,19 @@ export function isEligibleForNow(
     isOperationallyActive(item) &&
     !isBlocked(item, conditions, dependencies, items) &&
     (isInTodayUniverse(item, conditions, dependencies) || item.priority === 3)
+  )
+}
+
+export function isEligibleForLater(
+  item: OlysItem,
+  conditions: EntityCondition[],
+  dependencies: DependencyEdge[],
+  items: OlysItem[],
+) {
+  return (
+    isOperationallyActive(item) &&
+    !isBlocked(item, conditions, dependencies, items) &&
+    isInTodayUniverse(item, conditions, dependencies)
   )
 }
 
@@ -79,7 +104,8 @@ function isInTodayUniverse(
     Boolean(item.dateStart) ||
     hasActiveCondition(conditions, item.id, 'essential_protected') ||
     dependencies.some(
-      (edge) => edge.predecessorId === item.id && edge.status === 'active',
+      (edge) =>
+        edge.predecessorId === item.id && edge.status === 'active' && !edge.removedAt,
     ) ||
     item.entityType === 'habit' ||
     item.entityType === 'routine'

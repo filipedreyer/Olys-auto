@@ -11,6 +11,20 @@ export type EntityType =
   | 'list'
   | 'template'
 
+export const ENTITY_TYPES = [
+  'goal',
+  'project',
+  'task',
+  'habit',
+  'routine',
+  'agenda',
+  'event',
+  'reminder',
+  'note',
+  'list',
+  'template',
+] as const satisfies readonly EntityType[]
+
 export type ItemStatus =
   | 'active'
   | 'paused'
@@ -32,6 +46,13 @@ export type ConditionType =
 
 export type DependencyType = 'blocks' | 'precedes' | 'requires' | 'enables'
 
+export const DEPENDENCY_TYPES = [
+  'blocks',
+  'precedes',
+  'requires',
+  'enables',
+] as const satisfies readonly DependencyType[]
+
 export type DependencyStatus =
   | 'active'
   | 'candidate'
@@ -47,6 +68,14 @@ export type LinkType =
   | 'references'
   | 'derived_from'
 
+export const LINK_TYPES = [
+  'relates_to',
+  'supports',
+  'belongs_to',
+  'references',
+  'derived_from',
+] as const satisfies readonly LinkType[]
+
 export type InboxStatus =
   | 'new'
   | 'kept'
@@ -57,7 +86,13 @@ export type InboxStatus =
   | 'archived'
   | 'error'
 
-export type TodayLane = 'now' | 'fits_today' | 'attention' | 'completed'
+export type TodayLane =
+  | 'now'
+  | 'later'
+  | 'attention'
+  | 'blocked'
+  | 'paused'
+  | 'completed'
 
 export type CapacityState =
   | 'fits'

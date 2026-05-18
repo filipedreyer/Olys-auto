@@ -7,11 +7,20 @@ import { hasActiveCondition } from './eligibility'
 
 const WEEKDAY_CAPACITY_MINUTES = 360
 
+export type CapacityConfidence =
+  | 'known'
+  | 'partial'
+  | 'unknown'
+  | 'inferred_low_confidence'
+
 export type CapacityReading = {
   state: CapacityState
+  confidence: CapacityConfidence
+  qualitativeLoad: string
   availableMinutes: number
   committedMinutes: number
   unknownLoadCount: number
+  inferredLoadCount: number
   signals: string[]
 }
 
@@ -20,16 +29,24 @@ export function buildCapacityReading(
   conditions: EntityCondition[] = [],
 ): CapacityReading {
   const activeItems = items.filter((item) => item.status === 'active')
-  const committedMinutes = activeItems.reduce((total, item) => {
-    return total + getCommittedMinutes(item)
+  const loadEntries = activeItems.map(getCommittedLoad)
+  const committedMinutes = loadEntries.reduce((total, entry) => {
+    return total + entry.minutes
   }, 0)
-  const unknownLoadCount = activeItems.filter((item) => {
-    return getCommittedMinutes(item) === 0 && typeof item.durationMinutes !== 'number'
-  }).length
+  const unknownLoadCount = loadEntries.filter(
+    (entry) => entry.source === 'unknown',
+  ).length
+  const inferredLoadCount = loadEntries.filter(
+    (entry) => entry.source === 'inferred_low_confidence',
+  ).length
   const signals: string[] = []
 
   if (unknownLoadCount > 0) {
     signals.push(`${unknownLoadCount} item(ns) com carga unknown`)
+  }
+
+  if (inferredLoadCount > 0) {
+    signals.push(`${inferredLoadCount} item(ns) com carga inferida de janela`)
   }
 
   if (
@@ -42,16 +59,29 @@ export function buildCapacityReading(
 
   return {
     state: resolveCapacityState(committedMinutes, unknownLoadCount),
+    confidence: resolveCapacityConfidence(unknownLoadCount, inferredLoadCount),
+    qualitativeLoad: describeQualitativeLoad(
+      committedMinutes,
+      unknownLoadCount,
+      inferredLoadCount,
+    ),
     availableMinutes: WEEKDAY_CAPACITY_MINUTES,
     committedMinutes,
     unknownLoadCount,
+    inferredLoadCount,
     signals,
   }
 }
 
-function getCommittedMinutes(item: OlysItem) {
+function getCommittedLoad(item: OlysItem): {
+  minutes: number
+  source: 'declared' | 'inferred_low_confidence' | 'unknown'
+} {
   if (typeof item.durationMinutes === 'number') {
-    return item.durationMinutes
+    return {
+      minutes: item.durationMinutes,
+      source: 'declared',
+    }
   }
 
   if (item.startAt && item.endAt) {
@@ -59,11 +89,17 @@ function getCommittedMinutes(item: OlysItem) {
     const end = new Date(item.endAt).getTime()
 
     if (Number.isFinite(start) && Number.isFinite(end) && end > start) {
-      return Math.round((end - start) / 60000)
+      return {
+        minutes: Math.round((end - start) / 60000),
+        source: 'inferred_low_confidence',
+      }
     }
   }
 
-  return 0
+  return {
+    minutes: 0,
+    source: 'unknown',
+  }
 }
 
 function resolveCapacityState(
@@ -91,4 +127,47 @@ function resolveCapacityState(
   }
 
   return 'fits'
+}
+
+function resolveCapacityConfidence(
+  unknownLoadCount: number,
+  inferredLoadCount: number,
+): CapacityConfidence {
+  if (unknownLoadCount > 0 && inferredLoadCount === 0) {
+    return 'unknown'
+  }
+
+  if (unknownLoadCount > 0) {
+    return 'partial'
+  }
+
+  if (inferredLoadCount > 0) {
+    return 'inferred_low_confidence'
+  }
+
+  return 'known'
+}
+
+function describeQualitativeLoad(
+  committedMinutes: number,
+  unknownLoadCount: number,
+  inferredLoadCount: number,
+) {
+  if (unknownLoadCount > 0 && committedMinutes === 0) {
+    return 'Carga qualitativa unknown; nenhuma duracao foi inventada'
+  }
+
+  if (unknownLoadCount > 0 || inferredLoadCount > 0) {
+    return 'Leitura parcial; itens sem duracao permanecem unknown'
+  }
+
+  if (committedMinutes > WEEKDAY_CAPACITY_MINUTES) {
+    return 'Capacidade declarada excedida'
+  }
+
+  if (committedMinutes > WEEKDAY_CAPACITY_MINUTES * 0.85) {
+    return 'Capacidade declarada perto do limite'
+  }
+
+  return 'Capacidade declarada sustentavel'
 }

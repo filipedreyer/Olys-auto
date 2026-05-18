@@ -44,16 +44,7 @@ export function HojeScreen() {
               key={item.id}
               title={item.title}
               meta={item.sourceContext}
-              detail={
-                conditions.some(
-                  (condition) =>
-                    condition.entityId === item.id &&
-                    condition.conditionType === 'essential_protected' &&
-                    !condition.removedAt,
-                )
-                  ? 'Essencial Protegido como condicao'
-                  : item.dateStart
-              }
+              detail={projection.itemDetails[item.id]}
             />
           ))}
         </div>
@@ -65,16 +56,12 @@ export function HojeScreen() {
         </header>
 
         <div className="surface-section__content">
-          {projection.fitsToday.map((item) => (
+          {projection.later.map((item) => (
             <OperationalRow
               key={item.id}
               title={item.title}
               meta={item.sourceContext}
-              detail={
-                typeof item.durationMinutes === 'number'
-                  ? `${item.durationMinutes} min declarados`
-                  : 'Duracao unknown'
-              }
+              detail={projection.itemDetails[item.id]}
               state={item.status === 'paused' ? 'paused' : 'default'}
             />
           ))}
