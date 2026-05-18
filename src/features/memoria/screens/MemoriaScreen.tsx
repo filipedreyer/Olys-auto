@@ -1,4 +1,5 @@
 import { useOperationalStore } from '../../../shared/store/operationalStore'
+import { EmptyState } from '../../../shared/components/EmptyState'
 import { OperationalRow } from '../../fazer/components/OperationalRow'
 import { buildMemoryProjection } from '../domain/memoryProjection'
 
@@ -39,6 +40,10 @@ export function MemoriaScreen() {
         </header>
 
         <div className="surface-section__content">
+          {projection.recovery.length === 0 ? (
+            <EmptyState message="Nada recuperavel ainda; a Memoria cresce pelo ciclo de vida real." />
+          ) : null}
+
           {projection.recovery.map((item) => (
             <article key={item.id} className="triage-row">
               <OperationalRow
@@ -62,6 +67,10 @@ export function MemoriaScreen() {
         </header>
 
         <div className="surface-section__content">
+          {projection.caixola.length === 0 ? (
+            <EmptyState message="Nenhum fragmento ou nota solta em espera." />
+          ) : null}
+
           {projection.caixola.map((item) => (
             <OperationalRow
               key={item.id}
@@ -79,6 +88,10 @@ export function MemoriaScreen() {
         </header>
 
         <div className="surface-section__content">
+          {projection.templates.length === 0 ? (
+            <EmptyState message="Nenhum template reutilizavel neste momento." />
+          ) : null}
+
           {projection.templates.map((item) => (
             <article key={item.id} className="triage-row">
               <OperationalRow

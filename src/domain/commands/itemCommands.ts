@@ -94,6 +94,7 @@ export function restoreItem(items: OlysItem[], idToRestore: string): OlysItem[] 
   return updateItem(items, idToRestore, {
     status: 'active',
     archivedAt: undefined,
+    completedAt: undefined,
     deletedAt: undefined,
   })
 }

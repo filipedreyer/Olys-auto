@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { EmptyState } from '../../../shared/components/EmptyState'
 import { useOperationalStore } from '../../../shared/store/operationalStore'
 import { OperationalRow } from '../components/OperationalRow'
 import { TimelineLensSwitcher } from '../components/TimelineLensSwitcher'
@@ -40,6 +41,10 @@ export function TimelineScreen() {
 
       <section className="surface-section">
         <div className="surface-section__content">
+          {projection.entries.length === 0 ? (
+            <EmptyState message="Nada nesta lens; a Timeline permanece como leitura operacional, nao calendario vazio." />
+          ) : null}
+
           {projection.entries.map((entry) => (
             <OperationalRow
               key={entry.id}

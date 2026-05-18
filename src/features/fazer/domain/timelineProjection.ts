@@ -59,7 +59,7 @@ function buildTimelineTitle(activeLens: TimelineLens) {
     return 'Bloqueios, impacto e sequencia'
   }
 
-  return 'Continuidade contextual'
+  return 'Calendario operacional'
 }
 
 function buildEntries(

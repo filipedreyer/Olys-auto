@@ -295,6 +295,16 @@ main {
   line-height: 1.5;
 }
 
+.surface-empty {
+  margin: 0;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  line-height: 1.45;
+}
+
 .operational-row {
   min-height: 78px;
   display: grid;

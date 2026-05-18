@@ -104,7 +104,5 @@ function buildTrajectory(input: {
     parts.push(`${input.habits + input.routines} ritmo(s) operacional(is)`)
   }
 
-  return parts.length > 0
-    ? parts.join(' · ')
-    : 'Sem horizonte medio conectado'
+  return parts.length > 0 ? parts.join(' - ') : 'Sem horizonte medio conectado'
 }

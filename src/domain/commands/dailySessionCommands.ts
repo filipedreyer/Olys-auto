@@ -19,6 +19,10 @@ export function openDay(
   )
 
   if (existing) {
+    if (existing.closedAt) {
+      return sessions
+    }
+
     return sessions.map((session) =>
       session.id === existing.id
         ? {

@@ -169,6 +169,26 @@ describe('P7 operational memory', () => {
     )
   })
 
+  it('restores completed context without stale completion state', async () => {
+    const userId = scopedUser()
+    let snapshot = await createItem({
+      userId,
+      entityType: 'task',
+      title: 'Concluido a recuperar',
+      durationMinutes: null,
+    })
+    const item = snapshot.items[0]
+
+    snapshot = await completeItem(userId, item.id)
+    expect(snapshot.items.find((candidate) => candidate.id === item.id)?.completedAt).toBeTruthy()
+
+    snapshot = await restoreItem(userId, item.id)
+    const restored = snapshot.items.find((candidate) => candidate.id === item.id)
+
+    expect(restored).toMatchObject({ status: 'active' })
+    expect(restored?.completedAt).toBeUndefined()
+  })
+
   it('keeps UI out of Supabase and memory domain decisions', () => {
     const uiSource = readSourceFiles(['features/memoria/screens'])
 

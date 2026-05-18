@@ -161,6 +161,27 @@ describe('P4 capture and inbox flow', () => {
     expect(projection.readings.pending).toBe(0)
   })
 
+  it('separates kept and postponed entries from active Inbox triage', async () => {
+    const userId = scopedUser()
+    let snapshot = await captureInput({ userId, title: 'Manter para revisita' })
+    const keptId = snapshot.inboxItems[0].id
+    snapshot = await captureInput({ userId, title: 'Adiar para revisita' })
+    const postponedId = snapshot.inboxItems[0].id
+
+    snapshot = await triageInboxItem(userId, keptId, 'keep')
+    snapshot = await postponeInboxItem(userId, postponedId)
+
+    const projection = buildInboxProjection(snapshot.inboxItems)
+
+    expect(projection.readings.pending).toBe(0)
+    expect(projection.readings.revisit).toBe(2)
+    expect(projection.triageItems).toHaveLength(0)
+    expect(projection.revisitItems.map((item) => item.id)).toEqual(
+      expect.arrayContaining([keptId, postponedId]),
+    )
+    expect(projection.readings.statement).toContain('revisita controlada')
+  })
+
   it('keeps UI away from Supabase and domain decisions', () => {
     const uiSource = readSourceFiles([
       'features/capturar/components',

@@ -1,4 +1,5 @@
 import { useOperationalStore } from '../../../shared/store/operationalStore'
+import { EmptyState } from '../../../shared/components/EmptyState'
 import { OperationalRow } from '../../fazer/components/OperationalRow'
 import { buildPlanningProjection } from '../domain/planningProjection'
 
@@ -30,6 +31,10 @@ export function PlanejarScreen() {
         </header>
 
         <div className="surface-section__content">
+          {projection.goals.length === 0 ? (
+            <EmptyState message="Nenhuma meta ativa orientando o Fazer agora." />
+          ) : null}
+
           {projection.goals.map((goal) => (
             <OperationalRow
               key={goal.id}
@@ -47,6 +52,10 @@ export function PlanejarScreen() {
         </header>
 
         <div className="surface-section__content">
+          {projection.projects.length === 0 ? (
+            <EmptyState message="Nenhum projeto ativo conectado a execucao." />
+          ) : null}
+
           {projection.projects.map((project) => (
             <OperationalRow
               key={project.id}
@@ -65,6 +74,10 @@ export function PlanejarScreen() {
         </header>
 
         <div className="surface-section__content">
+          {projection.rhythms.length === 0 ? (
+            <EmptyState message="Nenhum habito ou rotina ativo como ritmo contextual." />
+          ) : null}
+
           {projection.rhythms.map((rhythm) => (
             <OperationalRow
               key={rhythm.id}

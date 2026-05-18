@@ -72,6 +72,24 @@ describe('P5 daily cycle and timeline', () => {
     )
   })
 
+  it('does not reopen or emit a new opening event for an already closed day', async () => {
+    const userId = scopedUser()
+    let snapshot = await openDay(userId, '2026-05-19')
+    snapshot = await closeDay(userId, '2026-05-19', 'Fechado')
+    const closed = snapshot.dailySessions.find(
+      (session) => session.date === '2026-05-19',
+    )!
+
+    snapshot = await openDay(userId, '2026-05-19')
+    const afterReopenAttempt = snapshot.dailySessions.find(
+      (session) => session.date === '2026-05-19',
+    )!
+    const events = await entityChangeEventsRepository.list(userId)
+
+    expect(afterReopenAttempt).toEqual(closed)
+    expect(events.filter((event) => event.changeType === 'day_opened')).toHaveLength(1)
+  })
+
   it('keeps TodayProjection as the source of Hoje lanes and readings', async () => {
     const userId = scopedUser()
     let snapshot = await createItem({
