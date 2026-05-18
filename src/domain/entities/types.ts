@@ -213,6 +213,11 @@ export type DailySession = {
   date: string
   openedAt?: string
   closedAt?: string
+  openingReading?: Record<string, unknown>
+  capacityReading?: Record<string, unknown>
+  directionReading?: Record<string, unknown>
+  attentionSummary?: string
+  sessionStatus?: 'open' | 'closed'
   closingNote?: string
   createdAt: string
   updatedAt: string

@@ -6,6 +6,7 @@ import {
 } from '../../../domain/entities/types'
 import { buildCapacityReading, CapacityReading } from './capacity'
 import { calculateDependencies, DependencyReading } from './dependencies'
+import { buildDirectionReading, DirectionReading } from './directionReading'
 import { TimelineLens } from './timelineLens'
 
 export type TimelineEntry = {
@@ -23,6 +24,7 @@ export type TimelineProjection = {
   readings: {
     capacity: CapacityReading
     dependencies: DependencyReading
+    direction: DirectionReading
   }
 }
 
@@ -34,6 +36,7 @@ export function buildTimelineProjection(
 ): TimelineProjection {
   const capacity = buildCapacityReading(items, conditions)
   const dependencyReading = calculateDependencies(items, dependencies)
+  const direction = buildDirectionReading(items, conditions, dependencies)
 
   return {
     activeLens,
@@ -42,6 +45,7 @@ export function buildTimelineProjection(
     readings: {
       capacity,
       dependencies: dependencyReading,
+      direction,
     },
   }
 }
@@ -75,8 +79,8 @@ function buildEntries(
             : 'Duracao unknown',
         detail:
           typeof item.durationMinutes === 'number'
-            ? 'Ocupa capacidade comprometida'
-            : 'Nao ocupa capacidade sem duracao ou regra explicita',
+            ? 'Carga declarada entra na leitura de sustentabilidade'
+            : 'Permanece unknown; nenhuma duracao foi inventada',
         tone: item.status === 'paused' ? 'paused' : 'default',
       }))
   }
@@ -90,19 +94,33 @@ function buildEntries(
         id: edge.id,
         title: predecessor?.title ?? 'Predecessor indisponivel',
         label: successor ? `Antes de ${successor.title}` : edge.type,
-        detail: edge.impact,
+        detail: `${edge.type}: ${edge.impact}`,
         tone: edge.status === 'active' ? 'blocked' : 'attention',
       }
     })
   }
 
   return items
-    .filter((item) => item.status !== 'deleted')
+    .filter((item) => item.status !== 'deleted' && isTemporalItem(item))
     .map((item) => ({
       id: item.id,
       title: item.title,
       label: item.startAt ?? item.dateStart ?? 'Sem janela fixa',
-      detail: item.sourceContext ?? 'Contexto operacional',
+      detail: item.endAt
+        ? `Janela ate ${item.endAt}`
+        : item.sourceContext ?? 'Contexto temporal operacional',
       tone: item.status === 'paused' ? 'paused' : 'default',
     }))
+}
+
+function isTemporalItem(item: OlysItem) {
+  return Boolean(
+    item.dateStart ||
+      item.dateEnd ||
+      item.startAt ||
+      item.endAt ||
+      item.entityType === 'event' ||
+      item.entityType === 'agenda' ||
+      item.entityType === 'reminder',
+  )
 }

@@ -42,6 +42,7 @@ import {
   CaptureDestinationId,
   resolveCaptureTarget,
 } from '../../features/capturar/domain/captureDestination'
+import { buildTodayProjection } from '../../features/fazer/domain/todayProjection'
 import { conditionsRepository } from '../repositories/conditionsRepository'
 import { dailySessionsRepository } from '../repositories/dailySessionsRepository'
 import { dependenciesRepository } from '../repositories/dependenciesRepository'
@@ -481,8 +482,18 @@ export async function removeLink(userId: string, linkId: string) {
 }
 
 export async function openDay(userId: string, date: string) {
-  const dailySessions = await dailySessionsRepository.list(userId)
-  const nextDailySessions = openDayDomain(dailySessions, { userId, date })
+  const [dailySessions, items, conditions, dependencies] = await Promise.all([
+    dailySessionsRepository.list(userId),
+    itemsRepository.list(userId),
+    conditionsRepository.list(userId),
+    dependenciesRepository.list(userId),
+  ])
+  const readings = buildDailySessionReadings(items, conditions, dependencies)
+  const nextDailySessions = openDayDomain(dailySessions, {
+    userId,
+    date,
+    ...readings,
+  })
   const created = findCreated(dailySessions, nextDailySessions)
   const updated =
     created ?? findSessionUpdated(dailySessions, nextDailySessions, userId, date)
@@ -501,6 +512,7 @@ export async function openDay(userId: string, date: string) {
       metadata: {
         sessionId: updated.id,
         date,
+        attentionSummary: updated.attentionSummary,
       },
     })
   }
@@ -513,11 +525,18 @@ export async function closeDay(
   date: string,
   closingNote: string,
 ) {
-  const dailySessions = await dailySessionsRepository.list(userId)
+  const [dailySessions, items, conditions, dependencies] = await Promise.all([
+    dailySessionsRepository.list(userId),
+    itemsRepository.list(userId),
+    conditionsRepository.list(userId),
+    dependenciesRepository.list(userId),
+  ])
+  const readings = buildDailySessionReadings(items, conditions, dependencies)
   const nextDailySessions = closeDayDomain(dailySessions, {
     userId,
     date,
     closingNote,
+    ...readings,
   })
   const created = findCreated(dailySessions, nextDailySessions)
   const updated =
@@ -537,6 +556,7 @@ export async function closeDay(
       metadata: {
         sessionId: updated.id,
         date,
+        attentionSummary: updated.attentionSummary,
       },
     })
   }
@@ -554,6 +574,41 @@ function resolveInboxTriageChangeType(action: 'keep' | 'complete' | 'discard') {
   }
 
   return 'inbox_discarded'
+}
+
+function buildDailySessionReadings(
+  items: OlysItem[],
+  conditions: EntityCondition[],
+  dependencies: DependencyEdge[],
+) {
+  const projection = buildTodayProjection(items, conditions, dependencies)
+
+  return {
+    openingReading: {
+      now: projection.now.length,
+      later: projection.later.length,
+      attention: projection.attention.length,
+      blocked: projection.blocked.length,
+      paused: projection.paused.length,
+      completed: projection.completed.length,
+    },
+    capacityReading: {
+      state: projection.readings.capacity.state,
+      confidence: projection.readings.capacity.confidence,
+      qualitativeLoad: projection.readings.capacity.qualitativeLoad,
+      unknownLoadCount: projection.readings.capacity.unknownLoadCount,
+      inferredLoadCount: projection.readings.capacity.inferredLoadCount,
+    },
+    directionReading: {
+      state: projection.readings.direction.state,
+      statement: projection.readings.direction.statement,
+      protectedItems: projection.readings.direction.protectedItems,
+    },
+    attentionSummary:
+      projection.attention.length > 0
+        ? `${projection.attention.length} ponto(s) pedem triagem operacional`
+        : 'Sem pontos criticos de atencao',
+  }
 }
 
 function findCreated<T extends PersistedEntity>(

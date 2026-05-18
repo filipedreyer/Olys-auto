@@ -33,7 +33,9 @@ export function TimelineScreen() {
 
       <section className="reading-band" aria-label="Leitura da timeline">
         <span>{projection.readings.capacity.unknownLoadCount} unknown</span>
+        <span>{projection.readings.capacity.qualitativeLoad}</span>
         <span>{projection.readings.dependencies.summary}</span>
+        <span>{projection.readings.direction.statement}</span>
       </section>
 
       <section className="surface-section">

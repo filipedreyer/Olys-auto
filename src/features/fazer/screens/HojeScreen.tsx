@@ -11,8 +11,14 @@ export function HojeScreen() {
   const items = useOperationalStore((state) => state.items)
   const conditions = useOperationalStore((state) => state.conditions)
   const dependencies = useOperationalStore((state) => state.dependencies)
+  const dailySessions = useOperationalStore((state) => state.dailySessions)
+  const openDay = useOperationalStore((state) => state.openDay)
+  const closeDay = useOperationalStore((state) => state.closeDay)
   const projection = buildTodayProjection(items, conditions, dependencies)
   const [confirmationOpen, setConfirmationOpen] = useState(false)
+  const [closingNote, setClosingNote] = useState('')
+  const today = new Date().toISOString().slice(0, 10)
+  const currentSession = dailySessions.find((session) => session.date === today)
 
   return (
     <section className="hoje-screen">
@@ -24,6 +30,40 @@ export function HojeScreen() {
 
         <span className="quiet-status">Release 1</span>
       </header>
+
+      <section className="day-cycle" aria-label="Ciclo do dia">
+        <div>
+          <strong>
+            {currentSession?.sessionStatus === 'closed'
+              ? 'Dia fechado'
+              : currentSession?.openedAt
+                ? 'Dia aberto'
+                : 'Dia ainda nao aberto'}
+          </strong>
+          <span>{currentSession?.attentionSummary ?? 'Sem leitura registrada'}</span>
+        </div>
+
+        <div className="day-cycle__actions">
+          <button type="button" onClick={() => void openDay(today)}>
+            Abrir o Dia
+          </button>
+          <input
+            aria-label="Nota de fechamento"
+            placeholder="Nota curta de fechamento"
+            value={closingNote}
+            onChange={(event) => setClosingNote(event.target.value)}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              void closeDay(today, closingNote)
+              setClosingNote('')
+            }}
+          >
+            Fechar o Dia
+          </button>
+        </div>
+      </section>
 
       <section className="focus-strip" aria-label="Leituras">
         <FocusIndicator label={projection.readings.direction.statement} />
