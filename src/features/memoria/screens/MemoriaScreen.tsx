@@ -1,10 +1,15 @@
 import { useOperationalStore } from '../../../shared/store/operationalStore'
+import { OperationalRow } from '../../fazer/components/OperationalRow'
 import { buildMemoryProjection } from '../domain/memoryProjection'
 
 export function MemoriaScreen() {
   const items = useOperationalStore((state) => state.items)
   const inboxItems = useOperationalStore((state) => state.inboxItems)
-  const projection = buildMemoryProjection(items, inboxItems)
+  const links = useOperationalStore((state) => state.links)
+  const dependencies = useOperationalStore((state) => state.dependencies)
+  const restoreItem = useOperationalStore((state) => state.restoreItem)
+  const reuseTemplate = useOperationalStore((state) => state.reuseTemplate)
+  const projection = buildMemoryProjection(items, inboxItems, links, dependencies)
 
   return (
     <section className="memoria-screen">
@@ -24,6 +29,71 @@ export function MemoriaScreen() {
             <p>{group.description}</p>
           </article>
         ))}
+      </section>
+
+      <p className="surface-note">{projection.continuity.statement}</p>
+
+      <section className="surface-section">
+        <header className="surface-section__header">
+          <h2>Recuperacao</h2>
+        </header>
+
+        <div className="surface-section__content">
+          {projection.recovery.map((item) => (
+            <article key={item.id} className="triage-row">
+              <OperationalRow
+                title={item.title}
+                meta={item.meta}
+                detail={item.detail}
+              />
+              <div className="triage-row__actions">
+                <button type="button" onClick={() => void restoreItem(item.id)}>
+                  Restaurar contexto
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="surface-section">
+        <header className="surface-section__header">
+          <h2>Caixola</h2>
+        </header>
+
+        <div className="surface-section__content">
+          {projection.caixola.map((item) => (
+            <OperationalRow
+              key={item.id}
+              title={item.title}
+              meta={item.meta}
+              detail={item.detail}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="surface-section">
+        <header className="surface-section__header">
+          <h2>Templates</h2>
+        </header>
+
+        <div className="surface-section__content">
+          {projection.templates.map((item) => (
+            <article key={item.id} className="triage-row">
+              <OperationalRow
+                title={item.title}
+                meta={item.meta}
+                detail={item.detail}
+              />
+              <div className="triage-row__actions">
+                <button type="button" onClick={() => void reuseTemplate(item.id)}>
+                  Reutilizar
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
     </section>
   )

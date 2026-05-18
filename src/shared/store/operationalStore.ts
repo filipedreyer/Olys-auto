@@ -15,6 +15,7 @@ import {
   removeEssentialProtected,
   removeLink,
   restoreItem,
+  reuseTemplate,
   softDeleteItem,
   triageInboxItem as triageInboxCommand,
   updateItem,
@@ -74,6 +75,7 @@ type OperationalStore = {
   removeDependency: (id: string) => Promise<void>
   createLink: (input: { sourceEntityId: string; targetEntityId: string }) => Promise<void>
   removeLink: (id: string) => Promise<void>
+  reuseTemplate: (id: string) => Promise<void>
   openDay: (date: string) => Promise<void>
   closeDay: (date: string, closingNote: string) => Promise<void>
 }
@@ -187,6 +189,9 @@ export const useOperationalStore = create<OperationalStore>((set, get) => ({
   },
   removeLink: async (id) => {
     await runAndApply(set, () => removeLink(get().userId, id))
+  },
+  reuseTemplate: async (id) => {
+    await runAndApply(set, () => reuseTemplate(get().userId, id))
   },
   openDay: async (date) => {
     await runAndApply(set, () => openDay(get().userId, date))

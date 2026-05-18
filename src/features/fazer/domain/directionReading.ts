@@ -14,6 +14,7 @@ export type DirectionReading = {
   projects: number
   habits: number
   routines: number
+  recentCompletions: number
   trajectory: string
   statement: string
 }
@@ -31,6 +32,9 @@ export function buildDirectionReading(
   const projects = activeItems.filter((item) => item.entityType === 'project').length
   const habits = activeItems.filter((item) => item.entityType === 'habit').length
   const routines = activeItems.filter((item) => item.entityType === 'routine').length
+  const recentCompletions = items.filter(
+    (item) => item.status === 'completed' && item.completedAt,
+  ).length
   const hasDirectionalEntity = activeItems.some((item) =>
     DIRECTIONAL_ENTITY_TYPES.includes(
       item.entityType as (typeof DIRECTIONAL_ENTITY_TYPES)[number],
@@ -47,6 +51,7 @@ export function buildDirectionReading(
       projects,
       habits,
       routines,
+      recentCompletions,
       trajectory,
       statement: 'Direcao preservada por condicao, trajetoria e sequencia',
     }
@@ -60,6 +65,7 @@ export function buildDirectionReading(
       projects,
       habits,
       routines,
+      recentCompletions,
       trajectory,
       statement: 'Direcao presente, ainda com lacunas de conexao com o hoje',
     }
@@ -72,6 +78,7 @@ export function buildDirectionReading(
     projects,
     habits,
     routines,
+    recentCompletions,
     trajectory,
     statement: 'Sem direcao operacional conectada ao hoje',
   }

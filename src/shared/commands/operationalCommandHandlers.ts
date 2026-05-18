@@ -43,6 +43,7 @@ import {
   resolveCaptureTarget,
 } from '../../features/capturar/domain/captureDestination'
 import { buildTodayProjection } from '../../features/fazer/domain/todayProjection'
+import { resolveTemplateReuseType } from '../../features/memoria/domain/memoryProjection'
 import { conditionsRepository } from '../repositories/conditionsRepository'
 import { dailySessionsRepository } from '../repositories/dailySessionsRepository'
 import { dependenciesRepository } from '../repositories/dependenciesRepository'
@@ -467,6 +468,43 @@ export async function createLink(input: {
   }
 
   return loadOperationalSnapshot(input.userId)
+}
+
+export async function reuseTemplate(userId: string, templateId: string) {
+  const items = await itemsRepository.list(userId)
+  const template = items.find(
+    (item) => item.id === templateId && item.entityType === 'template',
+  )
+
+  if (!template) {
+    return loadOperationalSnapshot(userId)
+  }
+
+  const nextItems = createItemDomain(items, {
+    userId,
+    entityType: resolveTemplateReuseType(template),
+    title: `${template.title} reutilizado`,
+    description: template.description,
+    sourceContext: `template:${template.id}`,
+    durationMinutes: null,
+  })
+  const created = findCreated(items, nextItems)
+
+  if (created) {
+    await itemsRepository.create(created)
+    await emitChange({
+      userId,
+      entityId: created.id,
+      changeType: 'template_reused',
+      sourceContext: 'command:memory',
+      metadata: {
+        templateId,
+        reuseType: created.entityType,
+      },
+    })
+  }
+
+  return loadOperationalSnapshot(userId)
 }
 
 export async function removeLink(userId: string, linkId: string) {
