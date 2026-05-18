@@ -24,6 +24,50 @@ export const dependenciesRepository = {
     return (data ?? []).map(mapDependencyFromRow)
   },
 
+  async create(edge: DependencyEdge) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        dependencies: [edge, ...getLocalState().dependencies],
+      })
+      return
+    }
+
+    const { error } = await supabase
+      .from('dependency_edges')
+      .insert(mapDependencyToRow(edge))
+
+    if (error) {
+      throw error
+    }
+  },
+
+  async update(edge: DependencyEdge) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        dependencies: getLocalState().dependencies.map((candidate) =>
+          candidate.id === edge.id && candidate.userId === edge.userId
+            ? edge
+            : candidate,
+        ),
+      })
+      return
+    }
+
+    const { error } = await supabase
+      .from('dependency_edges')
+      .update(mapDependencyToRow(edge))
+      .eq('user_id', edge.userId)
+      .eq('id', edge.id)
+
+    if (error) {
+      throw error
+    }
+  },
+
   async replaceAll(userId: string, dependencies: DependencyEdge[]) {
     const userDependencies = dependencies.filter((edge) => edge.userId === userId)
     const supabase = getSupabaseClient()

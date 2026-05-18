@@ -29,6 +29,50 @@ export const dailySessionsRepository = {
     return (data ?? []).map(mapDailySessionFromRow)
   },
 
+  async create(session: DailySession) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        dailySessions: [session, ...getLocalState().dailySessions],
+      })
+      return
+    }
+
+    const { error } = await supabase
+      .from('daily_sessions')
+      .insert(mapDailySessionToRow(session))
+
+    if (error) {
+      throw error
+    }
+  },
+
+  async update(session: DailySession) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        dailySessions: getLocalState().dailySessions.map((candidate) =>
+          candidate.id === session.id && candidate.userId === session.userId
+            ? session
+            : candidate,
+        ),
+      })
+      return
+    }
+
+    const { error } = await supabase
+      .from('daily_sessions')
+      .update(mapDailySessionToRow(session))
+      .eq('user_id', session.userId)
+      .eq('id', session.id)
+
+    if (error) {
+      throw error
+    }
+  },
+
   async replaceAll(userId: string, dailySessions: DailySession[]) {
     const userSessions = dailySessions.filter(
       (session) => session.userId === userId,

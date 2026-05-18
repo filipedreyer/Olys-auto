@@ -24,6 +24,48 @@ export const inboxRepository = {
     return (data ?? []).map(mapInboxFromRow)
   },
 
+  async create(item: InboxItem) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        inboxItems: [item, ...getLocalState().inboxItems],
+      })
+      return
+    }
+
+    const { error } = await supabase.from('inbox_items').insert(mapInboxToRow(item))
+
+    if (error) {
+      throw error
+    }
+  },
+
+  async update(item: InboxItem) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        inboxItems: getLocalState().inboxItems.map((candidate) =>
+          candidate.id === item.id && candidate.userId === item.userId
+            ? item
+            : candidate,
+        ),
+      })
+      return
+    }
+
+    const { error } = await supabase
+      .from('inbox_items')
+      .update(mapInboxToRow(item))
+      .eq('user_id', item.userId)
+      .eq('id', item.id)
+
+    if (error) {
+      throw error
+    }
+  },
+
   async replaceAll(userId: string, inboxItems: InboxItem[]) {
     const userInboxItems = inboxItems.filter((item) => item.userId === userId)
     const supabase = getSupabaseClient()

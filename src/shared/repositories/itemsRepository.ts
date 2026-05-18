@@ -24,6 +24,48 @@ export const itemsRepository = {
     return (data ?? []).map(mapItemFromRow)
   },
 
+  async create(item: OlysItem) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        items: [item, ...getLocalState().items],
+      })
+      return
+    }
+
+    const { error } = await supabase.from('items').insert(mapItemToRow(item))
+
+    if (error) {
+      throw error
+    }
+  },
+
+  async update(item: OlysItem) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        items: getLocalState().items.map((candidate) =>
+          candidate.id === item.id && candidate.userId === item.userId
+            ? item
+            : candidate,
+        ),
+      })
+      return
+    }
+
+    const { error } = await supabase
+      .from('items')
+      .update(mapItemToRow(item))
+      .eq('user_id', item.userId)
+      .eq('id', item.id)
+
+    if (error) {
+      throw error
+    }
+  },
+
   async replaceAll(userId: string, items: OlysItem[]) {
     const userItems = items.filter((item) => item.userId === userId)
     const supabase = getSupabaseClient()

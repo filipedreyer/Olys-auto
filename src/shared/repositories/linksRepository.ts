@@ -24,6 +24,50 @@ export const linksRepository = {
     return (data ?? []).map(mapLinkFromRow)
   },
 
+  async create(link: EntityLink) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        links: [link, ...getLocalState().links],
+      })
+      return
+    }
+
+    const { error } = await supabase
+      .from('entity_links')
+      .insert(mapLinkToRow(link))
+
+    if (error) {
+      throw error
+    }
+  },
+
+  async update(link: EntityLink) {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      replaceLocalState({
+        links: getLocalState().links.map((candidate) =>
+          candidate.id === link.id && candidate.userId === link.userId
+            ? link
+            : candidate,
+        ),
+      })
+      return
+    }
+
+    const { error } = await supabase
+      .from('entity_links')
+      .update(mapLinkToRow(link))
+      .eq('user_id', link.userId)
+      .eq('id', link.id)
+
+    if (error) {
+      throw error
+    }
+  },
+
   async replaceAll(userId: string, links: EntityLink[]) {
     const userLinks = links.filter((link) => link.userId === userId)
     const supabase = getSupabaseClient()

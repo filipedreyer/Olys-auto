@@ -24,65 +24,90 @@ type AuthContextValue = {
   status: AuthStatus
   user: AuthUser | null
   mode: 'supabase' | 'local'
+  logout: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
+const degradedAuthValue = (logout: () => Promise<void>): AuthContextValue => ({
+  status: 'degraded',
+  user: {
+    id: seedUserId,
+  },
+  mode: 'local',
+  logout,
+})
+
+const loadingAuthValue = (logout: () => Promise<void>): AuthContextValue => ({
+  status: 'loading',
+  user: null,
+  mode: 'supabase',
+  logout,
+})
+
 export function AuthProvider({ children }: PropsWithChildren) {
+  const logout = useMemo(
+    () => async () => {
+      const supabase = getSupabaseClient()
+
+      if (!supabase) {
+        setValue(degradedAuthValue(logout))
+        return
+      }
+
+      await supabase.auth.signOut()
+      setValue({
+        status: 'unauthenticated',
+        user: null,
+        mode: 'supabase',
+        logout,
+      })
+    },
+    [],
+  )
+
   const [value, setValue] = useState<AuthContextValue>(() => {
     const supabase = getSupabaseClient()
 
-    if (!supabase) {
-      return {
-        status: 'degraded',
-        user: {
-          id: seedUserId,
-        },
-        mode: 'local',
-      }
-    }
-
-    return {
-      status: 'loading',
-      user: null,
-      mode: 'supabase',
-    }
+    return supabase ? loadingAuthValue(logout) : degradedAuthValue(logout)
   })
 
   useEffect(() => {
     const supabase = getSupabaseClient()
 
     if (!supabase) {
-      setValue({
-        status: 'degraded',
-        user: {
-          id: seedUserId,
-        },
-        mode: 'local',
-      })
+      setValue(degradedAuthValue(logout))
       return
     }
 
     let active = true
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (!active) {
-        return
-      }
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (!active) {
+          return
+        }
 
-      const sessionUser = data.session?.user
+        const sessionUser = data.session?.user
 
-      setValue({
-        status: sessionUser ? 'authenticated' : 'unauthenticated',
-        user: sessionUser
-          ? {
-              id: sessionUser.id,
-              email: sessionUser.email,
-            }
-          : null,
-        mode: 'supabase',
+        setValue({
+          status: sessionUser ? 'authenticated' : 'unauthenticated',
+          user: sessionUser
+            ? {
+                id: sessionUser.id,
+                email: sessionUser.email,
+              }
+            : null,
+          mode: 'supabase',
+          logout,
+        })
       })
-    })
+      .catch(() => {
+        if (active) {
+          setValue(degradedAuthValue(logout))
+        }
+      })
 
     const {
       data: { subscription },
@@ -98,6 +123,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
             }
           : null,
         mode: 'supabase',
+        logout,
       })
     })
 
@@ -105,7 +131,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       active = false
       subscription.unsubscribe()
     }
-  }, [])
+  }, [logout])
 
   const contextValue = useMemo(() => value, [value])
 
