@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 52" role="img" aria-label="Tabs Hoje Timeline — right focus">
+
+<rect width="390" height="52" fill="#F7F5F1"/>
+<path d="M195 0H378C384.63 0 390 5.37 390 12V52H195Z" fill="#FFFFFF"/>
+<line x1="0" y1="51.5" x2="390" y2="51.5" stroke="#E7E4DE"/>
+
+
+<text x="16" y="31" font-family="DM Sans, Arial, sans-serif" font-size="16" font-weight="500" fill="#5B5F63">Hoje</text>
+<text x="211" y="31" font-family="DM Sans, Arial, sans-serif" font-size="16" font-weight="700" fill="#0D848B">Timeline</text>
+
+<rect x="195" y="49" width="195" height="3" rx="1.5" fill="#0D848B"/>
+<rect x="199" y="4" width="187" height="42" rx="10" fill="none" stroke="#0F172A" stroke-width="2"/>
+</svg>

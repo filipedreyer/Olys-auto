@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 138 28" role="img" aria-label="Chip Essencial agora">
+
+<rect x="0.5" y="0.5" width="137" height="27" rx="14" fill="#CCFBF1" stroke="#0F766E" stroke-opacity="0.18"/>
+<path d="M14 7.2l1.78 3.6 3.98.58-2.88 2.8.68 3.97L14 16.28l-3.56 1.87.68-3.97-2.88-2.8 3.98-.58L14 7.2Z" fill="#0F766E"/>
+<text x="28" y="18" font-family="DM Sans, Arial, sans-serif" font-size="12" font-weight="600" fill="#0F766E">Essencial agora</text>
+
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 652 640">
+  <g transform="translate(0 0)">
+
+  <defs>
+    <linearGradient id="grad_capacity_normal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0A4864"/>
+      <stop offset="100%" stop-color="#08B7C8"/>
+    </linearGradient>
+    <filter id="shadow_capacity_normal" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#062C38" flood-opacity="0.16"/>
+    </filter>
+    <clipPath id="clip_capacity_normal">
+      <rect x="0" y="0" width="320" height="640" rx="18"/>
+    </clipPath>
+  </defs>
+
+  <g filter="url(#shadow_capacity_normal)">
+    <g clip-path="url(#clip_capacity_normal)">
+      <rect x="0" y="0" width="320" height="640" rx="18" fill="url(#grad_capacity_normal)"/>
+      
+    <path d="M0 415 C70 392 102 454 170 442 C229 432 272 380 320 360 L320 640 L0 640 Z" fill="#74DDE6" opacity="0.22"/>
+    <path d="M0 480 C74 492 116 442 175 440 C236 438 266 405 320 398 L320 640 L0 640 Z" fill="#4FC7D5" opacity="0.18"/>
+
+      
+    <path d="M0 472 C58 478 112 450 154 404 C182 374 206 343 234 324" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="234" cy="324" r="10" fill="none" stroke="#FFFFFF" stroke-width="4.5"/>
+    <path d="M246 314 C269 299 290 290 320 282" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="9 11"/>
+
+    </g>
+  </g>
+  <text x="160" y="160" text-anchor="middle" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="108" font-weight="700" fill="#FFFFFF">05</text>
+  <line x1="76" y1="188" x2="244" y2="188" stroke="#FFFFFF" stroke-width="4"/>
+  <text x="160" y="302" text-anchor="middle" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="108" font-weight="700" fill="#FFFFFF">08</text>
+  <text x="160" y="596" text-anchor="middle" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="28" font-weight="600" letter-spacing="1.2" fill="#FFFFFF">CAPACIDADE</text>
+  </g>
+  <g transform="translate(332 0)">
+
+  <defs>
+    <linearGradient id="grad_direction_normal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#075D57"/>
+      <stop offset="100%" stop-color="#12C8BE"/>
+    </linearGradient>
+    <filter id="shadow_direction_normal" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#062C38" flood-opacity="0.16"/>
+    </filter>
+    <clipPath id="clip_direction_normal">
+      <rect x="0" y="0" width="320" height="640" rx="18"/>
+    </clipPath>
+  </defs>
+
+  <g filter="url(#shadow_direction_normal)">
+    <g clip-path="url(#clip_direction_normal)">
+      <rect x="0" y="0" width="320" height="640" rx="18" fill="url(#grad_direction_normal)"/>
+      
+    <path d="M0 415 C70 392 102 454 170 442 C229 432 272 380 320 360 L320 640 L0 640 Z" fill="#71D9D1" opacity="0.22"/>
+    <path d="M0 480 C74 492 116 442 175 440 C236 438 266 405 320 398 L320 640 L0 640 Z" fill="#48BFB7" opacity="0.18"/>
+
+      
+    </g>
+  </g>
+  <text x="160" y="160" text-anchor="middle" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="108" font-weight="700" fill="#FFFFFF">04</text>
+  <line x1="76" y1="188" x2="244" y2="188" stroke="#FFFFFF" stroke-width="4"/>
+  <text x="160" y="302" text-anchor="middle" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="108" font-weight="700" fill="#FFFFFF">05</text>
+  <text x="160" y="596" text-anchor="middle" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="28" font-weight="600" letter-spacing="1.2" fill="#FFFFFF">DIREÇÃO</text>
+  </g>
+</svg>

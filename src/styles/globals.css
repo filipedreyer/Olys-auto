@@ -1,28 +1,32 @@
+@import "../design-system/tokens/olys-tokens.css";
+
 :root {
-  color-scheme: dark;
-  --background: #101210;
-  --surface: #171a18;
-  --surface-raised: #20241f;
-  --surface-soft: #1b2024;
-  --line: rgba(238, 243, 238, 0.1);
-  --text-primary: #f2f5f1;
-  --text-secondary: #a9b2aa;
-  --text-muted: #768178;
-  --accent: #6eb37f;
-  --accent-quiet: rgba(110, 179, 127, 0.15);
-  --blue: #7aa7c7;
-  --warning: #c7a15f;
-  --danger: #c77969;
-  --radius-sm: 8px;
-  --radius-md: 10px;
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
+  color-scheme: light;
+
+  /* Legacy compatibility aliases. Canonical tokens live in ../design-system/tokens/olys-tokens.css. */
+  --background: var(--olys-surface-app);
+  --surface: var(--olys-surface-paper);
+  --surface-raised: var(--olys-surface-raised);
+  --surface-soft: var(--olys-surface-teal-soft);
+  --line: var(--olys-border-subtle);
+  --text-primary: var(--olys-text-primary);
+  --text-secondary: var(--olys-text-secondary);
+  --text-muted: var(--olys-text-muted);
+  --accent: var(--olys-brand-teal);
+  --accent-quiet: var(--olys-surface-teal-soft);
+  --blue: var(--olys-state-partial);
+  --warning: var(--olys-state-attention);
+  --danger: var(--olys-state-critical);
+  --radius-sm: var(--olys-radius-sm);
+  --radius-md: var(--olys-radius-md);
+  --space-1: var(--olys-space-1);
+  --space-2: var(--olys-space-2);
+  --space-3: var(--olys-space-3);
+  --space-4: var(--olys-space-4);
+  --space-5: var(--olys-space-6);
+  --space-6: var(--olys-space-7);
   --content-max: 920px;
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out: var(--olys-ease-standard);
 }
 
 * {

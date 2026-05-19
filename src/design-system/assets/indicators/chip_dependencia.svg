@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 28" role="img" aria-label="Chip Dependência">
+
+<rect x="0.5" y="0.5" width="123" height="27" rx="14" fill="#F1F5F9" stroke="#334155" stroke-opacity="0.18"/>
+<g fill="none" stroke="#334155" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M11.1 16.9l-1.7 1.7a4 4 0 0 1-5.7-5.7l2.1-2.1a4 4 0 0 1 5.7 0"/>
+  <path d="M16.9 11.1l1.7-1.7a4 4 0 1 1 5.7 5.7l-2.1 2.1a4 4 0 0 1-5.7 0"/>
+  <path d="M9.8 14.2l4.4-4.4"/>
+</g>
+<text x="28" y="18" font-family="DM Sans, Arial, sans-serif" font-size="12" font-weight="600" fill="#334155">Dependência</text>
+
+</svg>

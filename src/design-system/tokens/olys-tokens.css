@@ -1,0 +1,279 @@
+:root {
+  color-scheme: light;
+
+  /* Brand colors */
+  --olys-brand-black: #0C0D0D;
+  --olys-brand-teal: #0D848B;
+  --olys-brand-teal-light: #0FB5BE;
+  --olys-brand-teal-pale: #E0F5F6;
+  --olys-brand-ia-violet: #7C4DFF;
+  --olys-brand-paper: #FFFFFF;
+  --olys-brand-off-white: #F7F5F1;
+
+  /* Semantic colors */
+  --olys-semantic-attention: #B7791F;
+  --olys-semantic-critical: #B42318;
+  --olys-semantic-positive: #287D3C;
+  --olys-semantic-disabled: #C7C3BA;
+  --olys-semantic-unknown: #807A70;
+  --olys-semantic-blocked: #8E2C21;
+  --olys-semantic-partial: #3A6EA5;
+
+  /* IA colors */
+  --olys-ia-violet: var(--olys-brand-ia-violet);
+  --olys-ia-violet-soft: #EEE8FF;
+  --olys-ia-low-confidence: #F1E7FF;
+  --olys-ia-fallback: #F4F1EA;
+
+  /* Surfaces */
+  --olys-surface-app: var(--olys-brand-off-white);
+  --olys-surface-paper: var(--olys-brand-paper);
+  --olys-surface-raised: #FCFBF7;
+  --olys-surface-elevated: #FFFFFF;
+  --olys-surface-subtle: #F0EDE6;
+  --olys-surface-teal-soft: var(--olys-brand-teal-pale);
+  --olys-surface-critical-soft: #FDEBE8;
+  --olys-surface-attention-soft: #FFF4D7;
+  --olys-surface-disabled: #ECE8DF;
+
+  /* Text */
+  --olys-text-primary: var(--olys-brand-black);
+  --olys-text-secondary: #4C514F;
+  --olys-text-muted: #77736A;
+  --olys-text-inverse: #FFFFFF;
+  --olys-text-disabled: #9B968D;
+
+  /* Borders */
+  --olys-border-subtle: rgba(12, 13, 13, 0.1);
+  --olys-border-strong: rgba(12, 13, 13, 0.22);
+  --olys-border-teal: rgba(13, 132, 139, 0.42);
+  --olys-border-critical: rgba(180, 35, 24, 0.34);
+
+  /* Focus */
+  --olys-focus-ring: var(--olys-brand-teal-light);
+  --olys-focus-shadow: 0 0 0 3px rgba(15, 181, 190, 0.24);
+
+  /* Entity colors */
+  --olys-entity-task: #0D848B;
+  --olys-entity-project: #315C74;
+  --olys-entity-goal: #6F5AB8;
+  --olys-entity-note: #8C6A2F;
+  --olys-entity-list: #4E7B57;
+  --olys-entity-habit: #4D7C91;
+  --olys-entity-routine: #6D6A3D;
+  --olys-entity-event: #9B4F38;
+  --olys-entity-reminder: #B7791F;
+  --olys-entity-agenda: #3A6EA5;
+  --olys-entity-template: #807A70;
+  --olys-entity-unclassified: #9B968D;
+
+  /* Operational states */
+  --olys-state-default: var(--olys-text-secondary);
+  --olys-state-attention: var(--olys-semantic-attention);
+  --olys-state-critical: var(--olys-semantic-critical);
+  --olys-state-positive: var(--olys-semantic-positive);
+  --olys-state-disabled: var(--olys-semantic-disabled);
+  --olys-state-unknown: var(--olys-semantic-unknown);
+  --olys-state-blocked: var(--olys-semantic-blocked);
+  --olys-state-partial: var(--olys-semantic-partial);
+  --olys-state-paused: #786E61;
+  --olys-state-completed: var(--olys-semantic-positive);
+
+  /* Spacing */
+  --olys-space-0: 0;
+  --olys-space-1: 4px;
+  --olys-space-2: 8px;
+  --olys-space-3: 12px;
+  --olys-space-4: 16px;
+  --olys-space-5: 20px;
+  --olys-space-6: 24px;
+  --olys-space-7: 32px;
+  --olys-space-8: 40px;
+  --olys-space-9: 48px;
+
+  /* Radius */
+  --olys-radius-xs: 4px;
+  --olys-radius-sm: 6px;
+  --olys-radius-md: 8px;
+  --olys-radius-lg: 12px;
+  --olys-radius-pill: 999px;
+
+  /* Shadows */
+  --olys-shadow-none: none;
+  --olys-shadow-raised: 0 8px 24px rgba(12, 13, 13, 0.08);
+  --olys-shadow-overlay: 0 18px 48px rgba(12, 13, 13, 0.18);
+  --olys-shadow-tactile: 0 1px 0 rgba(12, 13, 13, 0.08);
+
+  /* Z-index */
+  --olys-z-base: 0;
+  --olys-z-shell: 20;
+  --olys-z-floating: 40;
+  --olys-z-overlay: 60;
+  --olys-z-modal: 80;
+  --olys-z-toast: 100;
+
+  /* Motion */
+  --olys-motion-fast: 120ms;
+  --olys-motion-base: 180ms;
+  --olys-motion-slow: 260ms;
+  --olys-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --olys-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Typography */
+  --olys-font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --olys-font-size-xs: 0.75rem;
+  --olys-font-size-sm: 0.875rem;
+  --olys-font-size-md: 1rem;
+  --olys-font-size-lg: 1.125rem;
+  --olys-font-size-xl: 1.35rem;
+  --olys-line-height-tight: 1.15;
+  --olys-line-height-base: 1.45;
+  --olys-line-height-loose: 1.65;
+  --olys-font-weight-regular: 400;
+  --olys-font-weight-medium: 560;
+  --olys-font-weight-strong: 680;
+
+  /* Touch targets */
+  --olys-touch-target-min: 44px;
+  --olys-touch-target-comfortable: 52px;
+
+  /* Safe areas */
+  --olys-safe-area-top: env(safe-area-inset-top, 0px);
+  --olys-safe-area-right: env(safe-area-inset-right, 0px);
+  --olys-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --olys-safe-area-left: env(safe-area-inset-left, 0px);
+
+  /* @deprecated compatibility aliases for pre-DS app variables. */
+  --background: var(--olys-surface-app);
+  --surface: var(--olys-surface-paper);
+  --surface-raised: var(--olys-surface-raised);
+  --surface-soft: var(--olys-surface-teal-soft);
+  --line: var(--olys-border-subtle);
+  --text-primary: var(--olys-text-primary);
+  --text-secondary: var(--olys-text-secondary);
+  --text-muted: var(--olys-text-muted);
+  --accent: var(--olys-brand-teal);
+  --accent-quiet: var(--olys-surface-teal-soft);
+  --blue: var(--olys-state-partial);
+  --warning: var(--olys-state-attention);
+  --danger: var(--olys-state-critical);
+}
+
+.olys-button,
+.olys-icon-button {
+  min-height: var(--olys-touch-target-min);
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-md);
+  background: var(--olys-surface-paper);
+  color: var(--olys-text-primary);
+  transition:
+    border-color var(--olys-motion-fast) var(--olys-ease-standard),
+    background var(--olys-motion-fast) var(--olys-ease-standard),
+    transform var(--olys-motion-fast) var(--olys-ease-standard);
+}
+
+.olys-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--olys-space-2);
+  padding: 0 var(--olys-space-4);
+  font-weight: var(--olys-font-weight-medium);
+}
+
+.olys-button[data-variant="primary"] {
+  border-color: var(--olys-brand-teal);
+  background: var(--olys-brand-teal);
+  color: var(--olys-text-inverse);
+}
+
+.olys-button[data-variant="quiet"] {
+  background: transparent;
+}
+
+.olys-button:focus-visible,
+.olys-icon-button:focus-visible,
+.olys-sheet:focus-visible {
+  outline: 2px solid var(--olys-focus-ring);
+  outline-offset: 3px;
+  box-shadow: var(--olys-focus-shadow);
+}
+
+.olys-surface {
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-md);
+  background: var(--olys-surface-paper);
+  color: var(--olys-text-primary);
+}
+
+.olys-icon {
+  display: inline-flex;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: currentColor;
+}
+
+.olys-top-bar,
+.olys-bottom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--olys-surface-paper);
+  color: var(--olys-text-primary);
+}
+
+.olys-floating-action-pair {
+  position: fixed;
+  right: max(var(--olys-space-4), var(--olys-safe-area-right));
+  bottom: max(var(--olys-space-4), var(--olys-safe-area-bottom));
+  z-index: var(--olys-z-floating);
+  display: inline-flex;
+  gap: var(--olys-space-2);
+}
+
+.olys-entity-rail {
+  flex: 0 0 4px;
+  width: 4px;
+  border-radius: var(--olys-radius-pill);
+  background: var(--olys-entity-unclassified);
+}
+
+.olys-operational-item {
+  display: flex;
+  gap: var(--olys-space-3);
+  min-height: var(--olys-touch-target-comfortable);
+  padding: var(--olys-space-3);
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-md);
+  background: var(--olys-surface-paper);
+  color: var(--olys-text-primary);
+}
+
+.olys-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--olys-space-2);
+  color: var(--olys-text-secondary);
+}
+
+.olys-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--olys-z-overlay);
+  background: rgba(12, 13, 13, 0.22);
+}
+
+.olys-sheet {
+  position: fixed;
+  right: var(--olys-space-3);
+  bottom: max(var(--olys-space-3), var(--olys-safe-area-bottom));
+  left: var(--olys-space-3);
+  z-index: var(--olys-z-modal);
+  max-height: min(78vh, 620px);
+  overflow: auto;
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-lg) var(--olys-radius-lg) var(--olys-radius-md) var(--olys-radius-md);
+  background: var(--olys-surface-paper);
+  color: var(--olys-text-primary);
+  box-shadow: var(--olys-shadow-overlay);
+}
