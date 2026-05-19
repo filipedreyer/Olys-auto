@@ -1,0 +1,21 @@
+# Fase 5 — Checklist
+
+- [x] Inbox não virou backlog.
+- [x] InboxItem continua separado de OlysItem.
+- [x] triageItems e revisitItems continuam separados.
+- [x] Ações Manter, Converter, Concluir, Adiar e Descartar preservadas.
+- [x] Revisita controlada não mostra Manter.
+- [x] Converter usa suggestedType quando existir.
+- [x] Converter cai em task quando não houver suggestedType.
+- [x] Adiar preserva needsRevisit.
+- [x] Rastreabilidade preservada.
+- [x] Command handlers não alterados.
+- [x] Repositories não alterados.
+- [x] operationalStore não alterado.
+- [x] Capturar não alterado.
+- [x] Hoje não alterado.
+- [x] Timeline não alterada.
+- [x] Shell não alterado.
+- [x] Typecheck passou.
+- [x] Build passou.
+- [x] Testes passaram.

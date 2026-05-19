@@ -1,6 +1,9 @@
-import { EmptyState } from '../../../shared/components/EmptyState'
 import { useOperationalStore } from '../../../shared/store/operationalStore'
-import { OperationalRow } from '../../fazer/components/OperationalRow'
+import { EntityType } from '../../../domain/entities/types'
+import { InboxHeader } from '../components/InboxHeader'
+import { InboxReadingBand } from '../components/InboxReadingBand'
+import { InboxRevisitLayer } from '../components/InboxRevisitLayer'
+import { InboxTriageLayer } from '../components/InboxTriageLayer'
 import { buildInboxProjection } from '../domain/inboxProjection'
 
 export function InboxScreen() {
@@ -9,129 +12,33 @@ export function InboxScreen() {
   const status = useOperationalStore((state) => state.status)
   const projection = buildInboxProjection(inboxItems)
   const busy = status === 'loading'
+  const keepInboxItem = (id: string) => triageInboxItem(id, 'keep')
+  const convertInboxItem = (id: string, targetType: EntityType) =>
+    triageInboxItem(id, 'convert', targetType)
+  const completeInboxItem = (id: string) => triageInboxItem(id, 'complete')
+  const postponeInboxItem = (id: string) => triageInboxItem(id, 'postpone')
+  const discardInboxItem = (id: string) => triageInboxItem(id, 'discard')
 
   return (
     <section className="inbox-screen">
-      <header className="screen-header">
-        <div>
-          <small>Inbox</small>
-          <h1>Triagem</h1>
-        </div>
-        <span className="quiet-status">{projection.readings.pending} entrada(s)</span>
-      </header>
-
-      <p className="surface-note">{projection.readings.statement}</p>
-
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Em triagem</h2>
-        </header>
-
-        <div className="surface-section__content">
-          {projection.triageItems.length === 0 ? (
-            <EmptyState message="Nenhuma entrada nova aguardando decisao." />
-          ) : null}
-
-          {projection.triageItems.map((item) => (
-            <article key={item.id} className="triage-row">
-              <OperationalRow
-                title={item.text}
-                meta={`${item.origin} - ${item.capturedAt}`}
-                detail={item.detail}
-              />
-
-              <div className="triage-row__actions">
-                <button
-                  disabled={busy}
-                  type="button"
-                  onClick={() => triageInboxItem(item.id, 'keep')}
-                >
-                  Manter
-                </button>
-                <button
-                  disabled={busy}
-                  type="button"
-                  onClick={() =>
-                    triageInboxItem(item.id, 'convert', item.suggestedType ?? 'task')
-                  }
-                >
-                  Converter
-                </button>
-                <button
-                  disabled={busy}
-                  type="button"
-                  onClick={() => triageInboxItem(item.id, 'complete')}
-                >
-                  Concluir
-                </button>
-                <button
-                  disabled={busy}
-                  type="button"
-                  onClick={() => triageInboxItem(item.id, 'postpone')}
-                >
-                  Adiar
-                </button>
-                <button
-                  disabled={busy}
-                  type="button"
-                  onClick={() => triageInboxItem(item.id, 'discard')}
-                >
-                  Descartar
-                </button>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Revisita controlada</h2>
-        </header>
-
-        <div className="surface-section__content">
-          {projection.revisitItems.length === 0 ? (
-            <EmptyState message="Nada mantido ou adiado competindo por atencao." />
-          ) : null}
-
-          {projection.revisitItems.map((item) => (
-            <article key={item.id} className="triage-row">
-              <OperationalRow
-                title={item.text}
-                meta={`${item.status} - ${item.capturedAt}`}
-                detail={item.detail}
-                state={item.status === 'postponed' ? 'paused' : 'default'}
-              />
-
-              <div className="triage-row__actions">
-                <button
-                  disabled={busy}
-                  type="button"
-                  onClick={() =>
-                    triageInboxItem(item.id, 'convert', item.suggestedType ?? 'task')
-                  }
-                >
-                  Converter
-                </button>
-                <button
-                  disabled={busy}
-                  type="button"
-                  onClick={() => triageInboxItem(item.id, 'complete')}
-                >
-                  Concluir
-                </button>
-                <button
-                  disabled={busy}
-                  type="button"
-                  onClick={() => triageInboxItem(item.id, 'discard')}
-                >
-                  Descartar
-                </button>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <InboxHeader readings={projection.readings} />
+      <InboxReadingBand readings={projection.readings} />
+      <InboxTriageLayer
+        items={projection.triageItems}
+        busy={busy}
+        onKeep={keepInboxItem}
+        onConvert={convertInboxItem}
+        onComplete={completeInboxItem}
+        onPostpone={postponeInboxItem}
+        onDiscard={discardInboxItem}
+      />
+      <InboxRevisitLayer
+        items={projection.revisitItems}
+        busy={busy}
+        onConvert={convertInboxItem}
+        onComplete={completeInboxItem}
+        onDiscard={discardInboxItem}
+      />
     </section>
   )
 }
