@@ -31,10 +31,12 @@ describe('operational grammar correction', () => {
     const css = readCss()
 
     expect(appShell).toContain('CaptureSheet')
-    expect(appShell).toContain('capture-fab')
+    expect(appShell).toContain('FloatingActionPair')
+    expect(appShell).toContain('shell-floating-action--capture')
     expect(captureGrid).toContain('capture-grid__cell')
     expect(captureGrid).not.toContain('capture-chip')
     expect(css).toContain('.capture-sheet')
+    expect(css).toContain('.olys-floating-action-pair')
     expect(css).toContain('grid-template-columns: repeat(3, minmax(0, 1fr))')
   })
 

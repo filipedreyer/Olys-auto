@@ -8,8 +8,8 @@ export type FloatingActionPairProps = {
 export function FloatingActionPair({ capturar, idea }: FloatingActionPairProps) {
   return (
     <div className="olys-floating-action-pair" aria-label="Acoes transversais">
-      {capturar}
       {idea}
+      {capturar}
     </div>
   );
 }

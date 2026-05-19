@@ -1,25 +1,49 @@
 import { PropsWithChildren, useEffect, useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import {
+  BottomNavOlys,
+  FloatingActionPair,
+  OlysIcon,
+  OlysSheet,
+  TopBarOlys,
+  olysAssets,
+} from '../../design-system'
 import { CaptureSheet } from '../../features/capturar/components/CaptureSheet'
-import { AuthStatusControl } from '../../shared/auth/AuthStatusControl'
+import { useAuth } from '../../shared/auth/AuthProvider'
 import { useOperationalStore } from '../../shared/store/operationalStore'
 
-const primaryNav = [
-  { to: '/fazer/hoje', label: 'Fazer' },
-  { to: '/planejar', label: 'Planejar' },
-  { to: '/memoria', label: 'Memoria' },
-]
-
-const actionNav = [
-  { to: '/memoria/inbox', label: 'Inbox' },
-]
+const bottomNavItems = [
+  {
+    key: 'fazer',
+    to: '/fazer/hoje',
+    label: 'Fazer',
+    icon: <OlysIcon src={olysAssets.nav.fazer} decorative />,
+  },
+  {
+    key: 'planejar',
+    to: '/planejar',
+    label: 'Planejar',
+    icon: <OlysIcon src={olysAssets.nav.planejar} decorative />,
+    end: true,
+  },
+  {
+    key: 'memoria',
+    to: '/memoria',
+    label: 'Memoria',
+    icon: <OlysIcon src={olysAssets.nav.memoria} decorative />,
+    end: true,
+  },
+] as const
 
 export function AppShell({ children }: PropsWithChildren) {
   const [captureOpen, setCaptureOpen] = useState(false)
+  const [ideaOpen, setIdeaOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+  const { logout, status: authStatus } = useAuth()
   const storeStatus = useOperationalStore((state) => state.status)
   const error = useOperationalStore((state) => state.error)
+  const inboxCount = useOperationalStore((state) => state.inboxItems.length)
 
   useEffect(() => {
     if (location.pathname === '/capturar') {
@@ -28,31 +52,57 @@ export function AppShell({ children }: PropsWithChildren) {
     }
   }, [location.pathname, navigate])
 
+  const hasPendingInbox = inboxCount > 0
+
   return (
-    <div className="app-shell">
-      <header className="topbar">
-        <NavLink to="/fazer/hoje" className="brand" aria-label="Olys Hoje">
-          Olys
-        </NavLink>
-
-        <nav className="topbar__actions" aria-label="Acoes globais">
-          <button
-            className="topbar__capture"
-            type="button"
-            onClick={() => setCaptureOpen(true)}
-          >
-            Capturar
+    <div className="app-shell app-shell--olys">
+      <TopBarOlys
+        menu={
+          <button className="shell-icon-button shell-icon-button--menu" type="button" aria-label="Abrir menu">
+            <span aria-hidden="true" />
           </button>
-          {actionNav.map((item) => (
-            <NavLink key={item.to} to={item.to}>
-              {item.label}
-            </NavLink>
-          ))}
-          <AuthStatusControl />
-        </nav>
-      </header>
+        }
+        acesso={
+          <button
+            className="shell-icon-button"
+            type="button"
+            aria-label={authStatus === 'authenticated' ? 'Sair do acesso' : 'Acesso local ou login'}
+            onClick={() => {
+              if (authStatus === 'authenticated') {
+                void logout()
+                return
+              }
 
-      <main>
+              void navigate('/login')
+            }}
+          >
+            <OlysIcon src={olysAssets.nav.acesso} decorative />
+          </button>
+        }
+        inbox={
+          <button
+            className="shell-icon-button shell-icon-button--inbox"
+            type="button"
+            aria-label={hasPendingInbox ? `Inbox com ${inboxCount} itens pendentes` : 'Inbox sem itens pendentes'}
+            onClick={() => void navigate('/memoria/inbox')}
+          >
+            <OlysIcon src={olysAssets.nav.inbox} decorative />
+            {hasPendingInbox ? <span className="shell-inbox-dot" aria-hidden="true" /> : null}
+          </button>
+        }
+        search={
+          <button
+            className="shell-icon-button shell-icon-button--search"
+            type="button"
+            aria-label="Busca estrutural ainda nao implementada"
+            aria-disabled="true"
+          >
+            <span aria-hidden="true" />
+          </button>
+        }
+      />
+
+      <main className="app-shell__main">
         {storeStatus === 'loading' ? (
           <p className="app-status" role="status">
             Sincronizando contexto operacional...
@@ -68,24 +118,34 @@ export function AppShell({ children }: PropsWithChildren) {
         {children}
       </main>
 
-      <nav className="bottom-nav" aria-label="Territorios principais">
-        {primaryNav.map((item) => (
-          <NavLink key={item.to} to={item.to}>
-            {item.label}
-          </NavLink>
-        ))}
-      </nav>
+      <BottomNavOlys items={bottomNavItems} />
 
-      <button
-        className="capture-fab"
-        type="button"
-        aria-label="Abrir captura"
-        onClick={() => setCaptureOpen(true)}
-      >
-        Capturar
-      </button>
+      <FloatingActionPair
+        idea={
+          <button className="shell-floating-action shell-floating-action--idea" type="button" aria-label="Abrir Idea" onClick={() => setIdeaOpen(true)}>
+            <OlysIcon src={olysAssets.nav.idea} decorative />
+          </button>
+        }
+        capturar={
+          <button
+            className="shell-floating-action shell-floating-action--capture"
+            type="button"
+            aria-label="Abrir captura"
+            onClick={() => setCaptureOpen(true)}
+          >
+            <OlysIcon src={olysAssets.nav.capturar} decorative />
+          </button>
+        }
+      />
 
       <CaptureSheet open={captureOpen} onClose={() => setCaptureOpen(false)} />
+
+      {/* Fase 1: porta estrutural da Idea. A logica contextual real pertence a Fase 6. */}
+      <OlysSheet open={ideaOpen} title="Idea" onClose={() => setIdeaOpen(false)}>
+        <div className="idea-placeholder" role="status">
+          Apoio contextual preparado para a proxima fase de IA.
+        </div>
+      </OlysSheet>
     </div>
   )
 }

@@ -11,10 +11,12 @@ export type TopBarOlysProps = {
 
 export function TopBarOlys({ menu, acesso, inbox, search }: TopBarOlysProps) {
   return (
-    <header className="olys-top-bar" aria-label="Barra superior Olys">
-      {menu}
-      <OlysIcon src={olysAssets.logo.primary} label="Olys" />
-      <nav aria-label="Acoes globais">
+    <header className="olys-top-bar" aria-label="Barra superior Olys" data-nav-scope="top-global">
+      <div className="olys-top-bar__brand">
+        {menu}
+        <OlysIcon className="olys-top-bar__logo" src={olysAssets.logo.primary} label="Olys" />
+      </div>
+      <nav className="olys-top-bar__actions" aria-label="Acoes globais">
         {acesso}
         {inbox}
         {search}
