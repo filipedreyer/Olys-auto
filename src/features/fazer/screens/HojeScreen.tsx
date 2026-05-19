@@ -115,6 +115,12 @@ export function HojeScreen() {
               meta={item.sourceContext}
               detail={projection.itemDetails[item.id]}
               state={item.status === 'paused' ? 'paused' : 'default'}
+              entityType={item.entityType}
+              priority={item.priority}
+              dateStart={item.dateStart}
+              startAt={item.startAt}
+              endAt={item.endAt}
+              durationMinutes={item.durationMinutes}
               size="compact"
             />
           ))}
@@ -139,6 +145,12 @@ export function HojeScreen() {
               meta={item.dateStart ?? item.sourceContext}
               detail="Risco operacional, dependencia ou informacao incompleta"
               state="attention"
+              entityType={item.entityType}
+              priority={item.priority}
+              dateStart={item.dateStart}
+              startAt={item.startAt}
+              endAt={item.endAt}
+              durationMinutes={item.durationMinutes}
               size="compact"
             />
           ))}
@@ -150,6 +162,12 @@ export function HojeScreen() {
               meta={item.sourceContext}
               detail={projection.itemDetails[item.id]}
               state="blocked"
+              entityType={item.entityType}
+              priority={item.priority}
+              dateStart={item.dateStart}
+              startAt={item.startAt}
+              endAt={item.endAt}
+              durationMinutes={item.durationMinutes}
               size="compact"
             />
           ))}

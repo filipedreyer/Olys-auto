@@ -15,6 +15,12 @@ export function OperationalCarousel({ items, details }: OperationalCarouselProps
           title={item.title}
           meta={item.sourceContext}
           detail={details[item.id]}
+          entityType={item.entityType}
+          priority={item.priority}
+          dateStart={item.dateStart}
+          startAt={item.startAt}
+          endAt={item.endAt}
+          durationMinutes={item.durationMinutes}
           size={resolveSize(index)}
         />
       ))}

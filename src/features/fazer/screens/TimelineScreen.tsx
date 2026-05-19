@@ -122,6 +122,7 @@ function CalendarField({ entries }: { entries: TimelineEntry[] }) {
           meta={entry.label}
           detail={entry.detail}
           state={entry.tone}
+          entityType="unclassified"
           size="compact"
         />
       ))}

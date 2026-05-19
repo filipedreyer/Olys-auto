@@ -17,6 +17,24 @@ export { EntityRail } from "./components/operational-item/EntityRail";
 export type { EntityRailKind, EntityRailProps } from "./components/operational-item/EntityRail";
 export { OperationalItemBase } from "./components/operational-item/OperationalItemBase";
 export type { OperationalItemBaseProps, OperationalItemState } from "./components/operational-item/OperationalItemBase";
+export { OperationalSignalStack } from "./components/operational-item/OperationalSignalStack";
+export type { OperationalSignalStackProps } from "./components/operational-item/OperationalSignalStack";
+export { OperationalActions } from "./components/operational-item/OperationalActions";
+export type { OperationalActionsProps } from "./components/operational-item/OperationalActions";
+export { OperationalRowOlys } from "./components/operational-item/OperationalRowOlys";
+export type { OperationalRowOlysProps } from "./components/operational-item/OperationalRowOlys";
+export { OperationalCardOlys } from "./components/operational-item/OperationalCardOlys";
+export type { OperationalCardOlysProps } from "./components/operational-item/OperationalCardOlys";
+export type {
+  OperationalItemAction,
+  OperationalItemActionKind,
+  OperationalItemDensity,
+  OperationalItemSignal,
+  OperationalItemSignalKind,
+  OperationalItemTone,
+  OperationalItemVisualEntity,
+  OperationalItemVisualState,
+} from "./components/operational-item/operationalItemTypes";
 export { OlysIndicator } from "./components/indicators/OlysIndicator";
 export type { OlysIndicatorProps, OlysIndicatorTone } from "./components/indicators/OlysIndicator";
 export { OlysSheet } from "./components/overlays/OlysSheet";

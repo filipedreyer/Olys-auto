@@ -1,16 +1,6 @@
-export type EntityRailKind =
-  | "task"
-  | "project"
-  | "goal"
-  | "note"
-  | "list"
-  | "habit"
-  | "routine"
-  | "event"
-  | "reminder"
-  | "agenda"
-  | "template"
-  | "unclassified";
+import type { OperationalItemDensity, OperationalItemVisualEntity } from "./operationalItemTypes";
+
+export type EntityRailKind = OperationalItemVisualEntity;
 
 const railTokenByKind: Record<EntityRailKind, string> = {
   task: "var(--olys-entity-task)",
@@ -29,8 +19,19 @@ const railTokenByKind: Record<EntityRailKind, string> = {
 
 export type EntityRailProps = {
   kind: EntityRailKind;
+  density?: OperationalItemDensity;
+  variant?: "row" | "card";
 };
 
-export function EntityRail({ kind }: EntityRailProps) {
-  return <span className="olys-entity-rail" aria-hidden="true" style={{ background: railTokenByKind[kind] }} />;
+export function EntityRail({ kind, density = "regular", variant = "row" }: EntityRailProps) {
+  return (
+    <span
+      className="olys-entity-rail"
+      aria-hidden="true"
+      data-density={density}
+      data-entity={kind}
+      data-variant={variant}
+      style={{ background: railTokenByKind[kind] }}
+    />
+  );
 }
