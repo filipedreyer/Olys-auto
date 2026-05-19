@@ -7,10 +7,11 @@ export function CapturarScreen() {
         <div>
           <small>Capturar</small>
           <h1>Entrada transversal</h1>
+          <p>Mesma superfície do acesso flutuante, preservada como fallback técnico.</p>
         </div>
       </header>
 
-      <CaptureSurface />
+      <CaptureSurface submitLabel="Enviar" />
     </section>
   )
 }

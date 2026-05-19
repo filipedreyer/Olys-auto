@@ -4,27 +4,55 @@ export type OlysSheetProps = PropsWithChildren<{
   open: boolean;
   title: string;
   onClose: () => void;
+  eyebrow?: string;
+  description?: string;
   actions?: ReactNode;
+  className?: string;
+  panelClassName?: string;
+  closeLabel?: string;
+  closeAriaLabel?: string;
 }>;
 
-export function OlysSheet({ open, title, onClose, actions, children }: OlysSheetProps) {
+export function OlysSheet({
+  open,
+  title,
+  onClose,
+  eyebrow,
+  description,
+  actions,
+  className,
+  panelClassName,
+  closeLabel = "Fechar",
+  closeAriaLabel = "Fechar camada",
+  children,
+}: OlysSheetProps) {
   if (!open) {
     return null;
   }
 
   return (
-    <>
-      <button className="olys-sheet-backdrop" type="button" aria-label="Fechar camada" onClick={onClose} />
-      <section className="olys-sheet" role="dialog" aria-modal="true" aria-label={title} tabIndex={-1}>
-        <header>
-          <h2>{title}</h2>
-          <button className="olys-button" type="button" onClick={onClose}>
-            Fechar
+    <div className={["olys-sheet-layer", className].filter(Boolean).join(" ")}>
+      <button className="olys-sheet-backdrop" type="button" aria-label={closeAriaLabel} onClick={onClose} />
+      <section
+        className={["olys-sheet", panelClassName].filter(Boolean).join(" ")}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        tabIndex={-1}
+      >
+        <header className="olys-sheet__header">
+          <div className="olys-sheet__heading">
+            {eyebrow ? <small>{eyebrow}</small> : null}
+            <h2>{title}</h2>
+            {description ? <p>{description}</p> : null}
+          </div>
+          <button className="olys-button" type="button" onClick={onClose} aria-label={closeAriaLabel}>
+            {closeLabel}
           </button>
         </header>
-        {children}
-        {actions ? <footer>{actions}</footer> : null}
+        <div className="olys-sheet__body">{children}</div>
+        {actions ? <footer className="olys-sheet__footer">{actions}</footer> : null}
       </section>
-    </>
+    </div>
   );
 }

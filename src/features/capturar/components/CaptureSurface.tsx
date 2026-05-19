@@ -1,13 +1,16 @@
 import { FormEvent, useState } from 'react'
 import { useOperationalStore } from '../../../shared/store/operationalStore'
 import { CaptureDestinationId } from '../domain/captureDestination'
+import { CaptureComposer } from './CaptureComposer'
 import { CaptureGrid } from './CaptureGrid'
+import { getCaptureDestinationPresentation } from './capturePresentation'
 
 type CaptureSurfaceProps = {
   onCaptured?: () => void
+  submitLabel?: string
 }
 
-export function CaptureSurface({ onCaptured }: CaptureSurfaceProps) {
+export function CaptureSurface({ onCaptured, submitLabel = 'Enviar' }: CaptureSurfaceProps) {
   const capture = useOperationalStore((state) => state.capture)
   const status = useOperationalStore((state) => state.status)
   const error = useOperationalStore((state) => state.error)
@@ -22,7 +25,7 @@ export function CaptureSurface({ onCaptured }: CaptureSurfaceProps) {
     setMessage(undefined)
 
     if (!title.trim()) {
-      setMessage('Nada capturado')
+      setMessage('Nada capturado. Escreva algo para enviar.')
       return
     }
 
@@ -40,45 +43,41 @@ export function CaptureSurface({ onCaptured }: CaptureSurfaceProps) {
     setTitle('')
     setDateStart('')
     setDestination('inbox')
-    setMessage('Capturado')
+    setMessage('Capturado.')
     onCaptured?.()
   }
 
+  const destinationPresentation = getCaptureDestinationPresentation(destination)
+  const helperMessage =
+    message ??
+    (destination === 'inbox'
+      ? 'Sem tipo explícito, entra na Inbox.'
+      : `Destino selecionado: ${destinationPresentation.label}.`)
+
   return (
     <form className="capture-surface" onSubmit={handleSubmit}>
-      <div className="capture-surface__field">
-        <label htmlFor="capture-input">Capturar</label>
-        <textarea
-          id="capture-input"
-          aria-label="Texto para capturar"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="Solte aqui o que precisa sair da cabeca"
-        />
-      </div>
+      <CaptureComposer
+        value={title}
+        onChange={setTitle}
+        busy={busy}
+        message={helperMessage}
+        error={error}
+        submitLabel={submitLabel}
+      />
 
       <CaptureGrid selected={destination} onSelect={setDestination} />
 
       {destination === 'reminder' ? (
         <label className="capture-date-field">
-          Data do lembrete
+          <span>Data do lembrete</span>
           <input
             type="date"
             value={dateStart}
             onChange={(event) => setDateStart(event.target.value)}
           />
+          <small>Lembrete precisa de data ou horário para existir fora da Inbox.</small>
         </label>
       ) : null}
-
-      <div className="capture-surface__footer">
-        <span className="surface-note">
-          {message ?? 'Sem tipo explicito, entra na Inbox.'}
-        </span>
-        {error ? <span className="auth-form__error">{error}</span> : null}
-        <button className="primary-action" type="submit" disabled={busy}>
-          {busy ? 'Capturando...' : 'Capturar'}
-        </button>
-      </div>
     </form>
   )
 }
