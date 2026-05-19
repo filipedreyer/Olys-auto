@@ -44,9 +44,9 @@ describe('operational grammar correction', () => {
     const hoje = readSource('features/fazer/screens/HojeScreen.tsx')
     const css = readCss()
 
-    expect(hoje).toContain('OperationalCarousel')
-    expect(hoje).toContain('today-secondary')
-    expect(hoje).toContain('attention-layer')
+    expect(hoje).toContain('NowStage')
+    expect(hoje).toContain('TodaySecondaryLayer')
+    expect(hoje).toContain('AttentionLayer')
     expect(css).toContain('.operational-carousel')
     expect(css).toContain('.operational-row--featured')
   })

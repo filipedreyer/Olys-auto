@@ -1,5 +1,6 @@
-import { OlysItem } from '../../../domain/entities/types'
-import { OperationalRow } from './OperationalRow'
+import { OperationalCardOlys } from '../../../design-system'
+import type { OlysItem } from '../../../domain/entities/types'
+import { toTodayItemViewModel } from './todayItemPresentation'
 
 type OperationalCarouselProps = {
   items: OlysItem[]
@@ -8,22 +9,30 @@ type OperationalCarouselProps = {
 
 export function OperationalCarousel({ items, details }: OperationalCarouselProps) {
   return (
-    <div className="operational-carousel" aria-label="Fluxo operacional agora">
-      {items.map((item, index) => (
-        <OperationalRow
-          key={item.id}
-          title={item.title}
-          meta={item.sourceContext}
-          detail={details[item.id]}
-          entityType={item.entityType}
-          priority={item.priority}
-          dateStart={item.dateStart}
-          startAt={item.startAt}
-          endAt={item.endAt}
-          durationMinutes={item.durationMinutes}
-          size={resolveSize(index)}
-        />
-      ))}
+    <div className="operational-carousel now-operational-carousel" aria-label="Fluxo operacional agora">
+      {items.map((item, index) => {
+        const viewModel = toTodayItemViewModel({
+          item,
+          detail: details[item.id],
+          density: resolveSize(index),
+          reason: 'now',
+        })
+
+        return (
+          <OperationalCardOlys
+            key={item.id}
+            entity={viewModel.entity}
+            title={viewModel.title}
+            context={viewModel.context}
+            temporalContext={viewModel.temporalContext}
+            detail={viewModel.detail}
+            state={viewModel.state}
+            density={viewModel.density}
+            signals={viewModel.signals}
+            className={`operational-row operational-row--${viewModel.state} operational-row--${viewModel.density}`}
+          />
+        )
+      })}
     </div>
   )
 }

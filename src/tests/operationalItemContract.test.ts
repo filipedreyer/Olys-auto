@@ -51,9 +51,10 @@ describe("operational item contract", () => {
   it("passes entity type into the carousel when the OlysItem is available", () => {
     const source = readSource("src/features/fazer/components/OperationalCarousel.tsx");
 
-    expect(source).toContain("entityType={item.entityType}");
-    expect(source).toContain("priority={item.priority}");
-    expect(source).toContain("durationMinutes={item.durationMinutes}");
+    expect(source).toContain("OperationalCardOlys");
+    expect(source).toContain("toTodayItemViewModel");
+    expect(source).toContain("item,");
+    expect(source).toContain("entity={viewModel.entity}");
   });
 
   it("keeps Timeline projection untouched and uses explicit unclassified fallback in the screen", () => {

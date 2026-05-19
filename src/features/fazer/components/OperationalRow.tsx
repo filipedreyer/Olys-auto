@@ -7,6 +7,7 @@ import {
   type OperationalItemVisualState,
 } from '../../../design-system'
 import { EntityType, OperationalRowState, Priority } from '../../../domain/entities/types'
+import { formatTemporalContext } from './todayItemPresentation'
 
 type OperationalRowProps = {
   title: string
@@ -65,15 +66,11 @@ export function OperationalRow({
 }
 
 function buildTemporalContext(dateStart?: string, startAt?: string, endAt?: string) {
-  if (startAt && endAt) {
-    return `${dateStart ? `${dateStart} ` : ''}${startAt}-${endAt}`
-  }
-
-  if (startAt) {
-    return `${dateStart ? `${dateStart} ` : ''}${startAt}`
-  }
-
-  return dateStart
+  return formatTemporalContext({
+    dateStart,
+    startAt,
+    endAt,
+  } as Parameters<typeof formatTemporalContext>[0])
 }
 
 function mergeSignals(
@@ -103,9 +100,7 @@ function mergeSignals(
   }
 
   if (
-    (input.state === 'unknown' ||
-      input.durationMinutes === null ||
-      input.detail?.toLowerCase().includes('unknown')) &&
+    (input.state === 'unknown' || input.durationMinutes === null) &&
     !hasSignal('unknown')
   ) {
     nextSignals.push({ kind: 'unknown' })
