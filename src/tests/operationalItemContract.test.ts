@@ -57,12 +57,14 @@ describe("operational item contract", () => {
     expect(source).toContain("entity={viewModel.entity}");
   });
 
-  it("keeps Timeline projection untouched and uses explicit unclassified fallback in the screen", () => {
+  it("keeps Timeline item rendering on canonical rows with explicit unclassified fallback", () => {
     const projection = readSource("src/features/fazer/domain/timelineProjection.ts");
-    const screen = readSource("src/features/fazer/screens/TimelineScreen.tsx");
+    const entryRow = readSource("src/features/fazer/components/timeline/TimelineEntryRow.tsx");
 
-    expect(projection).not.toContain("entityType:");
-    expect(screen).toContain('entityType="unclassified"');
+    expect(projection).toContain("entityType?: EntityType | 'unclassified'");
+    expect(projection).toContain("entityType: item.entityType");
+    expect(entryRow).toContain("entry.entityType ?? 'unclassified'");
+    expect(entryRow).toContain("<OperationalRow");
   });
 
   it("does not introduce hardcoded hex colors inside operational item DS components", () => {

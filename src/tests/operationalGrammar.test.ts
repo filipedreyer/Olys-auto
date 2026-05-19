@@ -55,10 +55,9 @@ describe('operational grammar correction', () => {
     const timeline = readSource('features/fazer/screens/TimelineScreen.tsx')
     const css = readCss()
 
-    expect(timeline).toContain('CapacityField')
-    expect(timeline).toContain('DependencyChain')
-    expect(css).toContain('.capacity-field')
-    expect(css).toContain('.dependency-chain')
+    expect(timeline).toContain('TimelineSurface')
+    expect(css).toContain('.timeline-capacity-lens')
+    expect(css).toContain('.timeline-dependency-lens')
   })
 })
 

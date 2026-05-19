@@ -187,7 +187,7 @@ describe('P5 daily cycle and timeline', () => {
       true,
     )
     expect(capacity.readings.capacity.confidence).toBe('unknown')
-    expect(capacity.entries[0].detail).toContain('nenhuma duracao foi inventada')
+    expect(capacity.entries[0].detail).toContain('nenhuma duração foi inventada')
     expect(dependency.entries[0].detail).toContain('Mostra bloqueio')
     expect(dependency.readings.dependencies.blocked).toHaveLength(1)
   })

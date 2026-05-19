@@ -81,9 +81,9 @@ describe("today screen contract", () => {
   it("does not redesign Timeline in this phase", () => {
     const source = readSource("src/features/fazer/screens/TimelineScreen.tsx");
 
-    expect(source).toContain("CapacityField");
-    expect(source).toContain("DependencyChain");
-    expect(source).toContain("CalendarField");
+    expect(source).toContain("TimelineHeader");
+    expect(source).toContain("TimelineReadings");
+    expect(source).toContain("TimelineSurface");
   });
 });
 

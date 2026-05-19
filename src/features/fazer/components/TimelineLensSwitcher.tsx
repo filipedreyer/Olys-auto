@@ -17,6 +17,7 @@ export function TimelineLensSwitcher({
           type="button"
           role="tab"
           aria-selected={activeLens === lens.id}
+          aria-pressed={activeLens === lens.id}
           className="timeline-lens-switcher__button"
           onClick={() => onChange(lens.id)}
         >

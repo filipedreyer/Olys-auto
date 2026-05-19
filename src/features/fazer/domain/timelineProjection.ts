@@ -1,6 +1,10 @@
 import {
   DependencyEdge,
+  DependencyStatus,
+  DependencyType,
   EntityCondition,
+  EntityType,
+  ItemStatus,
   OlysItem,
   OperationalRowState,
 } from '../../../domain/entities/types'
@@ -15,6 +19,20 @@ export type TimelineEntry = {
   label: string
   detail: string
   tone: OperationalRowState
+  entryKind: 'item' | 'dependency'
+  entityType?: EntityType | 'unclassified'
+  status?: ItemStatus
+  dateStart?: string
+  dateEnd?: string
+  startAt?: string
+  endAt?: string
+  durationMinutes?: number | null
+  sourceContext?: string
+  predecessorTitle?: string
+  successorTitle?: string
+  dependencyType?: DependencyType
+  dependencyImpact?: string
+  dependencyStatus?: DependencyStatus
 }
 
 export type TimelineProjection = {
@@ -56,10 +74,10 @@ function buildTimelineTitle(activeLens: TimelineLens) {
   }
 
   if (activeLens === 'dependency') {
-    return 'Bloqueios, impacto e sequencia'
+    return 'Bloqueios, impacto e sequência'
   }
 
-  return 'Calendario operacional'
+  return 'Calendário operacional'
 }
 
 function buildEntries(
@@ -76,12 +94,21 @@ function buildEntries(
         label:
           typeof item.durationMinutes === 'number'
             ? `${item.durationMinutes} min declarados`
-            : 'Duracao unknown',
+            : 'Duração unknown',
         detail:
           typeof item.durationMinutes === 'number'
             ? 'Carga declarada entra na leitura de sustentabilidade'
-            : 'Permanece unknown; nenhuma duracao foi inventada',
+            : 'Permanece unknown; nenhuma duração foi inventada',
         tone: item.status === 'paused' ? 'paused' : 'default',
+        entryKind: 'item',
+        entityType: item.entityType,
+        status: item.status,
+        dateStart: item.dateStart,
+        dateEnd: item.dateEnd,
+        startAt: item.startAt,
+        endAt: item.endAt,
+        durationMinutes: item.durationMinutes,
+        sourceContext: item.sourceContext,
       }))
   }
 
@@ -92,10 +119,17 @@ function buildEntries(
 
       return {
         id: edge.id,
-        title: predecessor?.title ?? 'Predecessor indisponivel',
+        title: predecessor?.title ?? 'Predecessor indisponível',
         label: successor ? `Antes de ${successor.title}` : edge.type,
         detail: `${edge.type}: ${edge.impact}`,
         tone: edge.status === 'active' ? 'blocked' : 'attention',
+        entryKind: 'dependency',
+        entityType: predecessor?.entityType ?? 'unclassified',
+        predecessorTitle: predecessor?.title,
+        successorTitle: successor?.title,
+        dependencyType: edge.type,
+        dependencyImpact: edge.impact,
+        dependencyStatus: edge.status,
       }
     })
   }
@@ -107,9 +141,18 @@ function buildEntries(
       title: item.title,
       label: item.startAt ?? item.dateStart ?? 'Sem janela fixa',
       detail: item.endAt
-        ? `Janela ate ${item.endAt}`
+        ? `Janela até ${item.endAt}`
         : item.sourceContext ?? 'Contexto temporal operacional',
       tone: item.status === 'paused' ? 'paused' : 'default',
+      entryKind: 'item',
+      entityType: item.entityType,
+      status: item.status,
+      dateStart: item.dateStart,
+      dateEnd: item.dateEnd,
+      startAt: item.startAt,
+      endAt: item.endAt,
+      durationMinutes: item.durationMinutes,
+      sourceContext: item.sourceContext,
     }))
 }
 

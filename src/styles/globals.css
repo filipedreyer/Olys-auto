@@ -1563,6 +1563,167 @@ main {
   gap: var(--space-5);
 }
 
+.timeline-header,
+.timeline-surface,
+.timeline-capacity-lens,
+.timeline-dependency-lens,
+.timeline-calendar-lens {
+  display: grid;
+  gap: var(--olys-space-4);
+}
+
+.timeline-header__topline,
+.timeline-header__body,
+.timeline-capacity-lens > header,
+.timeline-dependency-lens > header,
+.timeline-calendar-lens > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--olys-space-4);
+}
+
+.timeline-header small,
+.timeline-capacity-lens small,
+.timeline-dependency-lens small,
+.timeline-calendar-lens small {
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-xs);
+  font-weight: var(--olys-font-weight-strong);
+  text-transform: uppercase;
+}
+
+.timeline-header h1,
+.timeline-capacity-lens h2,
+.timeline-dependency-lens h2,
+.timeline-calendar-lens h2 {
+  margin: var(--olys-space-1) 0 0;
+}
+
+.timeline-header p,
+.timeline-capacity-lens p,
+.timeline-dependency-lens p,
+.timeline-calendar-lens p {
+  max-width: 58ch;
+  margin: 0;
+  color: var(--olys-text-secondary);
+  line-height: 1.45;
+}
+
+.timeline-readings {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--olys-space-2);
+}
+
+.timeline-readings .olys-indicator {
+  justify-content: flex-start;
+  min-height: var(--olys-touch-target-min);
+  border-left: 3px solid var(--olys-border-subtle);
+  background: var(--olys-surface-raised);
+  padding: var(--olys-space-2) var(--olys-space-3);
+}
+
+.timeline-readings .olys-indicator span {
+  border: 0;
+  background: transparent;
+  padding-left: 0;
+}
+
+.timeline-capacity-lens__summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--olys-space-2);
+}
+
+.timeline-capacity-lens__summary span,
+.timeline-capacity-entry > span,
+.timeline-entry-row > span {
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-xs);
+  line-height: 1.3;
+}
+
+.timeline-capacity-lens__summary span {
+  border-left: 3px solid var(--olys-border-subtle);
+  background: var(--olys-surface-raised);
+  padding: var(--olys-space-2) var(--olys-space-3);
+}
+
+.timeline-capacity-lens__entries,
+.timeline-calendar-lens__entries {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--olys-space-3);
+}
+
+.timeline-capacity-entry,
+.timeline-entry-row {
+  display: grid;
+  gap: var(--olys-space-2);
+}
+
+.timeline-capacity-entry {
+  border-left: 3px solid var(--olys-border-subtle);
+  background: var(--olys-surface-paper);
+  padding: var(--olys-space-3);
+}
+
+.timeline-capacity-entry[data-load='unknown'] {
+  border-left-color: var(--olys-state-unknown);
+}
+
+.timeline-capacity-entry[data-load='declared'] {
+  border-left-color: var(--olys-brand-teal);
+}
+
+.timeline-dependency-lens__chain {
+  display: grid;
+  gap: var(--olys-space-3);
+  max-width: 860px;
+}
+
+.timeline-dependency-node {
+  display: grid;
+  gap: var(--olys-space-2);
+  margin-left: calc(var(--timeline-depth, 0) * var(--olys-space-7));
+  border-left: 4px solid var(--olys-state-attention);
+  background: var(--olys-surface-raised);
+  padding: var(--olys-space-4);
+}
+
+.timeline-dependency-node[data-state='blocked'] {
+  border-left-color: var(--olys-state-critical);
+}
+
+.timeline-dependency-node > span,
+.timeline-dependency-node > small {
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-xs);
+}
+
+.timeline-dependency-node__flow {
+  display: flex;
+  align-items: center;
+  gap: var(--olys-space-2);
+  flex-wrap: wrap;
+}
+
+.timeline-dependency-node__flow strong {
+  color: var(--olys-text-primary);
+}
+
+.timeline-dependency-node__flow span {
+  color: var(--olys-state-critical);
+  font-weight: var(--olys-font-weight-strong);
+}
+
+.timeline-dependency-node p {
+  margin: 0;
+  color: var(--olys-text-secondary);
+  line-height: 1.45;
+}
+
 .capacity-field {
   min-height: 360px;
   display: grid;
@@ -1935,6 +2096,11 @@ main {
   .fazer-header__body,
   .today-header__topline,
   .inbox-header,
+  .timeline-header__topline,
+  .timeline-header__body,
+  .timeline-capacity-lens > header,
+  .timeline-dependency-lens > header,
+  .timeline-calendar-lens > header,
   .capture-composer__feedback {
     flex-direction: column;
     align-items: stretch;
@@ -1946,6 +2112,10 @@ main {
   .today-indicators,
   .today-secondary__grid,
   .inbox-reading-band,
+  .timeline-readings,
+  .timeline-capacity-lens__summary,
+  .timeline-capacity-lens__entries,
+  .timeline-calendar-lens__entries,
   .capacity-field,
   .calendar-field {
     grid-template-columns: 1fr;
@@ -1987,6 +2157,10 @@ main {
   .dependency-chain__node--depth-2,
   .dependency-chain__node--depth-3 {
     margin-left: var(--space-4);
+  }
+
+  .timeline-dependency-node {
+    margin-left: var(--olys-space-4);
   }
 
   .capture-fab {
