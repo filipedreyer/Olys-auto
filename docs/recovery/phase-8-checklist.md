@@ -1,0 +1,27 @@
+# Phase 8 Checklist
+
+- [x] Memória não virou knowledge base.
+- [x] Memória não virou file manager.
+- [x] Memória não virou backlog.
+- [x] Caixola não virou Inbox.
+- [x] Templates não viraram marketplace.
+- [x] Arquivados são recuperáveis.
+- [x] Concluídos são histórico operacional.
+- [x] Anexos não criam storage público.
+- [x] Busca não acessa repository.
+- [x] restoreItem preservado.
+- [x] reuseTemplate preservado.
+- [x] buildMemoryProjection preservado como fonte.
+- [x] Domain não alterado.
+- [x] Store não alterado.
+- [x] Command handlers não alterados.
+- [x] Repositories não alterados.
+- [x] Hoje não alterado.
+- [x] Timeline não alterada.
+- [x] Capturar não alterado.
+- [x] Inbox não alterada.
+- [x] Planejar não alterado.
+- [x] Shell não alterado.
+- [x] Typecheck passou.
+- [x] Build passou.
+- [x] Testes passaram.

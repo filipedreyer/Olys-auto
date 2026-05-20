@@ -1016,6 +1016,211 @@ main {
   margin: 0;
 }
 
+.memory-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--olys-space-4);
+  align-items: start;
+}
+
+.memory-header small,
+.memory-layer__header span,
+.memory-subarea-card > span {
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.memory-header h1 {
+  margin: var(--olys-space-1) 0 0;
+  color: var(--olys-text-primary);
+  font-size: var(--olys-font-size-2xl);
+  line-height: 1.1;
+}
+
+.memory-header p,
+.memory-layer__header p {
+  margin: var(--olys-space-2) 0 0;
+  color: var(--olys-text-secondary);
+  line-height: 1.45;
+}
+
+.memory-header > strong {
+  min-width: var(--olys-touch-target-min);
+  min-height: var(--olys-touch-target-min);
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-md);
+  background: var(--olys-surface-raised);
+  color: var(--olys-brand-teal);
+}
+
+.memory-reading-band,
+.memory-subarea-grid {
+  display: grid;
+  gap: var(--olys-space-3);
+}
+
+.memory-reading-band {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.memory-reading-card,
+.memory-subarea-card,
+.memory-layer {
+  border: 1px solid var(--olys-border-subtle);
+  background: var(--olys-surface);
+}
+
+.memory-reading-card {
+  display: grid;
+  gap: var(--olys-space-1);
+  padding: var(--olys-space-3);
+}
+
+.memory-reading-card span,
+.memory-reading-card p {
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-xs);
+}
+
+.memory-reading-card strong {
+  color: var(--olys-text-primary);
+  font-size: var(--olys-font-size-xl);
+  line-height: 1;
+}
+
+.memory-reading-card p {
+  margin: 0;
+}
+
+.memory-subarea-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.memory-subarea-card {
+  display: grid;
+  gap: var(--olys-space-2);
+  padding: var(--olys-space-3);
+  border-radius: var(--olys-radius-md);
+}
+
+.memory-subarea-card[data-tone='incubation'] {
+  border-color: var(--olys-state-attention);
+}
+
+.memory-subarea-card[data-tone='reuse'] {
+  border-color: var(--olys-brand-teal);
+}
+
+.memory-subarea-card[data-status='future_contract'] {
+  border-style: dashed;
+  background: var(--olys-surface-raised);
+}
+
+.memory-subarea-card strong {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--olys-space-2);
+  color: var(--olys-text-primary);
+}
+
+.memory-subarea-card strong em {
+  color: var(--olys-brand-teal);
+  font-style: normal;
+}
+
+.memory-subarea-card p {
+  margin: 0;
+  color: var(--olys-text-secondary);
+  font-size: var(--olys-font-size-sm);
+  line-height: 1.35;
+}
+
+.memory-layer {
+  display: grid;
+  gap: var(--olys-space-3);
+  padding: var(--olys-space-4);
+  border-radius: var(--olys-radius-lg);
+}
+
+.memory-layer__header h2 {
+  margin: var(--olys-space-1) 0 0;
+  color: var(--olys-text-primary);
+  font-size: var(--olys-font-size-lg);
+  line-height: 1.2;
+}
+
+.memory-layer__content {
+  display: grid;
+  gap: var(--olys-space-3);
+}
+
+.memory-caixola-layer {
+  border-color: var(--olys-state-attention);
+}
+
+.memory-templates-layer {
+  border-color: var(--olys-brand-teal);
+}
+
+.memory-archive-layer,
+.memory-completed-layer {
+  background: var(--olys-surface-raised);
+}
+
+.memory-attachments-layer {
+  border-style: dashed;
+}
+
+.memory-item-row {
+  display: grid;
+  gap: var(--olys-space-2);
+}
+
+.memory-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--olys-space-2);
+  padding-left: var(--olys-space-3);
+}
+
+.memory-item-actions span {
+  min-height: var(--olys-touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-sm);
+}
+
+.memory-search-control {
+  display: grid;
+  gap: var(--olys-space-2);
+}
+
+.memory-search-control span {
+  color: var(--olys-text-secondary);
+  font-size: var(--olys-font-size-sm);
+  font-weight: 700;
+}
+
+.memory-search-control input {
+  min-height: var(--olys-touch-target-min);
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-md);
+  background: var(--olys-surface);
+  color: var(--olys-text-primary);
+  padding: 0 var(--olys-space-3);
+}
+
+.memory-search-control input:focus-visible {
+  outline: var(--olys-focus-ring);
+  outline-offset: var(--olys-focus-offset);
+}
+
 .suggestion-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -2225,6 +2430,8 @@ main {
   .today-indicators,
   .today-secondary__grid,
   .inbox-reading-band,
+  .memory-reading-band,
+  .memory-subarea-grid,
   .planning-readings,
   .planning-direction-layer,
   .timeline-readings,
@@ -2250,6 +2457,22 @@ main {
 
   .inbox-action {
     flex: 1 1 100%;
+  }
+
+  .memory-header {
+    grid-template-columns: 1fr;
+  }
+
+  .memory-layer {
+    padding: var(--olys-space-3);
+  }
+
+  .memory-item-actions {
+    padding-left: 0;
+  }
+
+  .memory-item-actions .olys-button {
+    width: 100%;
   }
 
   .capture-grid {

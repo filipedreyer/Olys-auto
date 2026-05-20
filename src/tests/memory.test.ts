@@ -68,8 +68,8 @@ describe('P7 operational memory', () => {
     expect(snapshot.items.find((item) => item.id === archivedTarget.id)).toMatchObject({
       status: 'archived',
     })
-    expect(projection.archived[0].detail).toContain('vinculo')
-    expect(projection.archived[0].detail).toContain('dependencia')
+    expect(projection.archived[0].detail).toContain('vínculo')
+    expect(projection.archived[0].detail).toContain('dependência')
 
     const events = await entityChangeEventsRepository.list(userId)
     expect(events.map((event) => event.changeType)).toContain('item_archived')
@@ -117,7 +117,7 @@ describe('P7 operational memory', () => {
       ]),
     )
     expect(projection.groups.find((group) => group.id === 'caixola')?.description).toContain(
-      'sem virar backlog oculto',
+      'sem virar fila oculta',
     )
   })
 
