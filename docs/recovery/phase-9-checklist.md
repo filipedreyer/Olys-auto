@@ -1,0 +1,27 @@
+# Phase 9 Checklist
+
+- [x] Idea não virou rota.
+- [x] Idea não virou chatbot genérico.
+- [x] Idea abre pelo FloatingActionPair.
+- [x] IdeaDrawer substituiu placeholder.
+- [x] Context builder mínimo criado.
+- [x] Output estruturado criado.
+- [x] Reading, suggestion, report e proposed_action separados.
+- [x] Confirmation Sheet criada.
+- [x] Safety Gate criado.
+- [x] Ação persistente sem confirmação bloqueada.
+- [x] Command handlers não chamados.
+- [x] Repositories não chamados.
+- [x] Store não alterado.
+- [x] Prompt/resposta brutos não persistidos.
+- [x] App funciona sem IA real.
+- [x] Hoje não alterado.
+- [x] Timeline não alterada.
+- [x] Capturar não alterado.
+- [x] Inbox não alterada.
+- [x] Planejar não alterado.
+- [x] Memória não alterada, salvo leitura de contexto via store no Shell.
+- [x] Shell alterado apenas para usar IdeaDrawer.
+- [x] Typecheck passou.
+- [x] Build passou.
+- [x] Testes passaram.

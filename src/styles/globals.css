@@ -373,6 +373,190 @@ main {
   padding: var(--olys-space-4);
 }
 
+.idea-drawer {
+  width: min(760px, calc(100% - 24px));
+}
+
+.idea-drawer .olys-sheet__body {
+  gap: var(--olys-space-4);
+}
+
+.idea-context-summary,
+.idea-input,
+.idea-output-card,
+.idea-disclosure,
+.idea-confirmation-sheet__body {
+  border: 1px solid var(--olys-border-subtle);
+  background: var(--olys-surface);
+}
+
+.idea-context-summary,
+.idea-input,
+.idea-output-card,
+.idea-disclosure,
+.idea-confirmation-sheet__body {
+  display: grid;
+  gap: var(--olys-space-3);
+  padding: var(--olys-space-4);
+  border-radius: var(--olys-radius-md);
+}
+
+.idea-context-summary header,
+.idea-output-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--olys-space-3);
+  align-items: center;
+}
+
+.idea-context-summary header span,
+.idea-output-card header span,
+.idea-input label span,
+.idea-confirmation-sheet__body > span {
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.idea-context-summary header strong {
+  color: var(--olys-brand-ia-violet);
+}
+
+.idea-context-summary p,
+.idea-output-card p,
+.idea-disclosure p,
+.idea-confirmation-sheet__body p {
+  margin: 0;
+  color: var(--olys-text-secondary);
+  line-height: 1.45;
+}
+
+.idea-context-summary__signals,
+.idea-output-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--olys-space-2);
+}
+
+.idea-context-summary__signals span,
+.idea-output-card__meta span {
+  border: 1px solid var(--olys-border-subtle);
+  background: var(--olys-surface-raised);
+  color: var(--olys-text-secondary);
+  font-size: var(--olys-font-size-xs);
+  padding: var(--olys-space-1) var(--olys-space-2);
+}
+
+.idea-input label {
+  display: grid;
+  gap: var(--olys-space-2);
+}
+
+.idea-input textarea {
+  width: 100%;
+  min-height: 92px;
+  border: 1px solid var(--olys-border-subtle);
+  border-left: 4px solid var(--olys-brand-ia-violet);
+  border-radius: var(--olys-radius-md);
+  background: var(--olys-surface-raised);
+  color: var(--olys-text-primary);
+  padding: var(--olys-space-3);
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.idea-input textarea:focus-visible {
+  outline: var(--olys-focus-ring);
+  outline-offset: var(--olys-focus-offset);
+}
+
+.idea-input__actions,
+.idea-confirmation-sheet__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--olys-space-2);
+  justify-content: flex-end;
+}
+
+.idea-output-list {
+  display: grid;
+  gap: var(--olys-space-3);
+}
+
+.idea-output-card {
+  border-left: 4px solid var(--olys-border-subtle);
+}
+
+.idea-output-card h3,
+.idea-confirmation-sheet__body h3 {
+  margin: 0;
+  color: var(--olys-text-primary);
+  font-size: var(--olys-font-size-lg);
+}
+
+.idea-output-card small {
+  color: var(--olys-text-muted);
+}
+
+.idea-output-card--reading {
+  border-left-color: var(--olys-brand-teal);
+}
+
+.idea-output-card--suggestion,
+.idea-output-card--proposed-action {
+  border-left-color: var(--olys-brand-ia-violet);
+}
+
+.idea-output-card--report {
+  border-left-color: var(--olys-entity-project);
+}
+
+.idea-output-card--unavailable {
+  border-left-color: var(--olys-state-unknown);
+  background: var(--olys-surface-raised);
+}
+
+.idea-output-card--safety-blocked {
+  border-left-color: var(--olys-state-critical);
+}
+
+.idea-output-card__meta {
+  display: grid;
+}
+
+.idea-output-card__meta strong {
+  color: var(--olys-text-secondary);
+  font-size: var(--olys-font-size-xs);
+}
+
+.idea-disclosure {
+  background: var(--olys-surface-raised);
+}
+
+.idea-confirmation-sheet dl {
+  display: grid;
+  gap: var(--olys-space-2);
+  margin: 0;
+}
+
+.idea-confirmation-sheet dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--olys-space-3);
+  border-bottom: 1px solid var(--olys-border-subtle);
+  padding-bottom: var(--olys-space-2);
+}
+
+.idea-confirmation-sheet dt {
+  color: var(--olys-text-muted);
+}
+
+.idea-confirmation-sheet dd {
+  margin: 0;
+  color: var(--olys-text-primary);
+}
+
 .bottom-nav a {
   padding: 0 var(--space-2);
   font-size: 0.92rem;

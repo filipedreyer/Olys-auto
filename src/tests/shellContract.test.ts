@@ -34,7 +34,7 @@ describe("global shell contract", () => {
     expect(source).toContain("<BottomNavOlys");
     expect(source).toContain("<FloatingActionPair");
     expect(source).toContain("<CaptureSheet");
-    expect(source).toContain("<OlysSheet");
+    expect(source).toContain("<IdeaDrawer");
   });
 
   it("does not route Capturar, Idea or Inbox through bottom navigation", () => {

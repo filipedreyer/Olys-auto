@@ -4,11 +4,11 @@ import {
   BottomNavOlys,
   FloatingActionPair,
   OlysIcon,
-  OlysSheet,
   TopBarOlys,
   olysAssets,
 } from '../../design-system'
 import { CaptureSheet } from '../../features/capturar/components/CaptureSheet'
+import { IdeaDrawer } from '../../features/idea/components/IdeaDrawer'
 import { useAuth } from '../../shared/auth/AuthProvider'
 import { useOperationalStore } from '../../shared/store/operationalStore'
 
@@ -44,6 +44,11 @@ export function AppShell({ children }: PropsWithChildren) {
   const storeStatus = useOperationalStore((state) => state.status)
   const error = useOperationalStore((state) => state.error)
   const inboxCount = useOperationalStore((state) => state.inboxItems.length)
+  const items = useOperationalStore((state) => state.items)
+  const inboxItems = useOperationalStore((state) => state.inboxItems)
+  const conditions = useOperationalStore((state) => state.conditions)
+  const dependencies = useOperationalStore((state) => state.dependencies)
+  const links = useOperationalStore((state) => state.links)
 
   useEffect(() => {
     if (location.pathname === '/capturar') {
@@ -140,12 +145,16 @@ export function AppShell({ children }: PropsWithChildren) {
 
       <CaptureSheet open={captureOpen} onClose={() => setCaptureOpen(false)} />
 
-      {/* Fase 1: porta estrutural da Idea. A logica contextual real pertence a Fase 6. */}
-      <OlysSheet open={ideaOpen} title="Idea" onClose={() => setIdeaOpen(false)}>
-        <div className="idea-placeholder" role="status">
-          Apoio contextual preparado para a proxima fase de IA.
-        </div>
-      </OlysSheet>
+      <IdeaDrawer
+        open={ideaOpen}
+        onClose={() => setIdeaOpen(false)}
+        currentPath={location.pathname}
+        items={items}
+        inboxItems={inboxItems}
+        conditions={conditions}
+        dependencies={dependencies}
+        links={links}
+      />
     </div>
   )
 }
