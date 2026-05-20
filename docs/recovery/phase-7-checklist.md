@@ -1,0 +1,23 @@
+# Fase 7 — Checklist
+
+- [x] Planejar não virou dashboard.
+- [x] Planejar não virou OKR tool.
+- [x] Planejar não virou PM tool.
+- [x] Metas usam entityType goal.
+- [x] Projetos usam entityType project.
+- [x] Hábitos e rotinas usam entityType real.
+- [x] Readings usam dados existentes.
+- [x] qualitativeProgress preservado.
+- [x] dependencyRisk preservado.
+- [x] activeOperationalItems preservado.
+- [x] Projection não foi reescrita.
+- [x] Hoje não alterado.
+- [x] Timeline não alterada.
+- [x] Capturar não alterado.
+- [x] Inbox não alterada.
+- [x] Shell não alterado.
+- [x] Command handlers não alterados.
+- [x] Repositories não alterados.
+- [x] Typecheck passou.
+- [x] Build passou.
+- [x] Testes passaram.

@@ -500,6 +500,117 @@ main {
   gap: var(--space-3);
 }
 
+.planning-header,
+.planning-section__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--olys-space-4);
+}
+
+.planning-header small,
+.planning-section small {
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-xs);
+  font-weight: var(--olys-font-weight-strong);
+  text-transform: uppercase;
+}
+
+.planning-header h1,
+.planning-section h2 {
+  margin: var(--olys-space-1) 0 0;
+}
+
+.planning-header p {
+  max-width: 56ch;
+  margin: var(--olys-space-2) 0 0;
+  color: var(--olys-text-secondary);
+  line-height: 1.45;
+}
+
+.planning-header > span,
+.planning-section__header > strong {
+  min-height: var(--olys-touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  border-left: 3px solid var(--olys-brand-teal);
+  background: var(--olys-surface-teal-soft);
+  color: var(--olys-text-primary);
+  padding: 0 var(--olys-space-3);
+  font-weight: var(--olys-font-weight-strong);
+  white-space: nowrap;
+}
+
+.planning-readings {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--olys-space-2);
+}
+
+.planning-readings .olys-indicator {
+  justify-content: flex-start;
+  min-height: var(--olys-touch-target-min);
+  border-left: 3px solid var(--olys-border-subtle);
+  background: var(--olys-surface-raised);
+  padding: var(--olys-space-2) var(--olys-space-3);
+  line-height: 1.35;
+}
+
+.planning-direction-layer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--olys-space-2) var(--olys-space-4);
+  border-left: 4px solid var(--olys-brand-teal);
+  background: var(--olys-surface-paper);
+  padding: var(--olys-space-4);
+}
+
+.planning-direction-layer span,
+.planning-direction-layer p {
+  color: var(--olys-text-secondary);
+  line-height: 1.45;
+}
+
+.planning-direction-layer strong {
+  grid-row: span 2;
+  align-self: center;
+  color: var(--olys-brand-teal);
+  font-size: var(--olys-font-size-xl);
+}
+
+.planning-section {
+  display: grid;
+  gap: var(--olys-space-3);
+}
+
+.planning-section__content {
+  display: grid;
+  gap: var(--olys-space-3);
+}
+
+.planning-goals-layer {
+  border-left: 3px solid var(--olys-entity-goal);
+  padding-left: var(--olys-space-4);
+}
+
+.planning-projects-layer {
+  border-left: 3px solid var(--olys-entity-project);
+  padding-left: var(--olys-space-4);
+}
+
+.planning-rhythms-layer {
+  border-left: 3px solid var(--olys-entity-habit);
+  padding-left: var(--olys-space-4);
+}
+
+.planning-entity-row {
+  display: grid;
+}
+
+.planning-entity-row[data-state='attention'] .olys-operational-item {
+  background: var(--olys-surface-attention-soft);
+}
+
 .surface-note {
   margin: 0;
   color: var(--text-secondary);
@@ -2096,6 +2207,8 @@ main {
   .fazer-header__body,
   .today-header__topline,
   .inbox-header,
+  .planning-header,
+  .planning-section__header,
   .timeline-header__topline,
   .timeline-header__body,
   .timeline-capacity-lens > header,
@@ -2112,6 +2225,8 @@ main {
   .today-indicators,
   .today-secondary__grid,
   .inbox-reading-band,
+  .planning-readings,
+  .planning-direction-layer,
   .timeline-readings,
   .timeline-capacity-lens__summary,
   .timeline-capacity-lens__entries,
@@ -2119,6 +2234,10 @@ main {
   .capacity-field,
   .calendar-field {
     grid-template-columns: 1fr;
+  }
+
+  .planning-direction-layer strong {
+    grid-row: auto;
   }
 
   .inbox-triage-item {

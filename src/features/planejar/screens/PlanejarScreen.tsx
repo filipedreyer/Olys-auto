@@ -1,6 +1,10 @@
 import { useOperationalStore } from '../../../shared/store/operationalStore'
-import { EmptyState } from '../../../shared/components/EmptyState'
-import { OperationalRow } from '../../fazer/components/OperationalRow'
+import { PlanningDirectionLayer } from '../components/PlanningDirectionLayer'
+import { PlanningGoalsLayer } from '../components/PlanningGoalsLayer'
+import { PlanningHeader } from '../components/PlanningHeader'
+import { PlanningProjectsLayer } from '../components/PlanningProjectsLayer'
+import { PlanningReadings } from '../components/PlanningReadings'
+import { PlanningRhythmsLayer } from '../components/PlanningRhythmsLayer'
 import { buildPlanningProjection } from '../domain/planningProjection'
 
 export function PlanejarScreen() {
@@ -12,82 +16,12 @@ export function PlanejarScreen() {
 
   return (
     <section className="planejar-screen">
-      <header className="screen-header">
-        <div>
-          <small>Planejar</small>
-          <h1>Direcao e sequencia</h1>
-        </div>
-      </header>
-
-      <section className="reading-band" aria-label="Leitura de planejamento">
-        <span>{projection.readings.direction.statement}</span>
-        <span>{projection.readings.direction.trajectory}</span>
-        <span>{projection.readings.dependencies.summary}</span>
-      </section>
-
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Metas relevantes</h2>
-        </header>
-
-        <div className="surface-section__content">
-          {projection.goals.length === 0 ? (
-            <EmptyState message="Nenhuma meta ativa orientando o Fazer agora." />
-          ) : null}
-
-          {projection.goals.map((goal) => (
-            <OperationalRow
-              key={goal.id}
-              title={goal.title}
-              meta={goal.qualitativeProgress}
-              detail={goal.relationToToday}
-            />
-          ))}
-        </div>
-      </section>
-
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Projetos ativos</h2>
-        </header>
-
-        <div className="surface-section__content">
-          {projection.projects.length === 0 ? (
-            <EmptyState message="Nenhum projeto ativo conectado a execucao." />
-          ) : null}
-
-          {projection.projects.map((project) => (
-            <OperationalRow
-              key={project.id}
-              title={project.title}
-              meta={project.linkedGoalTitle ?? 'projeto'}
-              detail={project.relationToToday}
-              state={project.dependencyRisk > 0 ? 'attention' : 'default'}
-            />
-          ))}
-        </div>
-      </section>
-
-      <section className="surface-section">
-        <header className="surface-section__header">
-          <h2>Habitos e rotinas</h2>
-        </header>
-
-        <div className="surface-section__content">
-          {projection.rhythms.length === 0 ? (
-            <EmptyState message="Nenhum habito ou rotina ativo como ritmo contextual." />
-          ) : null}
-
-          {projection.rhythms.map((rhythm) => (
-            <OperationalRow
-              key={rhythm.id}
-              title={rhythm.title}
-              meta={rhythm.kind}
-              detail={rhythm.reading}
-            />
-          ))}
-        </div>
-      </section>
+      <PlanningHeader projection={projection} />
+      <PlanningReadings projection={projection} />
+      <PlanningDirectionLayer projection={projection} />
+      <PlanningGoalsLayer goals={projection.goals} />
+      <PlanningProjectsLayer projects={projection.projects} />
+      <PlanningRhythmsLayer rhythms={projection.rhythms} />
     </section>
   )
 }
