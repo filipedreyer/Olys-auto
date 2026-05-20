@@ -33,6 +33,7 @@ export function CompletedLayer({ items, details }: CompletedLayerProps) {
             endAt={item.endAt}
             durationMinutes={item.durationMinutes}
             size="compact"
+            itemId={item.id}
           />
         ))}
       </div>

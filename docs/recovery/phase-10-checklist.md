@@ -1,0 +1,23 @@
+# Fase 10 - Checklist
+
+- [x] ENT00 implementado.
+- [x] ENT01 a ENT09 cobertos.
+- [x] Sheet base criada.
+- [x] Campos específicos por entidade criados.
+- [x] Campos derivados não editáveis.
+- [x] EntityLink separado de DependencyEdge.
+- [x] Composição separada de vínculo/dependência.
+- [x] Histórico não mostra texto sensível bruto.
+- [x] Anexos sem storage público.
+- [x] Project Stages não viraram entidade.
+- [x] Milestones não viraram entidade.
+- [x] Risks não viraram entidade.
+- [x] Event Prep não virou entidade.
+- [x] Não há mega-formulário universal.
+- [x] Não houve import de código legado.
+- [x] Não houve alteração de domínio.
+- [x] Não houve alteração de command handlers.
+- [x] Não houve alteração de repositories.
+- [x] Build passou.
+- [x] Typecheck passou.
+- [x] Testes passaram.

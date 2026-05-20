@@ -2704,6 +2704,118 @@ main {
 }
 }
 
+.entity-sheet-panel {
+  max-width: min(720px, calc(100vw - var(--olys-space-4)));
+}
+
+.entity-sheet {
+  display: grid;
+  gap: var(--olys-space-4);
+}
+
+.entity-sheet-header,
+.entity-sheet-section {
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-md);
+  background: var(--olys-surface-paper);
+  padding: var(--olys-space-4);
+}
+
+.entity-sheet-header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--olys-space-3);
+}
+
+.entity-sheet-header h2,
+.entity-sheet-section h3,
+.entity-specific-block__item h4 {
+  margin: 0;
+}
+
+.entity-sheet-header p,
+.entity-sheet-section p,
+.entity-specific-block__item p {
+  margin: var(--olys-space-1) 0 0;
+  color: var(--olys-text-secondary);
+}
+
+.entity-sheet-header small,
+.entity-sheet-section small {
+  color: var(--olys-text-muted);
+}
+
+.entity-sheet-header__status {
+  display: grid;
+  gap: var(--olys-space-1);
+  justify-items: end;
+  color: var(--olys-text-secondary);
+}
+
+.entity-field-list,
+.entity-sheet-nested-list,
+.entity-sheet-actions__buttons {
+  display: grid;
+  gap: var(--olys-space-2);
+  margin-top: var(--olys-space-3);
+}
+
+.entity-field {
+  display: grid;
+  gap: var(--olys-space-1);
+  border-left: 3px solid var(--olys-border-strong);
+  padding: var(--olys-space-2) var(--olys-space-3);
+  background: var(--olys-surface-raised);
+}
+
+.entity-field--editable {
+  border-left-color: var(--olys-brand-teal);
+}
+
+.entity-field--derived,
+.entity-field--historical {
+  border-left-color: var(--olys-state-unknown);
+}
+
+.entity-field--future-contract {
+  border-left-color: var(--olys-ia-violet);
+}
+
+.entity-field span {
+  color: var(--olys-text-muted);
+}
+
+.entity-field strong {
+  color: var(--olys-text-primary);
+}
+
+.entity-sheet-mini-row,
+.entity-specific-block__item {
+  display: grid;
+  gap: var(--olys-space-1);
+  margin-top: var(--olys-space-2);
+  border-left: 3px solid var(--olys-brand-teal);
+  padding: var(--olys-space-2) var(--olys-space-3);
+  background: var(--olys-surface-raised);
+}
+
+.entity-dependency-block .entity-sheet-mini-row {
+  border-left-color: var(--olys-state-blocked);
+}
+
+.entity-relation-block .entity-sheet-mini-row {
+  border-left-color: var(--olys-state-partial);
+}
+
+.entity-sheet-actions__buttons {
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+}
+
+.entity-sheet-confirmation__body {
+  display: grid;
+  gap: var(--olys-space-2);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .shell-floating-action,
   .olys-button,

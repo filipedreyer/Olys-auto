@@ -33,6 +33,7 @@ export function TodaySecondaryLayer({ items, details }: TodaySecondaryLayerProps
             endAt={item.endAt}
             durationMinutes={item.durationMinutes}
             size="compact"
+            itemId={item.id}
           />
         ))}
       </div>

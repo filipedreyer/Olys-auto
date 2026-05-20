@@ -38,6 +38,7 @@ export function PlanningGoalsLayer({ goals }: PlanningGoalsLayerProps) {
             relation={polishPlanningText(goal.relationToToday)}
             state={resolveGoalState(goal.qualitativeProgress)}
             signals={getGoalSignals(goal)}
+            itemId={goal.id}
           />
         ))}
       </div>

@@ -33,6 +33,7 @@ export function PlanningRhythmsLayer({ rhythms }: PlanningRhythmsLayerProps) {
             relation={polishPlanningText(rhythm.reading)}
             state="default"
             density="compact"
+            itemId={rhythm.id}
           />
         ))}
       </div>

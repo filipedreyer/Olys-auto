@@ -7,6 +7,7 @@ import {
   type OperationalItemVisualState,
 } from '../../../design-system'
 import { EntityType, OperationalRowState, Priority } from '../../../domain/entities/types'
+import { useOptionalEntitySheet } from '../../entity-sheets/context/EntitySheetContext'
 import { formatTemporalContext } from './todayItemPresentation'
 
 type OperationalRowProps = {
@@ -23,6 +24,7 @@ type OperationalRowProps = {
   durationMinutes?: number | null
   signals?: readonly OperationalItemSignal[]
   actions?: readonly OperationalItemAction[]
+  itemId?: string
 }
 
 export function OperationalRow({
@@ -39,7 +41,9 @@ export function OperationalRow({
   durationMinutes,
   signals = [],
   actions = [],
+  itemId,
 }: OperationalRowProps) {
+  const entitySheet = useOptionalEntitySheet()
   const temporalContext = buildTemporalContext(dateStart, startAt, endAt)
   const resolvedSignals = mergeSignals(signals, {
     state,
@@ -48,6 +52,15 @@ export function OperationalRow({
     durationMinutes,
     detail,
   })
+  const openAction = itemId && entityType !== 'unclassified' && entitySheet
+    ? [{
+        kind: 'open' as const,
+        label: 'Detalhes',
+        ariaLabel: `Abrir Entity Sheet de ${title}`,
+        onSelect: () => entitySheet.openEntitySheet(itemId),
+      }]
+    : []
+  const resolvedActions = [...actions, ...openAction]
 
   return (
     <OperationalRowOlys
@@ -59,7 +72,7 @@ export function OperationalRow({
       state={state}
       density={size}
       signals={resolvedSignals}
-      actions={actions}
+      actions={resolvedActions}
       className={`operational-row operational-row--${state} operational-row--${size}`}
     />
   )

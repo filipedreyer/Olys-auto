@@ -41,6 +41,7 @@ export function PlanningProjectsLayer({ projects }: PlanningProjectsLayerProps) 
             }
             state={resolveProjectState(project)}
             signals={getProjectSignals(project)}
+            itemId={project.id}
           />
         ))}
       </div>

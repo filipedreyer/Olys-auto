@@ -8,6 +8,8 @@ import {
   olysAssets,
 } from '../../design-system'
 import { CaptureSheet } from '../../features/capturar/components/CaptureSheet'
+import { EntitySheetHost } from '../../features/entity-sheets/components/EntitySheetHost'
+import { EntitySheetProvider } from '../../features/entity-sheets/context/EntitySheetContext'
 import { IdeaDrawer } from '../../features/idea/components/IdeaDrawer'
 import { useAuth } from '../../shared/auth/AuthProvider'
 import { useOperationalStore } from '../../shared/store/operationalStore'
@@ -49,6 +51,12 @@ export function AppShell({ children }: PropsWithChildren) {
   const conditions = useOperationalStore((state) => state.conditions)
   const dependencies = useOperationalStore((state) => state.dependencies)
   const links = useOperationalStore((state) => state.links)
+  const completeItem = useOperationalStore((state) => state.completeItem)
+  const archiveItem = useOperationalStore((state) => state.archiveItem)
+  const restoreItem = useOperationalStore((state) => state.restoreItem)
+  const softDeleteItem = useOperationalStore((state) => state.softDeleteItem)
+  const applyEssentialProtected = useOperationalStore((state) => state.applyEssentialProtected)
+  const removeEssentialProtected = useOperationalStore((state) => state.removeEssentialProtected)
 
   useEffect(() => {
     if (location.pathname === '/capturar') {
@@ -60,7 +68,8 @@ export function AppShell({ children }: PropsWithChildren) {
   const hasPendingInbox = inboxCount > 0
 
   return (
-    <div className="app-shell app-shell--olys">
+    <EntitySheetProvider>
+      <div className="app-shell app-shell--olys">
       <TopBarOlys
         menu={
           <button className="shell-icon-button shell-icon-button--menu" type="button" aria-label="Abrir menu">
@@ -155,6 +164,22 @@ export function AppShell({ children }: PropsWithChildren) {
         dependencies={dependencies}
         links={links}
       />
-    </div>
+        <EntitySheetHost
+          items={items}
+          conditions={conditions}
+          links={links}
+          dependencies={dependencies}
+          busy={storeStatus === 'loading'}
+          actions={{
+            completeItem,
+            archiveItem,
+            restoreItem,
+            softDeleteItem,
+            applyEssentialProtected,
+            removeEssentialProtected,
+          }}
+        />
+      </div>
+    </EntitySheetProvider>
   )
 }

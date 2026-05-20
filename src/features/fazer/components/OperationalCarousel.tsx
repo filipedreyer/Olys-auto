@@ -1,5 +1,6 @@
 import { OperationalCardOlys } from '../../../design-system'
 import type { OlysItem } from '../../../domain/entities/types'
+import { useOptionalEntitySheet } from '../../entity-sheets/context/EntitySheetContext'
 import { toTodayItemViewModel } from './todayItemPresentation'
 
 type OperationalCarouselProps = {
@@ -8,6 +9,8 @@ type OperationalCarouselProps = {
 }
 
 export function OperationalCarousel({ items, details }: OperationalCarouselProps) {
+  const entitySheet = useOptionalEntitySheet()
+
   return (
     <div className="operational-carousel now-operational-carousel" aria-label="Fluxo operacional agora">
       {items.map((item, index) => {
@@ -29,6 +32,12 @@ export function OperationalCarousel({ items, details }: OperationalCarouselProps
             state={viewModel.state}
             density={viewModel.density}
             signals={viewModel.signals}
+            actions={entitySheet ? [{
+              kind: 'open',
+              label: 'Detalhes',
+              ariaLabel: `Abrir Entity Sheet de ${item.title}`,
+              onSelect: () => entitySheet.openEntitySheet(item.id),
+            }] : []}
             className={`operational-row operational-row--${viewModel.state} operational-row--${viewModel.density}`}
           />
         )

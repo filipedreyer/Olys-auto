@@ -37,6 +37,7 @@ export function AttentionLayer({ attention, blocked, details }: AttentionLayerPr
             endAt={item.endAt}
             durationMinutes={item.durationMinutes}
             size="compact"
+            itemId={item.id}
           />
         ))}
 
@@ -54,6 +55,7 @@ export function AttentionLayer({ attention, blocked, details }: AttentionLayerPr
             endAt={item.endAt}
             durationMinutes={item.durationMinutes}
             size="compact"
+            itemId={item.id}
           />
         ))}
       </div>

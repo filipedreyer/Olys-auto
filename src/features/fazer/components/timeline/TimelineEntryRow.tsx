@@ -30,6 +30,7 @@ export function TimelineEntryRow({
       durationMinutes={entry.durationMinutes}
       signals={getTimelineEntrySignals(entry)}
       size={compact ? 'compact' : 'regular'}
+      itemId={entry.entryKind === 'item' ? entry.id : undefined}
     />
   )
 }

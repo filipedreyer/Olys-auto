@@ -47,6 +47,7 @@ export function MemoryItemRow({
         entityType={entityType}
         state={state}
         size="compact"
+        itemId={item.originKind === 'item' && !item.isFutureContract ? item.id : undefined}
       />
       <div className="memory-item-actions" aria-label={`Ações de memória para ${item.title}`}>
         {item.isRecoverable && onRestore ? (

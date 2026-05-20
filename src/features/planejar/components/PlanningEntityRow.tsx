@@ -16,6 +16,7 @@ type PlanningEntityRowProps = {
   signals?: readonly OperationalItemSignal[]
   relation?: string
   density?: OperationalItemDensity
+  itemId?: string
 }
 
 export function PlanningEntityRow({
@@ -27,6 +28,7 @@ export function PlanningEntityRow({
   signals = [],
   relation,
   density = 'regular',
+  itemId,
 }: PlanningEntityRowProps) {
   return (
     <div className="planning-entity-row" data-entity={entityType} data-state={state}>
@@ -38,6 +40,7 @@ export function PlanningEntityRow({
         state={state}
         signals={signals}
         size={density}
+        itemId={itemId}
       />
     </div>
   )
