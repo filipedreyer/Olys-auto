@@ -1,0 +1,25 @@
+# Fase 11 - Checklist
+
+- [x] Abrir o Dia não é ritual gamificado.
+- [x] Fechar o Dia não é diário complexo.
+- [x] Diário é registro mínimo.
+- [x] Carta de Respiro não é motivacional genérica.
+- [x] Revisão Semanal não é relatório produtivista.
+- [x] Revisão Semanal não cria score.
+- [x] Revisão Semanal não cria streak.
+- [x] Essencial protegido continua condição.
+- [x] Replanejamento não executa ação automática.
+- [x] Ordenação manual temporária não foi implementada sem rastreabilidade.
+- [x] `openDay` preservado.
+- [x] `closeDay` preservado.
+- [x] `dailySessions` preservadas.
+- [x] Domínio não alterado.
+- [x] Repositories não alterados.
+- [x] Command handlers não alterados.
+- [x] Hoje não foi redesenhado.
+- [x] Planejar não foi transformado em dashboard.
+- [x] Idea não executa ação real.
+- [x] Entity Sheets não foram alteradas.
+- [x] Build passou.
+- [x] Typecheck passou.
+- [x] Testes passaram.

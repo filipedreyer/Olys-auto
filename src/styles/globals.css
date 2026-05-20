@@ -2816,6 +2816,122 @@ main {
   gap: var(--olys-space-2);
 }
 
+.daily-cycle-panel,
+.weekly-review-layer {
+  display: grid;
+  gap: var(--olys-space-4);
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-lg);
+  background: var(--olys-surface-paper);
+  padding: var(--olys-space-4);
+}
+
+.daily-cycle-panel__doors,
+.weekly-review-layer__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--olys-space-3);
+}
+
+.open-day-panel,
+.close-day-panel,
+.day-reading-card,
+.breathing-card,
+.weekly-direction-block,
+.weekly-capacity-block,
+.weekly-continuity-block,
+.weekly-protected-essentials-block,
+.weekly-review-prompts {
+  display: grid;
+  gap: var(--olys-space-2);
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-md);
+  background: var(--olys-surface-raised);
+  padding: var(--olys-space-3);
+}
+
+.day-reading-card dl,
+.weekly-review-readings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--olys-space-2);
+}
+
+.day-reading-card dl {
+  margin: 0;
+}
+
+.day-reading-card dt,
+.weekly-review-layer small,
+.open-day-panel small,
+.close-day-panel small,
+.breathing-card small {
+  color: var(--olys-text-muted);
+}
+
+.day-reading-card dd {
+  margin: 0;
+  color: var(--olys-text-primary);
+}
+
+.diary-closing-field {
+  display: grid;
+  gap: var(--olys-space-1);
+}
+
+.diary-closing-field textarea {
+  min-height: 84px;
+  resize: vertical;
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-sm);
+  background: var(--olys-surface-paper);
+  color: var(--olys-text-primary);
+  padding: var(--olys-space-2);
+}
+
+.breathing-card {
+  border-left: 4px solid var(--olys-brand-teal);
+}
+
+.weekly-review-layer__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--olys-space-3);
+}
+
+.weekly-protected-essentials-block__list,
+.weekly-review-prompts ul,
+.weekly-review-prompts__missing {
+  display: grid;
+  gap: var(--olys-space-2);
+  margin: 0;
+  padding: 0;
+}
+
+.weekly-review-prompts li {
+  margin-left: var(--olys-space-4);
+}
+
+.weekly-protected-essentials-block article {
+  border-left: 3px solid var(--olys-state-partial);
+  background: var(--olys-surface-paper);
+  padding: var(--olys-space-2);
+}
+
+@media (max-width: 760px) {
+  .daily-cycle-panel__doors,
+  .weekly-review-layer__grid,
+  .day-reading-card dl,
+  .weekly-review-readings {
+    grid-template-columns: 1fr;
+  }
+
+  .weekly-review-layer__header {
+    flex-direction: column;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .shell-floating-action,
   .olys-button,

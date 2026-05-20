@@ -3,6 +3,7 @@ import { ConfirmationSheet } from '../../ia/components/ConfirmationSheet'
 import { SuggestionCard } from '../../ia/components/SuggestionCard'
 import { contextualIdeaSuggestion } from '../../ia/domain/aiState'
 import { useOperationalStore } from '../../../shared/store/operationalStore'
+import { buildDailyCycleProjection } from '../../daily-cycle/domain/dailyCycleProjection'
 import { AttentionLayer } from '../components/AttentionLayer'
 import { CompletedLayer } from '../components/CompletedLayer'
 import { NowStage } from '../components/NowStage'
@@ -16,6 +17,7 @@ export function HojeScreen() {
   const items = useOperationalStore((state) => state.items)
   const conditions = useOperationalStore((state) => state.conditions)
   const dependencies = useOperationalStore((state) => state.dependencies)
+  const links = useOperationalStore((state) => state.links)
   const dailySessions = useOperationalStore((state) => state.dailySessions)
   const status = useOperationalStore((state) => state.status)
   const openDay = useOperationalStore((state) => state.openDay)
@@ -27,6 +29,15 @@ export function HojeScreen() {
   const currentSession = dailySessions.find((session) => session.date === today)
   const busy = status === 'loading'
   const dayState = resolveDayState(currentSession)
+  const cycleProjection = buildDailyCycleProjection({
+    today,
+    items,
+    conditions,
+    dependencies,
+    links,
+    dailySessions,
+    todayProjection: projection,
+  })
 
   return (
     <section className="hoje-screen fazer-territory">
@@ -43,6 +54,7 @@ export function HojeScreen() {
 
       <TodayCyclePanel
         dayState={dayState}
+        cycleProjection={cycleProjection}
         closingNote={closingNote}
         busy={busy}
         onClosingNoteChange={setClosingNote}
