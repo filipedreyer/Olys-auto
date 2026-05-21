@@ -1,0 +1,21 @@
+# Fase 12 - Checklist
+
+- [x] Splash criado.
+- [x] Login criado ou migrado.
+- [x] Cadastro criado ou preparado com erro honesto.
+- [x] Recuperação criada ou preparada com erro honesto.
+- [x] Onboarding curto criado.
+- [x] PWA install tratado sem promessa falsa.
+- [x] Sessão expirada criada.
+- [x] Loading/skeleton criados.
+- [x] Offline/erro parcial criados.
+- [x] Rotas públicas não usam Shell logado.
+- [x] Rotas privadas preservam Shell.
+- [x] AuthProvider não foi reescrito agressivamente.
+- [x] Command handlers não alterados.
+- [x] Repositories não alterados.
+- [x] Domínio não alterado.
+- [x] Projections operacionais não alteradas.
+- [x] Build passou.
+- [x] Typecheck passou.
+- [x] Testes passaram.

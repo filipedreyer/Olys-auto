@@ -2,35 +2,37 @@
 
 ## Papel
 
-Acesso cobre entrada, autenticacao, sessao, onboarding, PWA e estados sistemicos de disponibilidade.
+Acesso cobre entrada, autenticação, sessão, onboarding e retomada de confiança. Ele não herda a gramática do Shell logado.
 
-## Obrigatorio
+## Obrigatório
 
-- AC01 a AC07 devem ser tratados como superficie de confianca.
-- Login e cadastro devem ser claros e baixos em friccao.
-- Sessao expirada preserva continuidade.
-- Onboarding ensina a logica Olys, nao produtividade generica.
-- PWA nao bloqueia uso.
-- Degraded/local mode continua funcional quando Supabase nao existe.
+- AC01 a AC07 são superfícies de confiança.
+- Login, cadastro e recuperação são leves e diretos.
+- Onboarding é curto e orientado a maturidade.
+- Sessão expirada preserva confiança e não sugere perda de dados sem evidência.
+- Erro de configuração precisa ser claro.
+- Nenhum dado operacional pode ser perdido silenciosamente.
+- Rotas públicas não renderizam TopBar, BottomNav, FloatingActionPair, Capturar ou Idea.
 
 ## Proibido
 
-- Dark SaaS como default.
-- Splash promocional.
-- Onboarding longo e obrigatório sem valor.
-- Prometer sync/offline alem do implementado.
-- Acesso como cadeado/cofre quando o papel for retomada.
+- Landing page SaaS.
+- Tutorial longo de produtividade.
+- Gamificação.
+- Prometer sync/offline além do implementado.
+- Esconder falha de configuração.
+- Apagar contexto no logout sem regra explícita.
 
-## Dependencias
+## Dependências
 
-AuthProvider, Supabase mode, degraded mode, Shell Global e Governanca de Dados.
+AuthProvider, Supabase mode, degraded/local mode, Shell Global, contratos de PWA e estados sistêmicos.
 
-## Criterios De Aceite
+## Critérios De Aceite
 
-- Estados unauthenticated, loading, authenticated, degraded e expired session sao legiveis.
-- Erros de acesso nao quebram runtime.
-- PWA e safe area funcionam em mobile.
+- Estados loading, authenticated, unauthenticated, degraded/configuração e sessão expirada são legíveis.
+- Rotas públicas e privadas ficam separadas.
+- Falha de acesso não quebra runtime.
 
-## Riscos De Regressao
+## Riscos De Regressão
 
-Auth generico, perda de contexto, onboarding produtivista e bloqueio indevido do app local.
+Auth genérico, perda de contexto, onboarding produtivista, Shell logado aparecendo em acesso e promessa falsa de sincronização.

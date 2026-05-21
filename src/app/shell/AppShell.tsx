@@ -11,6 +11,7 @@ import { CaptureSheet } from '../../features/capturar/components/CaptureSheet'
 import { EntitySheetHost } from '../../features/entity-sheets/components/EntitySheetHost'
 import { EntitySheetProvider } from '../../features/entity-sheets/context/EntitySheetContext'
 import { IdeaDrawer } from '../../features/idea/components/IdeaDrawer'
+import { OfflineBanner } from '../../features/system-states/components/OfflineBanner'
 import { useAuth } from '../../shared/auth/AuthProvider'
 import { useOperationalStore } from '../../shared/store/operationalStore'
 
@@ -70,6 +71,7 @@ export function AppShell({ children }: PropsWithChildren) {
   return (
     <EntitySheetProvider>
       <div className="app-shell app-shell--olys">
+      <OfflineBanner />
       <TopBarOlys
         menu={
           <button className="shell-icon-button shell-icon-button--menu" type="button" aria-label="Abrir menu">

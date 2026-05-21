@@ -2919,6 +2919,178 @@ main {
   padding: var(--olys-space-2);
 }
 
+.access-shell {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--olys-space-4);
+  background: var(--olys-surface-app);
+  color: var(--olys-text-primary);
+  padding: max(var(--olys-space-4), var(--olys-safe-area-top)) max(var(--olys-space-4), var(--olys-safe-area-right)) max(var(--olys-space-4), var(--olys-safe-area-bottom)) max(var(--olys-space-4), var(--olys-safe-area-left));
+}
+
+.access-shell__brand {
+  width: 96px;
+}
+
+.access-shell__content {
+  display: grid;
+  place-items: center;
+}
+
+.access-card {
+  width: min(100%, 560px);
+  display: grid;
+  gap: var(--olys-space-4);
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-lg);
+  background: var(--olys-surface-paper);
+  padding: var(--olys-space-5);
+}
+
+.access-card h1,
+.access-card p {
+  margin: 0;
+}
+
+.access-card header {
+  display: grid;
+  gap: var(--olys-space-2);
+}
+
+.access-card header small,
+.access-trust-block small {
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-xs);
+  font-weight: var(--olys-font-weight-strong);
+  text-transform: uppercase;
+}
+
+.access-form,
+.access-form-field,
+.access-trust-block,
+.onboarding-screen {
+  display: grid;
+  gap: var(--olys-space-3);
+}
+
+.access-form-field input {
+  min-height: var(--olys-touch-target-min);
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-sm);
+  background: var(--olys-surface-paper);
+  color: var(--olys-text-primary);
+  padding: 0 var(--olys-space-3);
+}
+
+.access-form-field small,
+.access-form__error {
+  color: var(--olys-state-critical);
+}
+
+.access-form__status,
+.access-note,
+.access-card header p,
+.access-trust-block p,
+.onboarding-maturity-step p {
+  color: var(--olys-text-secondary);
+  line-height: 1.45;
+}
+
+.access-mode {
+  width: fit-content;
+  border-left: 3px solid var(--olys-brand-teal);
+  background: var(--olys-surface-teal-soft);
+  padding: var(--olys-space-2) var(--olys-space-3);
+}
+
+.access-links,
+.pwa-install-prompt__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--olys-space-3);
+}
+
+.access-links a {
+  color: var(--olys-brand-teal);
+  font-weight: var(--olys-font-weight-strong);
+}
+
+.access-trust-block,
+.pwa-install-prompt,
+.partial-error-state,
+.configuration-error-screen {
+  border-left: 3px solid var(--olys-state-partial);
+  background: var(--olys-surface-raised);
+  padding: var(--olys-space-3);
+}
+
+.onboarding-maturity-step {
+  display: grid;
+  grid-template-columns: var(--olys-touch-target-min) minmax(0, 1fr);
+  gap: var(--olys-space-3);
+  align-items: start;
+}
+
+.onboarding-maturity-step span {
+  min-height: var(--olys-touch-target-min);
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--olys-border-teal);
+  border-radius: var(--olys-radius-sm);
+  color: var(--olys-brand-teal);
+  font-weight: var(--olys-font-weight-strong);
+}
+
+.app-loading-state {
+  min-height: 100dvh;
+  display: grid;
+  align-content: center;
+  gap: var(--olys-space-4);
+  background: var(--olys-surface-app);
+  color: var(--olys-text-primary);
+  padding: var(--olys-space-5);
+}
+
+.skeleton-block {
+  display: grid;
+  gap: var(--olys-space-2);
+  max-width: 420px;
+}
+
+.skeleton-block span {
+  height: 16px;
+  border-radius: var(--olys-radius-sm);
+  background: var(--olys-surface-subtle);
+}
+
+.skeleton-block span:nth-child(2) {
+  width: 78%;
+}
+
+.skeleton-block span:nth-child(3) {
+  width: 54%;
+}
+
+.inline-loading-state {
+  color: var(--olys-text-secondary);
+}
+
+.offline-banner {
+  position: sticky;
+  top: 0;
+  z-index: var(--olys-z-toast);
+  border-bottom: 1px solid var(--olys-border-subtle);
+  background: var(--olys-surface-attention-soft);
+  color: var(--olys-text-primary);
+  padding: var(--olys-space-2) var(--olys-space-4);
+}
+
+.pwa-install-prompt {
+  display: grid;
+  gap: var(--olys-space-3);
+}
+
 @media (max-width: 760px) {
   .daily-cycle-panel__doors,
   .weekly-review-layer__grid,
@@ -2929,6 +3101,10 @@ main {
 
   .weekly-review-layer__header {
     flex-direction: column;
+  }
+
+  .access-card {
+    padding: var(--olys-space-4);
   }
 }
 

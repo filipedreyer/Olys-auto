@@ -14,6 +14,9 @@ export type AuthStatus =
   | 'loading'
   | 'authenticated'
   | 'degraded'
+  | 'expired'
+  | 'configurationError'
+  | 'recoverableError'
 
 type AuthUser = {
   id: string
@@ -28,6 +31,14 @@ type AuthContextValue = {
     ok: boolean
     error?: string
   }>
+  signup: (input: { email: string; password: string }) => Promise<{
+    ok: boolean
+    error?: string
+  }>
+  recoverPassword: (input: { email: string }) => Promise<{
+    ok: boolean
+    error?: string
+  }>
   logout: () => Promise<void>
 }
 
@@ -35,6 +46,8 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 
 const degradedAuthValue = (
   login: AuthContextValue['login'],
+  signup: AuthContextValue['signup'],
+  recoverPassword: AuthContextValue['recoverPassword'],
   logout: () => Promise<void>,
 ): AuthContextValue => ({
   status: 'degraded',
@@ -43,17 +56,23 @@ const degradedAuthValue = (
   },
   mode: 'local',
   login,
+  signup,
+  recoverPassword,
   logout,
 })
 
 const loadingAuthValue = (
   login: AuthContextValue['login'],
+  signup: AuthContextValue['signup'],
+  recoverPassword: AuthContextValue['recoverPassword'],
   logout: () => Promise<void>,
 ): AuthContextValue => ({
   status: 'loading',
   user: null,
   mode: 'supabase',
   login,
+  signup,
+  recoverPassword,
   logout,
 })
 
@@ -64,14 +83,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
         const supabase = getSupabaseClient()
 
         if (!supabase) {
-          setValue(degradedAuthValue(login, logout))
+          setValue(degradedAuthValue(login, signup, recoverPassword, logout))
           return {
             ok: false,
             error: 'Supabase environment is not configured',
           }
         }
 
-        setValue(loadingAuthValue(login, logout))
+        setValue(loadingAuthValue(login, signup, recoverPassword, logout))
 
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -84,6 +103,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
             user: null,
             mode: 'supabase',
             login,
+            signup,
+            recoverPassword,
             logout,
           })
           return {
@@ -98,12 +119,76 @@ export function AuthProvider({ children }: PropsWithChildren) {
       },
     [],
   )
+  const signup = useMemo(
+    () =>
+      async ({ email, password }: { email: string; password: string }) => {
+        const supabase = getSupabaseClient()
+
+        if (!supabase) {
+          return {
+            ok: false,
+            error: 'Cadastro exige Supabase configurado.',
+          }
+        }
+
+        setValue(loadingAuthValue(login, signup, recoverPassword, logout))
+
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        })
+
+        if (error) {
+          setValue({
+            status: 'unauthenticated',
+            user: null,
+            mode: 'supabase',
+            login,
+            signup,
+            recoverPassword,
+            logout,
+          })
+          return {
+            ok: false,
+            error: error.message,
+          }
+        }
+
+        return { ok: true }
+      },
+    [login],
+  )
+  const recoverPassword = useMemo(
+    () =>
+      async ({ email }: { email: string }) => {
+        const supabase = getSupabaseClient()
+
+        if (!supabase) {
+          return {
+            ok: false,
+            error: 'Recuperação exige Supabase configurado.',
+          }
+        }
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email)
+
+        if (error) {
+          return {
+            ok: false,
+            error: error.message,
+          }
+        }
+
+        return { ok: true }
+      },
+    [],
+  )
   const logout = useMemo(
     () => async () => {
       const supabase = getSupabaseClient()
 
       if (!supabase) {
-        setValue(degradedAuthValue(login, logout))
+        setValue(degradedAuthValue(login, signup, recoverPassword, logout))
         return
       }
 
@@ -113,23 +198,27 @@ export function AuthProvider({ children }: PropsWithChildren) {
         user: null,
         mode: 'supabase',
         login,
+        signup,
+        recoverPassword,
         logout,
       })
     },
-    [login],
+    [login, recoverPassword, signup],
   )
 
   const [value, setValue] = useState<AuthContextValue>(() => {
     const supabase = getSupabaseClient()
 
-    return supabase ? loadingAuthValue(login, logout) : degradedAuthValue(login, logout)
+    return supabase
+      ? loadingAuthValue(login, signup, recoverPassword, logout)
+      : degradedAuthValue(login, signup, recoverPassword, logout)
   })
 
   useEffect(() => {
     const supabase = getSupabaseClient()
 
     if (!supabase) {
-      setValue(degradedAuthValue(login, logout))
+      setValue(degradedAuthValue(login, signup, recoverPassword, logout))
       return
     }
 
@@ -154,22 +243,32 @@ export function AuthProvider({ children }: PropsWithChildren) {
             : null,
           mode: 'supabase',
           login,
+          signup,
+          recoverPassword,
           logout,
         })
       })
       .catch(() => {
         if (active) {
-          setValue(degradedAuthValue(login, logout))
+          setValue({
+            status: 'recoverableError',
+            user: null,
+            mode: 'supabase',
+            login,
+            signup,
+            recoverPassword,
+            logout,
+          })
         }
       })
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       const sessionUser = session?.user
 
       setValue({
-        status: sessionUser ? 'authenticated' : 'unauthenticated',
+        status: event === 'SIGNED_OUT' && !sessionUser ? 'expired' : sessionUser ? 'authenticated' : 'unauthenticated',
         user: sessionUser
           ? {
               id: sessionUser.id,
@@ -178,6 +277,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
           : null,
         mode: 'supabase',
         login,
+        signup,
+        recoverPassword,
         logout,
       })
     })
@@ -186,7 +287,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       active = false
       subscription.unsubscribe()
     }
-  }, [login, logout])
+  }, [login, logout, recoverPassword, signup])
 
   const contextValue = useMemo(() => value, [value])
 

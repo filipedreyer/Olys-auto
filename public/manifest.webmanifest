@@ -1,0 +1,10 @@
+{
+  "name": "Olys",
+  "short_name": "Olys",
+  "description": "Sistema operacional pessoal para direção, atenção e continuidade contextual.",
+  "start_url": "/splash",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F7F5F1",
+  "theme_color": "#0D848B"
+}
