@@ -3091,11 +3091,162 @@ main {
   gap: var(--olys-space-3);
 }
 
+.central-screen {
+  display: grid;
+  gap: var(--olys-space-5);
+}
+
+.central-header,
+.central-section {
+  display: grid;
+  gap: var(--olys-space-4);
+  border: 1px solid var(--olys-border-subtle);
+  border-radius: var(--olys-radius-lg);
+  background: var(--olys-surface-paper);
+  padding: var(--olys-space-5);
+}
+
+.central-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.central-header small,
+.central-section header small,
+.central-section-card small,
+.central-governed-flow small {
+  color: var(--olys-text-muted);
+  font-size: var(--olys-font-size-xs);
+  font-weight: var(--olys-font-weight-strong);
+  text-transform: uppercase;
+}
+
+.central-header h1,
+.central-header p,
+.central-section h2,
+.central-section p,
+.central-section-card h3,
+.central-section-card p,
+.central-governed-flow h3,
+.central-governed-flow p {
+  margin: 0;
+}
+
+.central-header p,
+.central-section header p,
+.central-section-card p,
+.central-section-card span,
+.central-disclosure-block p,
+.central-disclosure-block li,
+.central-governed-flow p,
+.central-governed-flow dd,
+.central-section__list p,
+.central-section__list span {
+  color: var(--olys-text-secondary);
+  line-height: 1.45;
+}
+
+.central-header > span {
+  border-left: 3px solid var(--olys-brand-teal);
+  background: var(--olys-surface-teal-soft);
+  color: var(--olys-text-primary);
+  padding: var(--olys-space-2) var(--olys-space-3);
+  font-weight: var(--olys-font-weight-strong);
+}
+
+.central-section-grid,
+.central-section__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--olys-space-3);
+}
+
+.central-section-card,
+.central-disclosure-block,
+.central-governed-flow,
+.central-section__list article {
+  display: grid;
+  gap: var(--olys-space-2);
+  border: 1px solid var(--olys-border-subtle);
+  border-left: 3px solid var(--olys-border-strong);
+  border-radius: var(--olys-radius-md);
+  background: var(--olys-surface-raised);
+  padding: var(--olys-space-3);
+}
+
+.central-section-card[data-status='active'],
+.central-disclosure-block[data-tone='neutral'] {
+  border-left-color: var(--olys-brand-teal);
+}
+
+.central-section-card[data-status='preparatory'],
+.central-disclosure-block[data-tone='attention'],
+.central-governed-flow[data-flow='export'],
+.central-governed-flow[data-flow='support'],
+.central-governed-flow[data-flow='preference'] {
+  border-left-color: var(--olys-state-partial);
+}
+
+.central-section-card[data-status='requires_backend'],
+.central-governed-flow[data-dangerous='true'],
+.central-disclosure-block[data-tone='danger'] {
+  border-left-color: var(--olys-state-critical);
+}
+
+.central-section__list {
+  display: grid;
+  gap: var(--olys-space-2);
+}
+
+.central-disclosure-block ul {
+  display: grid;
+  gap: var(--olys-space-2);
+  margin: 0;
+  padding-left: var(--olys-space-4);
+}
+
+.central-governed-flow dl,
+.central-account-section__details {
+  display: grid;
+  gap: var(--olys-space-2);
+  margin: 0;
+}
+
+.central-governed-flow dl div,
+.central-account-section__details div {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.35fr) minmax(0, 1fr);
+  gap: var(--olys-space-3);
+  border-bottom: 1px solid var(--olys-border-subtle);
+  padding-bottom: var(--olys-space-2);
+}
+
+.central-governed-flow dt,
+.central-account-section__details dt {
+  color: var(--olys-text-muted);
+}
+
+.central-governed-flow dd,
+.central-account-section__details dd {
+  margin: 0;
+}
+
+.central-governed-flow__status {
+  border-left: 3px solid var(--olys-brand-teal);
+  background: var(--olys-surface-teal-soft);
+  padding: var(--olys-space-2) var(--olys-space-3);
+}
+
 @media (max-width: 760px) {
   .daily-cycle-panel__doors,
   .weekly-review-layer__grid,
   .day-reading-card dl,
-  .weekly-review-readings {
+  .weekly-review-readings,
+  .central-header,
+  .central-section-grid,
+  .central-section__grid,
+  .central-governed-flow dl div,
+  .central-account-section__details div {
     grid-template-columns: 1fr;
   }
 
@@ -3104,6 +3255,11 @@ main {
   }
 
   .access-card {
+    padding: var(--olys-space-4);
+  }
+
+  .central-header,
+  .central-section {
     padding: var(--olys-space-4);
   }
 }

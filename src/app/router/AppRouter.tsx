@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { CapturarScreen } from '../../features/capturar/screens/CapturarScreen'
+import { CentralScreen } from '../../features/central/screens/CentralScreen'
 import { SplashScreen } from '../../features/access/screens/SplashScreen'
 import { LoginScreen } from '../../features/access/screens/LoginScreen'
 import { SignupScreen } from '../../features/access/screens/SignupScreen'
@@ -38,6 +39,7 @@ export function AppRouter() {
       <Route path="/memoria/inbox" element={<PrivateRoute><InboxScreen /></PrivateRoute>} />
       <Route path="/planejar" element={<PrivateRoute><PlanejarScreen /></PrivateRoute>} />
       <Route path="/memoria" element={<PrivateRoute><MemoriaScreen /></PrivateRoute>} />
+      <Route path="/central" element={<PrivateRoute><CentralScreen /></PrivateRoute>} />
 
       <Route path="/hoje" element={<Navigate to="/fazer/hoje" replace />} />
       <Route path="/timeline" element={<Navigate to="/fazer/timeline" replace />} />

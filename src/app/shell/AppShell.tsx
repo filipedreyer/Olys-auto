@@ -43,7 +43,7 @@ export function AppShell({ children }: PropsWithChildren) {
   const [ideaOpen, setIdeaOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
-  const { logout, status: authStatus } = useAuth()
+  const { status: authStatus } = useAuth()
   const storeStatus = useOperationalStore((state) => state.status)
   const error = useOperationalStore((state) => state.error)
   const inboxCount = useOperationalStore((state) => state.inboxItems.length)
@@ -82,10 +82,10 @@ export function AppShell({ children }: PropsWithChildren) {
           <button
             className="shell-icon-button"
             type="button"
-            aria-label={authStatus === 'authenticated' ? 'Sair do acesso' : 'Acesso local ou login'}
+            aria-label={authStatus === 'authenticated' || authStatus === 'degraded' ? 'Abrir Central de Confiança' : 'Acesso local ou login'}
             onClick={() => {
-              if (authStatus === 'authenticated') {
-                void logout()
+              if (authStatus === 'authenticated' || authStatus === 'degraded') {
+                void navigate('/central')
                 return
               }
 
